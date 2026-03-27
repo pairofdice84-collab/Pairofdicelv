@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manny — Photography</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --white: #f5f2ec;
+    --cream: #e8e3d8;
+    --accent: #c8a96e;
+    --accent2: #e05c3a;
+    --mid: #1a1a1a;
+    --gray: #555;
+    --light-gray: #999;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1px solid rgba(200,169,110,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease;
+  }
+  body:has(a:hover) .cursor, body:has(button:hover) .cursor { width: 20px; height: 20px; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 4rem;
+    mix-blend-mode: difference;
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.15em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 3rem;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+  }
+  .nav-links a:hover { opacity: 1; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 8rem 4rem 5rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 10vw, 11rem);
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s forwards;
+  }
+  .hero-title .italic {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    margin-top: 2.5rem;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--light-gray);
+    max-width: 360px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.7s forwards;
+  }
+
+  .hero-cta {
+    margin-top: 3rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.9s forwards;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--black);
+    padding: 1rem 2.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    cursor: none;
+    transition: background 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); }
+
+  .btn-ghost {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: opacity 0.3s, gap 0.3s;
+  }
+  .btn-ghost:hover { opacity: 1; gap: 1rem; }
+
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-img-container {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    animation: fadeIn 1.4s ease 0.2s forwards;
+  }
+
+  .hero-img-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 4px;
+    height: 100%;
+    padding: 8rem 3rem 3rem;
+  }
+
+  .hero-img-block {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .hero-img-block:first-child {
+    grid-row: span 2;
+  }
+
+  .img-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+  }
+  .hero-img-block:hover .img-placeholder { transform: scale(1.05); }
+
+  .img-ph-1 { background: linear-gradient(135deg, #1c1c1c 0%, #2a2520 100%); }
+  .img-ph-2 { background: linear-gradient(135deg, #1f1a15 0%, #252020 100%); }
+  .img-ph-3 { background: linear-gradient(135deg, #151518 0%, #1a1820 100%); }
+
+  /* Decorative grain overlay */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0.4;
+  }
+
+  .hero-scroll-indicator {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    opacity: 0;
+    animation: fadeIn 1s ease 1.5s forwards;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  .scroll-text {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--light-gray);
+    writing-mode: vertical-rl;
+  }
+
+  /* MARQUEE */
+  .marquee-section {
+    border-top: 1px solid #1e1e1e;
+    border-bottom: 1px solid #1e1e1e;
+    padding: 1.25rem 0;
+    overflow: hidden;
+    background: var(--mid);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 4rem;
+    white-space: nowrap;
+    animation: marquee 25s linear infinite;
+  }
+  .marquee-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  .marquee-sep {
+    color: #333;
+    font-size: 1.4rem;
+  }
+
+  /* SERVICES */
+  .services {
+    padding: 8rem 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 5rem;
+  }
+
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 6vw, 6rem);
+    line-height: 0.95;
+    color: var(--white);
+  }
+  .section-title .em { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--cream); }
+
+  .section-desc {
+    max-width: 320px;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--light-gray);
+    padding-bottom: 0.5rem;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #1a1a1a;
+    border: 1px solid #1a1a1a;
+  }
+
+  .service-card {
+    background: var(--black);
+    padding: 3.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s ease;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s ease;
+  }
+  .service-card:hover { background: #0f0f0f; }
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    color: #1a1a1a;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    transition: color 0.4s;
+  }
+  .service-card:hover .service-number { color: #222; }
+
+  .service-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    color: var(--white);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .service-desc {
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: var(--light-gray);
+    margin-bottom: 2rem;
+  }
+
+  .service-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid #2a2318;
+    padding: 0.3rem 0.75rem;
+  }
+
+  /* PORTFOLIO */
+  .portfolio {
+    padding: 8rem 4rem;
+    background: #060606;
+  }
+
+  .portfolio-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* Filter bar */
+  .port-filters {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .port-filter-btn {
+    background: transparent;
+    border: 1px solid #1e1e1e;
+    color: var(--light-gray);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.6rem 1.5rem;
+    cursor: none;
+    transition: all 0.35s ease;
+  }
+  .port-filter-btn:hover,
+  .port-filter-btn.active {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(200,169,110,0.08);
+  }
+
+  /* Project grid */
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto;
+    gap: 4px;
+  }
+
+  .port-item {
+    overflow: hidden;
+    position: relative;
+    cursor: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .port-item.hidden {
+    display: none;
+  }
+
+  /* Asymmetric layout — first item hero-sized, rest alternate */
+  .port-item:nth-child(1) { grid-column: span 8; aspect-ratio: 16/9; }
+  .port-item:nth-child(2) { grid-column: span 4; aspect-ratio: 1; }
+  .port-item:nth-child(3) { grid-column: span 4; aspect-ratio: 3/4; }
+  .port-item:nth-child(4) { grid-column: span 4; aspect-ratio: 3/4; }
+  .port-item:nth-child(5) { grid-column: span 4; aspect-ratio: 3/4; }
+
+  .port-bg {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    align-items: flex-end;
+    padding: 2rem;
+    position: relative;
+  }
+
+  /* Unique moody gradients per project */
+  .pg-street    { background: linear-gradient(160deg, #0e0e18 0%, #1a1530 50%, #0a0a12 100%); }
+  .pg-wedding   { background: linear-gradient(160deg, #1a1510 0%, #2d1f10 50%, #150e08 100%); }
+  .pg-couples   { background: linear-gradient(160deg, #1a0e14 0%, #2a1520 50%, #120a10 100%); }
+  .pg-events    { background: linear-gradient(160deg, #0e1210 0%, #152520 50%, #0a100e 100%); }
+  .pg-realestate { background: linear-gradient(160deg, #12100e 0%, #201a10 50%, #0e0c08 100%); }
+
+  .port-item:hover .port-bg { transform: scale(1.06); }
+
+  .port-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.15) 45%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2rem;
+  }
+  .port-item:hover .port-overlay { opacity: 1; }
+
+  .port-info {
+    transform: translateY(10px);
+    transition: transform 0.4s ease;
+  }
+  .port-item:hover .port-info { transform: translateY(0); }
+
+  .port-category {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+
+  .port-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--white);
+    margin-bottom: 0.25rem;
+  }
+
+  .port-count {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.4);
+    margin-top: 0.4rem;
+  }
+
+  .port-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+    color: rgba(255,255,255,0.06);
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+  }
+
+  .port-icon {
+    width: 40px;
+    height: 40px;
+    opacity: 0.08;
+  }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 200;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: none;
+  }
+  .lightbox.open { display: flex; }
+
+  .lightbox-close {
+    position: absolute;
+    top: 2rem;
+    right: 2.5rem;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: none;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+    z-index: 210;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.1em;
+  }
+  .lightbox-close:hover { opacity: 1; }
+
+  .lightbox-title {
+    position: absolute;
+    top: 2.2rem;
+    left: 2.5rem;
+    z-index: 210;
+  }
+  .lightbox-title h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    color: var(--white);
+  }
+  .lightbox-title span {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .lightbox-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 4px;
+    width: 90%;
+    max-width: 1200px;
+    max-height: 75vh;
+    overflow-y: auto;
+    padding: 1rem 0;
+    scrollbar-width: thin;
+    scrollbar-color: #333 transparent;
+  }
+
+  .lightbox-img {
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.1);
+    transition: transform 0.3s ease;
+  }
+  .lightbox-img:hover { transform: scale(1.02); }
+  .lightbox-img svg {
+    width: 28px;
+    height: 28px;
+    opacity: 0.15;
+  }
+
+  /* ABOUT */
+  .about {
+    padding: 8rem 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8rem;
+    align-items: center;
+  }
+
+  .about-visual {
+    position: relative;
+  }
+
+  .about-img-main {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: linear-gradient(160deg, #141210 0%, #1e1a14 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.05);
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+  }
+
+  .about-img-accent {
+    position: absolute;
+    width: 55%;
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #1a1510, #252010);
+    bottom: -4%;
+    right: -8%;
+    border: 6px solid var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.04);
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+  }
+
+  .about-badge {
+    position: absolute;
+    top: 2rem;
+    left: -2rem;
+    background: var(--accent);
+    color: var(--black);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    z-index: 2;
+  }
+
+  .badge-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    line-height: 1;
+  }
+
+  .badge-text {
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .about-text {}
+
+  .about-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 5vw, 5.5rem);
+    line-height: 0.95;
+    margin: 1rem 0 2.5rem;
+  }
+  .about-heading .em { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--accent); }
+
+  .about-body {
+    font-size: 0.95rem;
+    line-height: 1.9;
+    color: var(--light-gray);
+    margin-bottom: 2rem;
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin: 3rem 0;
+    padding: 2.5rem 0;
+    border-top: 1px solid #1a1a1a;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--light-gray);
+    margin-top: 0.4rem;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--mid);
+    padding: 5rem 4rem 3rem;
+    border-top: 1px solid #1a1a1a;
+  }
+
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4rem;
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    letter-spacing: 0.1em;
+    color: var(--white);
+  }
+
+  .footer-cta-text {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 1.5rem;
+    color: var(--cream);
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 2rem;
+    border-top: 1px solid #252525;
+  }
+
+  .footer-copy {
+    font-size: 0.75rem;
+    color: var(--gray);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .footer-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.2); }
+  }
+
+  /* REVEAL ON SCROLL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1.5rem 2rem; }
+    .hero { grid-template-columns: 1fr; min-height: 100svh; }
+    .hero-right { display: none; }
+    .hero-left { padding: 8rem 2rem 6rem; }
+    .services { padding: 5rem 2rem; }
+    .services-grid { grid-template-columns: 1fr; }
+    .portfolio { padding: 5rem 2rem; }
+    .port-filters { gap: 0.4rem; }
+    .port-filter-btn { padding: 0.5rem 1rem; font-size: 0.6rem; }
+    .portfolio-grid { grid-template-columns: 1fr 1fr; }
+    .port-item:nth-child(n) { grid-column: span 1; aspect-ratio: 1; }
+    .lightbox-gallery { grid-template-columns: 1fr 1fr; width: 95%; }
+    .lightbox-title { top: 1.5rem; left: 1.5rem; }
+    .lightbox-close { top: 1.5rem; right: 1.5rem; }
+    .about { grid-template-columns: 1fr; gap: 4rem; padding: 5rem 2rem; }
+    .footer-top { flex-direction: column; gap: 2rem; align-items: flex-start; }
+    footer { padding: 4rem 2rem 2rem; }
+    .footer-bottom { flex-direction: column; gap: 1.5rem; align-items: flex-start; }
+    .section-header { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Manny</a>
+  <ul class="nav-links">
+    <li><a href="#portfolio">Work</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Visual Storyteller · Las Vegas</p>
+    <h1 class="hero-title">
+      Making<br>
+      the <span class="italic">World</span><br>
+      Stand Still
+    </h1>
+    <p class="hero-sub">Photography that stops the scroll, holds the gaze, and lives in the memory. Every frame is a decision.</p>
+    <div class="hero-cta">
+      <a href="#portfolio" class="btn-primary">View Work</a>
+      <a href="#contact" class="btn-ghost">Book a Session →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-container">
+      <div class="hero-img-grid">
+        <div class="hero-img-block">
+          <div class="img-placeholder img-ph-1">Portrait</div>
+        </div>
+        <div class="hero-img-block">
+          <div class="img-placeholder img-ph-2">Street</div>
+        </div>
+        <div class="hero-img-block">
+          <div class="img-placeholder img-ph-3">Studio</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll-indicator">
+    <span class="scroll-text">Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item">Portrait</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">Editorial</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">Street</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">Commercial</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">Event</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">Fine Art</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">Podcast Production</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">Portrait</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">Editorial</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">Street</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">Commercial</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">Event</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">Fine Art</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">Podcast Production</span>
+    <span class="marquee-sep">✦</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="section-header reveal">
+    <div>
+      <span class="section-label">What I Offer</span>
+      <h2 class="section-title">Services that<br><span class="em">Deliver</span></h2>
+    </div>
+    <p class="section-desc">From intimate portraits to full podcast production, every engagement is handled with the same obsessive attention to craft.</p>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-number">01</div>
+      <h3 class="service-name">Portrait & Editorial</h3>
+      <p class="service-desc">Personal branding, headshots, and editorial work that communicate who you are before you say a word.</p>
+      <div class="service-tags">
+        <span class="tag">Branding</span>
+        <span class="tag">Editorial</span>
+        <span class="tag">Headshots</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-number">02</div>
+      <h3 class="service-name">Podcast Production</h3>
+      <p class="service-desc">Dual-camera professional setups with broadcast-grade audio. Your show, elevated. Canon R5C + R7 rig available on location.</p>
+      <div class="service-tags">
+        <span class="tag">Video</span>
+        <span class="tag">Audio</span>
+        <span class="tag">Editing</span>
+      </div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-number">03</div>
+      <h3 class="service-name">Commercial & Events</h3>
+      <p class="service-desc">Product photography, brand campaigns, and events coverage that move fast without losing the detail.</p>
+      <div class="service-tags">
+        <span class="tag">Commercial</span>
+        <span class="tag">Events</span>
+        <span class="tag">Product</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="portfolio" id="portfolio">
+  <div class="portfolio-inner">
+    <div class="section-header reveal">
+      <div>
+        <span class="section-label">Selected Work</span>
+        <h2 class="section-title">The <span class="em">Portfolio</span></h2>
+      </div>
+      <p class="section-desc">Projects organized by shoot. Click any project to explore the gallery.</p>
+    </div>
+
+    <div class="port-filters reveal">
+      <button class="port-filter-btn active" data-filter="all">All Projects</button>
+      <button class="port-filter-btn" data-filter="street">Street</button>
+      <button class="port-filter-btn" data-filter="wedding">Wedding</button>
+      <button class="port-filter-btn" data-filter="couples">Couples</button>
+      <button class="port-filter-btn" data-filter="events">Events</button>
+      <button class="port-filter-btn" data-filter="realestate">Real Estate</button>
+    </div>
+
+    <div class="portfolio-grid" id="portfolioGrid">
+      <!-- Vegas After Dark -->
+      <div class="port-item reveal" data-category="street" data-project="vegas-after-dark" onclick="openLightbox('vegas-after-dark')">
+        <div class="port-bg pg-street">
+          <div class="port-placeholder">
+            <svg class="port-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Cover Photo
+          </div>
+        </div>
+        <div class="port-overlay">
+          <div class="port-info">
+            <p class="port-category">Street Photography</p>
+            <p class="port-title">Vegas After Dark</p>
+            <p class="port-count">— Click to view gallery</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wedding -->
+      <div class="port-item reveal reveal-delay-1" data-category="wedding" data-project="wedding" onclick="openLightbox('wedding')">
+        <div class="port-bg pg-wedding">
+          <div class="port-placeholder">
+            <svg class="port-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Cover Photo
+          </div>
+        </div>
+        <div class="port-overlay">
+          <div class="port-info">
+            <p class="port-category">Wedding</p>
+            <p class="port-title">Wedding Photography</p>
+            <p class="port-count">— Click to view gallery</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Couples -->
+      <div class="port-item reveal reveal-delay-1" data-category="couples" data-project="couples" onclick="openLightbox('couples')">
+        <div class="port-bg pg-couples">
+          <div class="port-placeholder">
+            <svg class="port-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Cover Photo
+          </div>
+        </div>
+        <div class="port-overlay">
+          <div class="port-info">
+            <p class="port-category">Couples</p>
+            <p class="port-title">Couples & Engagements</p>
+            <p class="port-count">— Click to view gallery</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Events -->
+      <div class="port-item reveal reveal-delay-2" data-category="events" data-project="events" onclick="openLightbox('events')">
+        <div class="port-bg pg-events">
+          <div class="port-placeholder">
+            <svg class="port-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Cover Photo
+          </div>
+        </div>
+        <div class="port-overlay">
+          <div class="port-info">
+            <p class="port-category">Events</p>
+            <p class="port-title">Events & Commercial</p>
+            <p class="port-count">— Click to view gallery</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Real Estate -->
+      <div class="port-item reveal reveal-delay-2" data-category="realestate" data-project="realestate" onclick="openLightbox('realestate')">
+        <div class="port-bg pg-realestate">
+          <div class="port-placeholder">
+            <svg class="port-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Cover Photo
+          </div>
+        </div>
+        <div class="port-overlay">
+          <div class="port-info">
+            <p class="port-category">Real Estate</p>
+            <p class="port-title">Real Estate & Architecture</p>
+            <p class="port-count">— Click to view gallery</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-title">
+    <span id="lightboxCategory">Category</span>
+    <h3 id="lightboxTitle">Project Title</h3>
+  </div>
+  <button class="lightbox-close" onclick="closeLightbox()">✕ Close</button>
+  <div class="lightbox-gallery" id="lightboxGallery"></div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-visual reveal">
+    <div class="about-badge">
+      <span class="badge-number">∞</span>
+      <span class="badge-text">Frames<br>Captured</span>
+    </div>
+    <div class="about-img-main">Your Photo Here</div>
+    <div class="about-img-accent">Behind the Lens</div>
+  </div>
+
+  <div class="about-text">
+    <span class="section-label reveal">The Photographer</span>
+    <h2 class="about-heading reveal">
+      Driven by<br>
+      <span class="em">Light</span> &<br>
+      Intention
+    </h2>
+    <p class="about-body reveal">Self-taught and technically obsessed, I approach every shoot the same way — with curiosity, precision, and a refusal to settle for the obvious frame. Based in Las Vegas, working everywhere.</p>
+    <p class="about-body reveal">Photography isn't just a profession — it's the lens through which I understand the world. Whether I'm capturing a portrait or producing a full podcast episode, the mission is the same: make it undeniable.</p>
+
+    <div class="about-stats reveal">
+      <div>
+        <div class="stat-num">10+</div>
+        <div class="stat-label">Years Shooting</div>
+      </div>
+      <div>
+        <div class="stat-num">3</div>
+        <div class="stat-label">Genres Mastered</div>
+      </div>
+      <div>
+        <div class="stat-num">LV</div>
+        <div class="stat-label">Based In</div>
+      </div>
+    </div>
+
+    <a href="#contact" class="btn-primary reveal">Work With Me</a>
+  </div>
+</section>
+
+<!-- FOOTER / CONTACT -->
+<footer id="contact">
+  <div class="footer-top">
+    <div class="footer-logo">Manny.</div>
+    <div>
+      <p class="footer-cta-text">Let's make something worth looking at.</p>
+      <a href="/cdn-cgi/l/email-protection#cda5a8a1a1a28da8b5aca0bda1a8e3aea2a0" class="btn-primary"><span class="__cf_email__" data-cfemail="c5ada0a9a9aa85a0bda4a8b5a9a0eba6aaa8">[email&#160;protected]</span></a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2026 Manny Photography. Las Vegas, NV.</p>
+    <ul class="footer-links">
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">LinkedIn</a></li>
+      <li><a href="#">Behance</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // ─── PORTFOLIO FILTER ───
+  const filterBtns = document.querySelectorAll('.port-filter-btn');
+  const portItems = document.querySelectorAll('.port-item');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.getAttribute('data-filter');
+      portItems.forEach(item => {
+        if (filter === 'all' || item.getAttribute('data-category') === filter) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  // ─── LIGHTBOX ───
+  const projectData = {
+    'vegas-after-dark': {
+      title: 'Vegas After Dark',
+      category: 'Street Photography',
+      gradient: 'linear-gradient(160deg, #0e0e18 0%, #1a1530 50%, #0a0a12 100%)',
+      count: 8
+    },
+    'wedding': {
+      title: 'Wedding Photography',
+      category: 'Wedding',
+      gradient: 'linear-gradient(160deg, #1a1510 0%, #2d1f10 50%, #150e08 100%)',
+      count: 10
+    },
+    'couples': {
+      title: 'Couples & Engagements',
+      category: 'Couples',
+      gradient: 'linear-gradient(160deg, #1a0e14 0%, #2a1520 50%, #120a10 100%)',
+      count: 8
+    },
+    'events': {
+      title: 'Events & Commercial',
+      category: 'Events',
+      gradient: 'linear-gradient(160deg, #0e1210 0%, #152520 50%, #0a100e 100%)',
+      count: 10
+    },
+    'realestate': {
+      title: 'Real Estate & Architecture',
+      category: 'Real Estate',
+      gradient: 'linear-gradient(160deg, #12100e 0%, #201a10 50%, #0e0c08 100%)',
+      count: 8
+    }
+  };
+
+  function openLightbox(projectKey) {
+    const data = projectData[projectKey];
+    if (!data) return;
+
+    document.getElementById('lightboxTitle').textContent = data.title;
+    document.getElementById('lightboxCategory').textContent = data.category;
+
+    const gallery = document.getElementById('lightboxGallery');
+    gallery.innerHTML = '';
+
+    for (let i = 0; i < data.count; i++) {
+      const div = document.createElement('div');
+      div.className = 'lightbox-img';
+      div.style.background = data.gradient;
+      div.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Photo ' + (i + 1) + '</span>';
+      gallery.appendChild(div);
+    }
+
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>
+</body>
+</html>
