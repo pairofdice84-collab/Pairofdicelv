@@ -402,232 +402,81 @@
   }
 
   /* PORTFOLIO */
-  .portfolio {
-    padding: 8rem 4rem;
-    background: #060606;
-  }
+  .portfolio { padding: 8rem 4rem; background: #060606; }
+  .portfolio-inner { max-width: 1400px; margin: 0 auto; }
 
-  .portfolio-inner {
-    max-width: 1400px;
-    margin: 0 auto;
-  }
+  .port-filters { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 3rem; margin-bottom: 3rem; }
+  .port-filter-btn { background: transparent; border: 1px solid #1e1e1e; color: var(--light-gray); font-family: 'DM Sans', sans-serif; font-size: 0.65rem; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.6rem 1.5rem; cursor: none; transition: all 0.35s ease; }
+  .port-filter-btn:hover, .port-filter-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(200,169,110,0.08); }
 
-  /* Filter bar */
-  .port-filters {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-top: 3rem;
-    margin-bottom: 3rem;
-  }
-
-  .port-filter-btn {
-    background: transparent;
-    border: 1px solid #1e1e1e;
-    color: var(--light-gray);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 400;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    padding: 0.6rem 1.5rem;
-    cursor: none;
-    transition: all 0.35s ease;
-  }
-  .port-filter-btn:hover,
-  .port-filter-btn.active {
-    color: var(--accent);
-    border-color: var(--accent);
-    background: rgba(200,169,110,0.08);
-  }
-
-  /* Project grid */
-  .portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: auto;
-    gap: 4px;
-  }
-
-  .port-item {
-    overflow: hidden;
-    position: relative;
-    cursor: none;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-  }
-  .port-item.hidden {
-    display: none;
-  }
-
-  /* Asymmetric layout — first item hero-sized, rest alternate */
+  .portfolio-grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-template-rows: auto; gap: 4px; }
+  .port-item { overflow: hidden; position: relative; cursor: none; transition: opacity 0.4s ease, transform 0.4s ease; }
+  .port-item.hidden { display: none; }
   .port-item:nth-child(1) { grid-column: span 8; aspect-ratio: 16/9; }
   .port-item:nth-child(2) { grid-column: span 4; aspect-ratio: 1; }
   .port-item:nth-child(3) { grid-column: span 4; aspect-ratio: 3/4; }
   .port-item:nth-child(4) { grid-column: span 4; aspect-ratio: 3/4; }
   .port-item:nth-child(5) { grid-column: span 4; aspect-ratio: 3/4; }
 
-  .port-bg {
-    width: 100%;
-    height: 100%;
-    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    display: flex;
-    align-items: flex-end;
-    padding: 2rem;
-    position: relative;
-  }
-
-  /* Unique moody gradients per project */
+  .port-bg { width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; align-items: flex-end; padding: 2rem; position: relative; }
   .pg-street    { background: linear-gradient(160deg, #0e0e18 0%, #1a1530 50%, #0a0a12 100%); }
   .pg-wedding   { background: linear-gradient(160deg, #1a1510 0%, #2d1f10 50%, #150e08 100%); }
   .pg-couples   { background: linear-gradient(160deg, #1a0e14 0%, #2a1520 50%, #120a10 100%); }
   .pg-events    { background: linear-gradient(160deg, #0e1210 0%, #152520 50%, #0a100e 100%); }
   .pg-realestate { background: linear-gradient(160deg, #12100e 0%, #201a10 50%, #0e0c08 100%); }
-
   .port-item:hover .port-bg { transform: scale(1.06); }
 
-  .port-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.15) 45%, transparent 100%);
-    opacity: 0;
-    transition: opacity 0.4s;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 2rem;
-  }
+  .port-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.15) 45%, transparent 100%); opacity: 0; transition: opacity 0.4s; display: flex; flex-direction: column; justify-content: flex-end; padding: 2rem; }
   .port-item:hover .port-overlay { opacity: 1; }
-
-  .port-info {
-    transform: translateY(10px);
-    transition: transform 0.4s ease;
-  }
+  .port-info { transform: translateY(10px); transition: transform 0.4s ease; }
   .port-item:hover .port-info { transform: translateY(0); }
-
-  .port-category {
-    font-size: 0.6rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.3rem;
-  }
-
-  .port-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.3rem;
-    color: var(--white);
-    margin-bottom: 0.25rem;
-  }
-
-  .port-count {
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    color: rgba(255,255,255,0.4);
-    margin-top: 0.4rem;
-  }
-
-  .port-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 1rem;
-    color: rgba(255,255,255,0.06);
-    font-size: 0.65rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-  }
-
-  .port-icon {
-    width: 40px;
-    height: 40px;
-    opacity: 0.08;
-  }
+  .port-category { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.3rem; }
+  .port-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: var(--white); margin-bottom: 0.25rem; }
+  .port-count { font-size: 0.65rem; letter-spacing: 0.15em; color: rgba(255,255,255,0.4); margin-top: 0.4rem; }
+  .port-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; color: rgba(255,255,255,0.06); font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; }
+  .port-icon { width: 40px; height: 40px; opacity: 0.08; }
 
   /* Lightbox */
-  .lightbox {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.95);
-    z-index: 200;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: none;
-  }
+  .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 200; display: none; flex-direction: column; align-items: center; justify-content: center; cursor: none; }
   .lightbox.open { display: flex; }
-
-  .lightbox-close {
-    position: absolute;
-    top: 2rem;
-    right: 2.5rem;
-    background: none;
-    border: none;
-    color: var(--white);
-    font-size: 1.5rem;
-    cursor: none;
-    opacity: 0.5;
-    transition: opacity 0.3s;
-    z-index: 210;
-    font-family: 'DM Sans', sans-serif;
-    letter-spacing: 0.1em;
-  }
+  .lightbox-close { position: absolute; top: 2rem; right: 2.5rem; background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: none; opacity: 0.5; transition: opacity 0.3s; z-index: 210; font-family: 'DM Sans', sans-serif; letter-spacing: 0.1em; }
   .lightbox-close:hover { opacity: 1; }
-
-  .lightbox-title {
-    position: absolute;
-    top: 2.2rem;
-    left: 2.5rem;
-    z-index: 210;
-  }
-  .lightbox-title h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.2rem;
-    color: var(--white);
-  }
-  .lightbox-title span {
-    font-size: 0.6rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--accent);
-  }
-
-  .lightbox-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 4px;
-    width: 90%;
-    max-width: 1200px;
-    max-height: 75vh;
-    overflow-y: auto;
-    padding: 1rem 0;
-    scrollbar-width: thin;
-    scrollbar-color: #333 transparent;
-  }
-
-  .lightbox-img {
-    aspect-ratio: 4/3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 0.5rem;
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.1);
-    transition: transform 0.3s ease;
-  }
+  .lightbox-title { position: absolute; top: 2.2rem; left: 2.5rem; z-index: 210; }
+  .lightbox-title h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--white); }
+  .lightbox-title span { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); }
+  .lightbox-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 4px; width: 90%; max-width: 1200px; max-height: 75vh; overflow-y: auto; padding: 1rem 0; scrollbar-width: thin; scrollbar-color: #333 transparent; }
+  .lightbox-img { aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.5rem; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.1); transition: transform 0.3s ease; }
   .lightbox-img:hover { transform: scale(1.02); }
-  .lightbox-img svg {
-    width: 28px;
-    height: 28px;
-    opacity: 0.15;
-  }
+  .lightbox-img svg { width: 28px; height: 28px; opacity: 0.15; }
+
+  /* CONTACT FORM */
+  .contact-section { padding: 8rem 4rem; max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
+  .contact-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 5vw, 5rem); line-height: 0.95; margin: 1rem 0 2rem; }
+  .contact-heading .em { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--accent); }
+  .contact-body { font-size: 0.95rem; line-height: 1.9; color: var(--light-gray); margin-bottom: 2.5rem; max-width: 400px; }
+  .contact-details { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 2rem; }
+  .contact-detail { display: flex; align-items: center; gap: 1rem; }
+  .contact-detail-icon { width: 40px; height: 40px; border: 1px solid #1e1e1e; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .contact-detail-icon svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
+  .contact-detail-text { font-size: 0.85rem; color: var(--light-gray); }
+  .contact-detail-label { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.15rem; }
+
+  .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group label { font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--light-gray); }
+  .form-group input, .form-group select, .form-group textarea { background: #0e0e0e; border: 1px solid #1e1e1e; color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 300; padding: 0.9rem 1rem; outline: none; transition: border-color 0.3s ease; -webkit-appearance: none; appearance: none; cursor: none; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); }
+  .form-group input::placeholder, .form-group textarea::placeholder { color: #333; }
+  .form-group select { color: #333; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; }
+  .form-group select.selected { color: var(--white); }
+  .form-group textarea { resize: vertical; min-height: 120px; }
+  .form-submit { background: var(--accent); color: var(--black); padding: 1.1rem 2.5rem; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; border: none; cursor: none; transition: background 0.3s ease, transform 0.3s ease; align-self: flex-start; margin-top: 0.5rem; }
+  .form-submit:hover { background: var(--accent2); transform: translateY(-2px); }
+  .form-submit:disabled { opacity: 0.5; transform: none; }
+  .form-success { display: none; padding: 1.5rem; border: 1px solid rgba(200,169,110,0.3); background: rgba(200,169,110,0.05); text-align: center; }
+  .form-success h4 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--accent); margin-bottom: 0.5rem; }
+  .form-success p { font-size: 0.85rem; color: var(--light-gray); }
 
   /* ABOUT */
   .about {
@@ -746,61 +595,11 @@
   }
 
   /* FOOTER */
-  footer {
-    background: var(--mid);
-    padding: 5rem 4rem 3rem;
-    border-top: 1px solid #1a1a1a;
-  }
-
-  .footer-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4rem;
-  }
-
-  .footer-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 3rem;
-    letter-spacing: 0.1em;
-    color: var(--white);
-  }
-
-  .footer-cta-text {
-    font-family: 'DM Serif Display', serif;
-    font-style: italic;
-    font-size: 1.5rem;
-    color: var(--cream);
-    margin-bottom: 1.5rem;
-  }
-
-  .footer-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 2rem;
-    border-top: 1px solid #252525;
-  }
-
-  .footer-copy {
-    font-size: 0.75rem;
-    color: var(--gray);
-    letter-spacing: 0.1em;
-  }
-
-  .footer-links {
-    display: flex;
-    gap: 2.5rem;
-    list-style: none;
-  }
-  .footer-links a {
-    color: var(--gray);
-    text-decoration: none;
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    transition: color 0.3s;
-  }
+  footer { background: var(--mid); padding: 3rem 4rem; border-top: 1px solid #1a1a1a; }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-size: 0.75rem; color: var(--gray); letter-spacing: 0.1em; }
+  .footer-links { display: flex; gap: 2.5rem; list-style: none; }
+  .footer-links a { color: var(--gray); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.3s; }
   .footer-links a:hover { color: var(--accent); }
 
   /* ANIMATIONS */
@@ -852,8 +651,9 @@
     .lightbox-title { top: 1.5rem; left: 1.5rem; }
     .lightbox-close { top: 1.5rem; right: 1.5rem; }
     .about { grid-template-columns: 1fr; gap: 4rem; padding: 5rem 2rem; }
-    .footer-top { flex-direction: column; gap: 2rem; align-items: flex-start; }
-    footer { padding: 4rem 2rem 2rem; }
+    .contact-section { grid-template-columns: 1fr; gap: 3rem; padding: 5rem 2rem; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { padding: 3rem 2rem 2rem; }
     .footer-bottom { flex-direction: column; gap: 1.5rem; align-items: flex-start; }
     .section-header { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
   }
@@ -1010,7 +810,6 @@
     </div>
 
     <div class="portfolio-grid" id="portfolioGrid">
-      <!-- Vegas After Dark -->
       <div class="port-item reveal" data-category="street" data-project="vegas-after-dark" onclick="openLightbox('vegas-after-dark')">
         <div class="port-bg pg-street">
           <div class="port-placeholder">
@@ -1027,7 +826,6 @@
         </div>
       </div>
 
-      <!-- Wedding -->
       <div class="port-item reveal reveal-delay-1" data-category="wedding" data-project="wedding" onclick="openLightbox('wedding')">
         <div class="port-bg pg-wedding">
           <div class="port-placeholder">
@@ -1044,7 +842,6 @@
         </div>
       </div>
 
-      <!-- Couples -->
       <div class="port-item reveal reveal-delay-1" data-category="couples" data-project="couples" onclick="openLightbox('couples')">
         <div class="port-bg pg-couples">
           <div class="port-placeholder">
@@ -1061,7 +858,6 @@
         </div>
       </div>
 
-      <!-- Events -->
       <div class="port-item reveal reveal-delay-2" data-category="events" data-project="events" onclick="openLightbox('events')">
         <div class="port-bg pg-events">
           <div class="port-placeholder">
@@ -1078,7 +874,6 @@
         </div>
       </div>
 
-      <!-- Real Estate -->
       <div class="port-item reveal reveal-delay-2" data-category="realestate" data-project="realestate" onclick="openLightbox('realestate')">
         <div class="port-bg pg-realestate">
           <div class="port-placeholder">
@@ -1148,26 +943,125 @@
   </div>
 </section>
 
-<!-- FOOTER / CONTACT -->
-<footer id="contact">
-  <div class="footer-top">
-    <div class="footer-logo">Manny.</div>
-    <div>
-      <p class="footer-cta-text">Let's make something worth looking at.</p>
-      <a href="/cdn-cgi/l/email-protection#cda5a8a1a1a28da8b5aca0bda1a8e3aea2a0" class="btn-primary"><span class="__cf_email__" data-cfemail="c5ada0a9a9aa85a0bda4a8b5a9a0eba6aaa8">[email&#160;protected]</span></a>
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-left reveal">
+    <span class="section-label">Get In Touch</span>
+    <h2 class="contact-heading">Let's <span class="em">Create</span><br>Together</h2>
+    <p class="contact-body">Whether it's a wedding, engagement shoot, event coverage, or real estate walkthrough — every project starts with a conversation.</p>
+
+    <div class="contact-details">
+      <div class="contact-detail">
+        <div class="contact-detail-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div>
+          <div class="contact-detail-label">Based In</div>
+          <div class="contact-detail-text">Las Vegas, Nevada</div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div>
+          <div class="contact-detail-label">Email</div>
+          <div class="contact-detail-text">eriveram921@gmail.com</div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </div>
+        <div>
+          <div class="contact-detail-label">Instagram</div>
+          <div class="contact-detail-text">@pairofdicelv</div>
+        </div>
+      </div>
     </div>
   </div>
+
+  <div class="contact-right reveal reveal-delay-1">
+    <!--
+      ╔═══════════════════════════════════════════════════════════╗
+      ║  WEB3FORMS SETUP — DO THIS BEFORE YOUR FORM WORKS:      ║
+      ║                                                           ║
+      ║  1. Go to https://web3forms.com                           ║
+      ║  2. Enter your email: eriveram921@gmail.com               ║
+      ║  3. Check your Gmail — they'll send you an Access Key     ║
+      ║  4. Find YOUR_ACCESS_KEY_HERE below (line right after     ║
+      ║     this comment box) and replace it with that key        ║
+      ║                                                           ║
+      ║  Example: if your key is abc123-def456-ghi789             ║
+      ║  Change: value="f611101c-9a41-4732-9657-9f3692fa8bab"                     ║
+      ║  To:     value="abc123-def456-ghi789"                     ║
+      ╚═══════════════════════════════════════════════════════════╝
+    -->
+    <form class="contact-form" id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="f611101c-9a41-4732-9657-9f3692fa8bab">
+      <input type="hidden" name="subject" value="New Lead from Portfolio Website">
+      <input type="hidden" name="from_name" value="Manny Photography Website">
+      <input type="checkbox" name="botcheck" style="display: none;">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Your full name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="your@email.com" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" name="phone" placeholder="(702) 555-0000">
+        </div>
+        <div class="form-group">
+          <label for="service">Service</label>
+          <select id="service" name="service" required onchange="this.classList.add('selected')">
+            <option value="" disabled selected>Select a service</option>
+            <option value="Wedding Photography">Wedding Photography</option>
+            <option value="Couples & Engagements">Couples & Engagements</option>
+            <option value="Events & Commercial">Events & Commercial</option>
+            <option value="Real Estate">Real Estate & Architecture</option>
+            <option value="Street / Editorial">Street / Editorial</option>
+            <option value="Podcast Production">Podcast Production</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" placeholder="Tell me about your project, timeline, and vision..." required></textarea>
+      </div>
+
+      <button type="submit" class="form-submit" id="submitBtn">Send Message</button>
+    </form>
+
+    <div class="form-success" id="formSuccess">
+      <h4>Message Sent</h4>
+      <p>Thanks for reaching out — I'll get back to you within 24 hours.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
   <div class="footer-bottom">
     <p class="footer-copy">© 2026 Manny Photography. Las Vegas, NV.</p>
     <ul class="footer-links">
-      <li><a href="#">Instagram</a></li>
+      <li><a href="https://instagram.com/pairofdicelv" target="_blank">Instagram</a></li>
       <li><a href="#">LinkedIn</a></li>
       <li><a href="#">Behance</a></li>
     </ul>
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   // Custom cursor
   const cursor = document.getElementById('cursor');
   const ring = document.getElementById('cursorRing');
@@ -1220,48 +1114,20 @@
 
   // ─── LIGHTBOX ───
   const projectData = {
-    'vegas-after-dark': {
-      title: 'Vegas After Dark',
-      category: 'Street Photography',
-      gradient: 'linear-gradient(160deg, #0e0e18 0%, #1a1530 50%, #0a0a12 100%)',
-      count: 8
-    },
-    'wedding': {
-      title: 'Wedding Photography',
-      category: 'Wedding',
-      gradient: 'linear-gradient(160deg, #1a1510 0%, #2d1f10 50%, #150e08 100%)',
-      count: 10
-    },
-    'couples': {
-      title: 'Couples & Engagements',
-      category: 'Couples',
-      gradient: 'linear-gradient(160deg, #1a0e14 0%, #2a1520 50%, #120a10 100%)',
-      count: 8
-    },
-    'events': {
-      title: 'Events & Commercial',
-      category: 'Events',
-      gradient: 'linear-gradient(160deg, #0e1210 0%, #152520 50%, #0a100e 100%)',
-      count: 10
-    },
-    'realestate': {
-      title: 'Real Estate & Architecture',
-      category: 'Real Estate',
-      gradient: 'linear-gradient(160deg, #12100e 0%, #201a10 50%, #0e0c08 100%)',
-      count: 8
-    }
+    'vegas-after-dark': { title: 'Vegas After Dark', category: 'Street Photography', gradient: 'linear-gradient(160deg, #0e0e18 0%, #1a1530 50%, #0a0a12 100%)', count: 8 },
+    'wedding': { title: 'Wedding Photography', category: 'Wedding', gradient: 'linear-gradient(160deg, #1a1510 0%, #2d1f10 50%, #150e08 100%)', count: 10 },
+    'couples': { title: 'Couples & Engagements', category: 'Couples', gradient: 'linear-gradient(160deg, #1a0e14 0%, #2a1520 50%, #120a10 100%)', count: 8 },
+    'events': { title: 'Events & Commercial', category: 'Events', gradient: 'linear-gradient(160deg, #0e1210 0%, #152520 50%, #0a100e 100%)', count: 10 },
+    'realestate': { title: 'Real Estate & Architecture', category: 'Real Estate', gradient: 'linear-gradient(160deg, #12100e 0%, #201a10 50%, #0e0c08 100%)', count: 8 }
   };
 
   function openLightbox(projectKey) {
     const data = projectData[projectKey];
     if (!data) return;
-
     document.getElementById('lightboxTitle').textContent = data.title;
     document.getElementById('lightboxCategory').textContent = data.category;
-
     const gallery = document.getElementById('lightboxGallery');
     gallery.innerHTML = '';
-
     for (let i = 0; i < data.count; i++) {
       const div = document.createElement('div');
       div.className = 'lightbox-img';
@@ -1269,7 +1135,6 @@
       div.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Photo ' + (i + 1) + '</span>';
       gallery.appendChild(div);
     }
-
     document.getElementById('lightbox').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -1285,6 +1150,35 @@
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeLightbox();
+  });
+
+  // ─── CONTACT FORM (Web3Forms) ───
+  const contactForm = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const formSuccess = document.getElementById('formSuccess');
+
+  contactForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    try {
+      const formData = new FormData(contactForm);
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await response.json();
+      if (data.success) {
+        contactForm.style.display = 'none';
+        formSuccess.style.display = 'block';
+      } else {
+        submitBtn.textContent = 'Error — Try Again';
+        submitBtn.disabled = false;
+      }
+    } catch (err) {
+      submitBtn.textContent = 'Error — Try Again';
+      submitBtn.disabled = false;
+    }
   });
 </script>
 </body>
