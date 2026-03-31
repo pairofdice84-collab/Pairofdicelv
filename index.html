@@ -978,7 +978,7 @@
 
       <div class="port-item reveal reveal-delay-1" data-category="wedding" data-project="wedding" onclick="openLightbox('wedding')">
         <div class="port-bg pg-wedding">
-          <img src="" style="background:linear-gradient(135deg,#1a1510,#2d1f10)" alt="Wedding Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          <img src="images/wedding/wedding-dq3a1613.jpg" loading="lazy" alt="Wedding Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
         </div>
         <div class="port-overlay">
           <div class="port-info">
@@ -1262,7 +1262,26 @@
   // ─── LIGHTBOX ───
   const projectData = {
     'vegas-after-dark': { title: 'Vegas After Dark', category: 'Street Photography', gradient: 'linear-gradient(160deg, #0e0e18 0%, #1a1530 50%, #0a0a12 100%)', count: 8 },
-    'wedding': { title: 'Wedding Photography', category: 'Wedding', images: ['placeholder', 'placeholder', 'placeholder'] },
+    'wedding': { title: 'Wedding Photography', category: 'Wedding', images: [
+      'images/wedding/wedding-223a5341.jpg',
+      'images/wedding/wedding-dq3a1613.jpg',
+      'images/wedding/wedding-dq3a1596.jpg',
+      'images/wedding/wedding-dq3a4499.jpg',
+      'images/wedding/wedding-dq3a0513.jpg',
+      'images/wedding/wedding-dq3a4769-enhanced-nr.jpg',
+      'images/wedding/wedding-dq3a4811.jpg',
+      'images/wedding/wedding-dq3a4118.jpg',
+      'images/wedding/wedding-223a4520.jpg',
+      'images/wedding/wedding-223a4620.jpg',
+      'images/wedding/wedding-dq3a9252.jpg',
+      'images/wedding/wedding-dq3a9851.jpg',
+      'images/wedding/wedding-dsc07231.jpg',
+      'images/wedding/wedding-dsc07424.jpg',
+      'images/wedding/wedding-dq3a0099.jpg',
+      'images/wedding/wedding-dq3a0296.jpg',
+      'images/wedding/wedding-4l7a2082.jpg',
+      'images/wedding/wedding-dq3a1569.jpg'
+    ] },
     'couples': { title: 'Couples & Engagements', category: 'Couples', gradient: 'linear-gradient(160deg, #1a0e14 0%, #2a1520 50%, #120a10 100%)', count: 8 },
     'events': { title: 'Events & Commercial', category: 'Events', gradient: 'linear-gradient(160deg, #0e1210 0%, #152520 50%, #0a100e 100%)', count: 10 },
     'realestate': { title: 'Real Estate & Architecture', category: 'Real Estate', gradient: 'linear-gradient(160deg, #12100e 0%, #201a10 50%, #0e0c08 100%)', count: 8 }
@@ -1282,8 +1301,9 @@
         div.className = 'lightbox-img';
         const img = document.createElement('img');
         img.src = src;
+        img.loading = 'lazy';
         img.alt = data.title;
-        img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:2px;';
         div.appendChild(img);
         gallery.appendChild(div);
       });
