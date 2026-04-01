@@ -1340,4 +1340,30 @@
   const formSuccess = document.getElementById('formSuccess');
 
   contactForm.addEventListener('submit', async function(e) {
-    e.
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: new FormData(contactForm)
+      });
+
+      if (response.ok) {
+        contactForm.style.display = 'none';
+        formSuccess.style.display = 'block';
+        contactForm.reset();
+      } else {
+        alert('Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      alert('Network error. Please try again.');
+    }
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send Message';
+  });
+</script>
+</body>
+</html>
