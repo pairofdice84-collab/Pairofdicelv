@@ -792,6 +792,27 @@
     to   { box-shadow: 0 0 30px rgba(200,169,110,0.8), 0 0 60px rgba(200,169,110,0.3); }
   }
 
+  /* ═══════════════════════════════
+     FULL-SCREEN PHOTO VIEWER
+  ═══════════════════════════════ */
+  .viewer { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 300; display: none; align-items: center; justify-content: center; cursor: none; }
+  .viewer.open { display: flex; }
+  .viewer-img { max-width: 90vw; max-height: 85vh; object-fit: contain; opacity: 0; transition: opacity 0.3s ease; user-select: none; -webkit-user-drag: none; }
+  .viewer-img.loaded { opacity: 1; }
+  .viewer-close { position: absolute; top: 2rem; right: 2.5rem; background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: none; opacity: 0.5; transition: opacity 0.3s; z-index: 310; font-family: 'DM Sans', sans-serif; letter-spacing: 0.1em; }
+  .viewer-close:hover { opacity: 1; }
+  .viewer-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(200,169,110,0.15); border: 1px solid rgba(200,169,110,0.3); color: var(--white); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: none; opacity: 0.6; transition: opacity 0.3s, background 0.3s; z-index: 310; font-size: 1.2rem; }
+  .viewer-arrow:hover { opacity: 1; background: rgba(200,169,110,0.3); }
+  .viewer-arrow.prev { left: 1.5rem; }
+  .viewer-arrow.next { right: 1.5rem; }
+  .viewer-counter { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); font-size: 0.7rem; letter-spacing: 0.25em; color: var(--light-gray); z-index: 310; }
+  @media (max-width: 900px) {
+    .viewer-arrow { width: 40px; height: 40px; font-size: 1rem; }
+    .viewer-arrow.prev { left: 0.75rem; }
+    .viewer-arrow.next { right: 0.75rem; }
+    .viewer-img { max-width: 95vw; max-height: 80vh; }
+  }
+
 </style>
 </head>
 <body>
@@ -978,7 +999,7 @@
 
       <div class="port-item reveal reveal-delay-1" data-category="wedding" data-project="wedding" onclick="openLightbox('wedding')">
         <div class="port-bg pg-wedding">
-          <img src="wedding-dq3a1613.jpg" loading="lazy" alt="Wedding Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          <img src="images/wedding/wedding-dq3a1613.jpg" loading="lazy" alt="Wedding Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
         </div>
         <div class="port-overlay">
           <div class="port-info">
@@ -1048,6 +1069,15 @@
   </div>
   <button class="lightbox-close" onclick="closeLightbox()">✕ Close</button>
   <div class="lightbox-gallery" id="lightboxGallery"></div>
+</div>
+
+<!-- FULL-SCREEN VIEWER -->
+<div class="viewer" id="viewer">
+  <button class="viewer-close" onclick="closeViewer()">✕ Close</button>
+  <button class="viewer-arrow prev" onclick="viewerNav(-1)">‹</button>
+  <img class="viewer-img" id="viewerImg" alt="Photo">
+  <button class="viewer-arrow next" onclick="viewerNav(1)">›</button>
+  <div class="viewer-counter" id="viewerCounter">1 / 18</div>
 </div>
 
 <!-- ABOUT -->
@@ -1263,24 +1293,24 @@
   const projectData = {
     'vegas-after-dark': { title: 'Vegas After Dark', category: 'Street Photography', gradient: 'linear-gradient(160deg, #0e0e18 0%, #1a1530 50%, #0a0a12 100%)', count: 8 },
     'wedding': { title: 'Wedding Photography', category: 'Wedding', images: [
-      'wedding-223a5341.jpg',
-      'wedding-dq3a1613.jpg',
-      'wedding-dq3a1596.jpg',
-      'wedding-dq3a4499.jpg',
-      'wedding-dq3a0513.jpg',
-      'wedding-dq3a4769-enhanced-nr.jpg',
-      'wedding-dq3a4811.jpg',
-      'wedding-dq3a4118.jpg',
-      'wedding-223a4520.jpg',
-      'wedding-223a4620.jpg',
-      'wedding-dq3a9252.jpg',
-      'wedding-dq3a9851.jpg',
-      'wedding-dsc07231.jpg',
-      'wedding-dsc07424.jpg',
-      'wedding-dq3a0099.jpg',
-      'wedding-dq3a0296.jpg',
-      'wedding-4l7a2082.jpg',
-      'wedding-dq3a1569.jpg'
+      'images/wedding/wedding-223a5341.jpg',
+      'images/wedding/wedding-dq3a1613.jpg',
+      'images/wedding/wedding-dq3a1596.jpg',
+      'images/wedding/wedding-dq3a4499.jpg',
+      'images/wedding/wedding-dq3a0513.jpg',
+      'images/wedding/wedding-dq3a4769-enhanced-nr.jpg',
+      'images/wedding/wedding-dq3a4811.jpg',
+      'images/wedding/wedding-dq3a4118.jpg',
+      'images/wedding/wedding-223a4520.jpg',
+      'images/wedding/wedding-223a4620.jpg',
+      'images/wedding/wedding-dq3a9252.jpg',
+      'images/wedding/wedding-dq3a9851.jpg',
+      'images/wedding/wedding-dsc07231.jpg',
+      'images/wedding/wedding-dsc07424.jpg',
+      'images/wedding/wedding-dq3a0099.jpg',
+      'images/wedding/wedding-dq3a0296.jpg',
+      'images/wedding/wedding-4l7a2082.jpg',
+      'images/wedding/wedding-dq3a1569.jpg'
     ] },
     'couples': { title: 'Couples & Engagements', category: 'Couples', gradient: 'linear-gradient(160deg, #1a0e14 0%, #2a1520 50%, #120a10 100%)', count: 8 },
     'events': { title: 'Events & Commercial', category: 'Events', gradient: 'linear-gradient(160deg, #0e1210 0%, #152520 50%, #0a100e 100%)', count: 10 },
@@ -1296,9 +1326,11 @@
     gallery.innerHTML = '';
     if (data.images) {
       // Real images
-      data.images.forEach(function(src) {
+      data.images.forEach(function(src, index) {
         const div = document.createElement('div');
         div.className = 'lightbox-img';
+        div.style.cursor = 'pointer';
+        div.onclick = function() { openViewer(data.images, index); };
         const img = document.createElement('img');
         img.src = src;
         img.loading = 'lazy';
@@ -1331,8 +1363,66 @@
   });
 
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'Escape') {
+      if (document.getElementById('viewer').classList.contains('open')) {
+        closeViewer();
+      } else {
+        closeLightbox();
+      }
+    }
   });
+
+  // ─── FULL-SCREEN VIEWER ───
+  let viewerImages = [];
+  let viewerIndex = 0;
+  let touchStartX = 0;
+
+  function openViewer(images, index) {
+    viewerImages = images;
+    viewerIndex = index;
+    showViewerImage();
+    document.getElementById('viewer').classList.add('open');
+  }
+
+  function closeViewer() {
+    document.getElementById('viewer').classList.remove('open');
+    viewerImages = [];
+  }
+
+  function viewerNav(dir) {
+    viewerIndex = (viewerIndex + dir + viewerImages.length) % viewerImages.length;
+    showViewerImage();
+  }
+
+  function showViewerImage() {
+    const img = document.getElementById('viewerImg');
+    img.classList.remove('loaded');
+    img.onload = function() { img.classList.add('loaded'); };
+    img.src = viewerImages[viewerIndex];
+    document.getElementById('viewerCounter').textContent = (viewerIndex + 1) + ' / ' + viewerImages.length;
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (!document.getElementById('viewer').classList.contains('open')) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); viewerNav(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); viewerNav(-1); }
+  });
+
+  document.getElementById('viewer').addEventListener('click', function(e) {
+    if (e.target === this) closeViewer();
+  });
+
+  document.getElementById('viewer').addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  document.getElementById('viewer').addEventListener('touchend', function(e) {
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) viewerNav(1);
+      else viewerNav(-1);
+    }
+  }, { passive: true });
 
   // ─── CONTACT FORM (Web3Forms) ───
   const contactForm = document.getElementById('contactForm');
