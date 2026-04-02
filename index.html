@@ -999,13 +999,13 @@
 
       <div class="port-item reveal reveal-delay-1" data-category="wedding" data-project="wedding" onclick="openLightbox('wedding')">
         <div class="port-bg pg-wedding">
-          <img src="images/wedding/wedding-dq3a1613.jpg" loading="lazy" alt="Wedding Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          <img src="wedding-dq3a1613.jpg" loading="lazy" alt="Wedding Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
         </div>
         <div class="port-overlay">
           <div class="port-info">
             <p class="port-category">Wedding</p>
             <p class="port-title">Wedding Photography</p>
-            <p class="port-count">— 3 photos · Click to view gallery</p>
+            <p class="port-count">— 18 photos · Click to view gallery</p>
           </div>
         </div>
       </div>
@@ -1042,18 +1042,16 @@
         </div>
       </div>
 
+      <!-- REAL ESTATE — UPDATED WITH COVER IMAGE -->
       <div class="port-item reveal reveal-delay-2" data-category="realestate" data-project="realestate" onclick="openLightbox('realestate')">
         <div class="port-bg pg-realestate">
-          <div class="port-placeholder">
-            <svg class="port-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            Cover Photo
-          </div>
+          <img src="images/realestate-dji-0115.jpg" loading="lazy" alt="Real Estate Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
         </div>
         <div class="port-overlay">
           <div class="port-info">
             <p class="port-category">Real Estate</p>
             <p class="port-title">Real Estate & Architecture</p>
-            <p class="port-count">— Click to view gallery</p>
+            <p class="port-count">— 13 photos · Click to view gallery</p>
           </div>
         </div>
       </div>
@@ -1159,21 +1157,6 @@
   </div>
 
   <div class="contact-right reveal reveal-delay-1">
-    <!--
-      ╔═══════════════════════════════════════════════════════════╗
-      ║  WEB3FORMS SETUP — DO THIS BEFORE YOUR FORM WORKS:      ║
-      ║                                                           ║
-      ║  1. Go to https://web3forms.com                           ║
-      ║  2. Enter your email: eriveram921@gmail.com               ║
-      ║  3. Check your Gmail — they'll send you an Access Key     ║
-      ║  4. Find YOUR_ACCESS_KEY_HERE below (line right after     ║
-      ║     this comment box) and replace it with that key        ║
-      ║                                                           ║
-      ║  Example: if your key is abc123-def456-ghi789             ║
-      ║  Change: value="YOUR_ACCESS_KEY_HERE"                     ║
-      ║  To:     value="abc123-def456-ghi789"                     ║
-      ╚═══════════════════════════════════════════════════════════╝
-    -->
     <form class="contact-form" id="contactForm" action="https://api.web3forms.com/submit" method="POST">
       <input type="hidden" name="access_key" value="f611101c-9a41-4732-9657-9f3692fa8bab">
       <input type="hidden" name="subject" value="New Lead from Portfolio Website">
@@ -1293,28 +1276,42 @@
   const projectData = {
     'vegas-after-dark': { title: 'Vegas After Dark', category: 'Street Photography', gradient: 'linear-gradient(160deg, #0e0e18 0%, #1a1530 50%, #0a0a12 100%)', count: 8 },
     'wedding': { title: 'Wedding Photography', category: 'Wedding', images: [
-      'images/wedding/wedding-223a5341.jpg',
-      'images/wedding/wedding-dq3a1613.jpg',
-      'images/wedding/wedding-dq3a1596.jpg',
-      'images/wedding/wedding-dq3a4499.jpg',
-      'images/wedding/wedding-dq3a0513.jpg',
-      'images/wedding/wedding-dq3a4769-enhanced-nr.jpg',
-      'images/wedding/wedding-dq3a4811.jpg',
-      'images/wedding/wedding-dq3a4118.jpg',
-      'images/wedding/wedding-223a4520.jpg',
-      'images/wedding/wedding-223a4620.jpg',
-      'images/wedding/wedding-dq3a9252.jpg',
-      'images/wedding/wedding-dq3a9851.jpg',
-      'images/wedding/wedding-dsc07231.jpg',
-      'images/wedding/wedding-dsc07424.jpg',
-      'images/wedding/wedding-dq3a0099.jpg',
-      'images/wedding/wedding-dq3a0296.jpg',
-      'images/wedding/wedding-4l7a2082.jpg',
-      'images/wedding/wedding-dq3a1569.jpg'
+      'wedding-223a5341.jpg',
+      'wedding-dq3a1613.jpg',
+      'wedding-dq3a1596.jpg',
+      'wedding-dq3a4499.jpg',
+      'wedding-dq3a0513.jpg',
+      'wedding-dq3a4769-enhanced-nr.jpg',
+      'wedding-dq3a4811.jpg',
+      'wedding-dq3a4118.jpg',
+      'wedding-223a4520.jpg',
+      'wedding-223a4620.jpg',
+      'wedding-dq3a9252.jpg',
+      'wedding-dq3a9851.jpg',
+      'wedding-dsc07231.jpg',
+      'wedding-dsc07424.jpg',
+      'wedding-dq3a0099.jpg',
+      'wedding-dq3a0296.jpg',
+      'wedding-4l7a2082.jpg',
+      'wedding-dq3a1569.jpg'
     ] },
     'couples': { title: 'Couples & Engagements', category: 'Couples', gradient: 'linear-gradient(160deg, #1a0e14 0%, #2a1520 50%, #120a10 100%)', count: 8 },
     'events': { title: 'Events & Commercial', category: 'Events', gradient: 'linear-gradient(160deg, #0e1210 0%, #152520 50%, #0a100e 100%)', count: 10 },
-    'realestate': { title: 'Real Estate & Architecture', category: 'Real Estate', gradient: 'linear-gradient(160deg, #12100e 0%, #201a10 50%, #0e0c08 100%)', count: 8 }
+    'realestate': { title: 'Real Estate & Architecture', category: 'Real Estate', images: [
+      'images/realestate-dji-0115.jpg',
+      'images/realestate-dji-0022.jpg',
+      'images/realestate-dji-0044.jpg',
+      'images/realestate-dji-0105.jpg',
+      'images/realestate-4l7a9108.jpg',
+      'images/realestate-4l7a9365.jpg',
+      'images/realestate-4l7a2387.jpg',
+      'images/realestate-4l7a2410.jpg',
+      'images/realestate-4l7a2503.jpg',
+      'images/realestate-223a5389.jpg',
+      'images/realestate-223a5485.jpg',
+      'images/realestate-dsc01555.jpg',
+      'images/realestate-dsc01562.jpg'
+    ] }
   };
 
   function openLightbox(projectKey) {
