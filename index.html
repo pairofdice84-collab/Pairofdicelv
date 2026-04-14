@@ -6,1439 +6,197 @@
 <title>Manny — Photography</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --black: #080808;
-    --white: #f5f2ec;
-    --cream: #e8e3d8;
-    --accent: #c8a96e;
-    --accent2: #e05c3a;
-    --mid: #1a1a1a;
-    --gray: #555;
-    --light-gray: #999;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    overflow-x: hidden;
-    cursor: none;
-  }
-
-  /* CUSTOM CURSOR */
-  .cursor {
-    position: fixed;
-    width: 10px; height: 10px;
-    background: var(--accent);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
-    mix-blend-mode: difference;
-  }
-  .cursor-ring {
-    position: fixed;
-    width: 40px; height: 40px;
-    border: 1px solid rgba(200,169,110,0.5);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: all 0.15s ease;
-  }
-  body:has(a:hover) .cursor, body:has(button:hover) .cursor { width: 20px; height: 20px; }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2rem 4rem;
-  }
-  .nav-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.6rem;
-    letter-spacing: 0.15em;
-    color: var(--white);
-    text-decoration: none;
-  }
-  .nav-links {
-    display: flex;
-    gap: 3rem;
-    list-style: none;
-  }
-  .nav-links a {
-    color: var(--white);
-    text-decoration: none;
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    opacity: 0.7;
-    transition: opacity 0.3s;
-  }
-  .nav-links a:hover { opacity: 1; }
-
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-left {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 8rem 4rem 5rem;
-    position: relative;
-    z-index: 2;
-  }
-
-  .hero-eyebrow {
-    font-size: 0.7rem;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.3s forwards;
-  }
-
-  .hero-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(5rem, 10vw, 11rem);
-    line-height: 0.92;
-    letter-spacing: -0.01em;
-    color: var(--white);
-    opacity: 0;
-    animation: fadeUp 1s ease 0.5s forwards;
-  }
-  .hero-title .italic {
-    font-family: 'DM Serif Display', serif;
-    font-style: italic;
-    color: var(--accent);
-  }
-
-  .hero-sub {
-    margin-top: 2.5rem;
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: var(--light-gray);
-    max-width: 360px;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.7s forwards;
-  }
-
-  .hero-cta {
-    margin-top: 3rem;
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.9s forwards;
-  }
-
-  .btn-primary {
-    background: var(--accent);
-    color: var(--black);
-    padding: 1rem 2.5rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: none;
-    cursor: none;
-    transition: background 0.3s ease, transform 0.3s ease;
-    display: inline-block;
-  }
-  .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); }
-
-  .btn-ghost {
-    color: var(--white);
-    text-decoration: none;
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    opacity: 0.6;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: opacity 0.3s, gap 0.3s;
-  }
-  .btn-ghost:hover { opacity: 1; gap: 1rem; }
-
-  .hero-right {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-img-container {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    animation: fadeIn 1.4s ease 0.2s forwards;
-  }
-
-  .hero-img-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 4px;
-    height: 100%;
-    padding: 8rem 3rem 3rem;
-  }
-
-  .hero-img-block {
-    overflow: hidden;
-    position: relative;
-  }
-
-  .hero-img-block:first-child {
-    grid-row: span 2;
-  }
-
-  .img-placeholder {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.8s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.2);
-  }
-  .hero-img-block:hover .img-placeholder { transform: scale(1.05); }
-
-  .img-ph-1 { background: linear-gradient(135deg, #1c1c1c 0%, #2a2520 100%); }
-  .img-ph-2 { background: linear-gradient(135deg, #1f1a15 0%, #252020 100%); }
-  .img-ph-3 { background: linear-gradient(135deg, #151518 0%, #1a1820 100%); }
-
-  /* Decorative grain overlay */
-  .hero::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 10;
-    opacity: 0.4;
-  }
-
-  .hero-scroll-indicator {
-    position: absolute;
-    bottom: 3rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 5;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-    opacity: 0;
-    animation: fadeIn 1s ease 1.5s forwards;
-  }
-  .scroll-line {
-    width: 1px;
-    height: 60px;
-    background: linear-gradient(to bottom, var(--accent), transparent);
-    animation: scrollPulse 2s ease-in-out infinite;
-  }
-  .scroll-text {
-    font-size: 0.6rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--light-gray);
-    writing-mode: vertical-rl;
-  }
-
-  /* MARQUEE */
-  .marquee-section {
-    border-top: 1px solid #1e1e1e;
-    border-bottom: 1px solid #1e1e1e;
-    padding: 1.25rem 0;
-    overflow: hidden;
-    background: var(--mid);
-  }
-  .marquee-track {
-    display: flex;
-    gap: 4rem;
-    white-space: nowrap;
-    animation: marquee 25s linear infinite;
-  }
-  .marquee-item {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.1rem;
-    letter-spacing: 0.15em;
-    color: var(--accent);
-    flex-shrink: 0;
-  }
-  .marquee-sep {
-    color: #333;
-    font-size: 1.4rem;
-  }
-
-  /* SERVICES */
-  .services {
-    padding: 8rem 4rem;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 5rem;
-  }
-
-  .section-label {
-    font-size: 0.65rem;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1rem;
-    display: block;
-  }
-
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(3rem, 6vw, 6rem);
-    line-height: 0.95;
-    color: var(--white);
-  }
-  .section-title .em { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--cream); }
-
-  .section-desc {
-    max-width: 320px;
-    font-size: 0.9rem;
-    line-height: 1.8;
-    color: var(--light-gray);
-    padding-bottom: 0.5rem;
-  }
-
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: #1a1a1a;
-    border: 1px solid #1a1a1a;
-  }
-
-  .service-card {
-    background: var(--black);
-    padding: 3.5rem 2.5rem;
-    position: relative;
-    overflow: hidden;
-    transition: background 0.4s ease;
-  }
-  .service-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--accent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.5s ease;
-  }
-  .service-card:hover { background: #0f0f0f; }
-  .service-card:hover::before { transform: scaleX(1); }
-
-  .service-number {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 4rem;
-    color: #1a1a1a;
-    line-height: 1;
-    margin-bottom: 1.5rem;
-    transition: color 0.4s;
-  }
-  .service-card:hover .service-number { color: #222; }
-
-  .service-name {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.6rem;
-    color: var(--white);
-    margin-bottom: 1rem;
-    line-height: 1.2;
-  }
-
-  .service-desc {
-    font-size: 0.85rem;
-    line-height: 1.8;
-    color: var(--light-gray);
-    margin-bottom: 2rem;
-  }
-
-  .service-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .tag {
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent);
-    border: 1px solid #2a2318;
-    padding: 0.3rem 0.75rem;
-  }
-
-  /* PORTFOLIO */
-  .portfolio { padding: 8rem 4rem; background: #060606; }
-  .portfolio-inner { max-width: 1400px; margin: 0 auto; }
-
-  .port-filters { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 3rem; margin-bottom: 3rem; }
-  .port-filter-btn { background: transparent; border: 1px solid #1e1e1e; color: var(--light-gray); font-family: 'DM Sans', sans-serif; font-size: 0.65rem; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.6rem 1.5rem; cursor: none; transition: all 0.35s ease; }
-  .port-filter-btn:hover, .port-filter-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(200,169,110,0.08); }
-
-  .portfolio-grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-template-rows: auto; gap: 4px; }
-  .port-item { overflow: hidden; position: relative; cursor: none; transition: opacity 0.4s ease, transform 0.4s ease; }
-  .port-item.hidden { display: none; }
-  .port-item:nth-child(1) { grid-column: span 8; aspect-ratio: 16/9; }
-  .port-item:nth-child(2) { grid-column: span 4; aspect-ratio: 1; }
-  .port-item:nth-child(3) { grid-column: span 4; aspect-ratio: 3/4; }
-  .port-item:nth-child(4) { grid-column: span 4; aspect-ratio: 3/4; }
-  .port-item:nth-child(5) { grid-column: span 4; aspect-ratio: 3/4; }
-
-  .port-bg { width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; align-items: flex-end; padding: 2rem; position: relative; }
-  .pg-street    { background: linear-gradient(160deg, #0e0e18 0%, #1a1530 50%, #0a0a12 100%); }
-  .pg-wedding   { background: linear-gradient(160deg, #1a1510 0%, #2d1f10 50%, #150e08 100%); }
-  .pg-couples   { background: linear-gradient(160deg, #1a0e14 0%, #2a1520 50%, #120a10 100%); }
-  .pg-events    { background: linear-gradient(160deg, #0e1210 0%, #152520 50%, #0a100e 100%); }
-  .pg-realestate { background: linear-gradient(160deg, #12100e 0%, #201a10 50%, #0e0c08 100%); }
-  .port-item:hover .port-bg { transform: scale(1.06); }
-
-  .port-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.15) 45%, transparent 100%); opacity: 0; transition: opacity 0.4s; display: flex; flex-direction: column; justify-content: flex-end; padding: 2rem; }
-  .port-item:hover .port-overlay { opacity: 1; }
-  .port-info { transform: translateY(10px); transition: transform 0.4s ease; }
-  .port-item:hover .port-info { transform: translateY(0); }
-  .port-category { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.3rem; }
-  .port-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: var(--white); margin-bottom: 0.25rem; }
-  .port-count { font-size: 0.65rem; letter-spacing: 0.15em; color: rgba(255,255,255,0.4); margin-top: 0.4rem; }
-  .port-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; color: rgba(255,255,255,0.06); font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; }
-  .port-icon { width: 40px; height: 40px; opacity: 0.08; }
-
-  /* Lightbox */
-  .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 200; display: none; flex-direction: column; align-items: center; justify-content: center; cursor: none; }
-  .lightbox.open { display: flex; }
-  .lightbox-close { position: absolute; top: 2rem; right: 2.5rem; background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: none; opacity: 0.5; transition: opacity 0.3s; z-index: 210; font-family: 'DM Sans', sans-serif; letter-spacing: 0.1em; }
-  .lightbox-close:hover { opacity: 1; }
-  .lightbox-title { position: absolute; top: 2.2rem; left: 2.5rem; z-index: 210; }
-  .lightbox-title h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--white); }
-  .lightbox-title span { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); }
-  .lightbox-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 4px; width: 90%; max-width: 1200px; max-height: 75vh; overflow-y: auto; padding: 1rem 0; scrollbar-width: thin; scrollbar-color: #333 transparent; }
-  .lightbox-img { aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.5rem; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.1); transition: transform 0.3s ease; }
-  .lightbox-img:hover { transform: scale(1.02); }
-  .lightbox-img svg { width: 28px; height: 28px; opacity: 0.15; }
-
-  /* CONTACT FORM */
-  .contact-section { padding: 8rem 4rem; max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
-  .contact-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 5vw, 5rem); line-height: 0.95; margin: 1rem 0 2rem; }
-  .contact-heading .em { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--accent); }
-  .contact-body { font-size: 0.95rem; line-height: 1.9; color: var(--light-gray); margin-bottom: 2.5rem; max-width: 400px; }
-  .contact-details { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 2rem; }
-  .contact-detail { display: flex; align-items: center; gap: 1rem; }
-  .contact-detail-icon { width: 40px; height: 40px; border: 1px solid #1e1e1e; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .contact-detail-icon svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
-  .contact-detail-text { font-size: 0.85rem; color: var(--light-gray); }
-  .contact-detail-label { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.15rem; }
-
-  .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
-  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-  .form-group label { font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--light-gray); }
-  .form-group input, .form-group select, .form-group textarea { background: #0e0e0e; border: 1px solid #1e1e1e; color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 300; padding: 0.9rem 1rem; outline: none; transition: border-color 0.3s ease; -webkit-appearance: none; appearance: none; cursor: none; }
-  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); }
-  .form-group input::placeholder, .form-group textarea::placeholder { color: #333; }
-  .form-group select { color: #333; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; }
-  .form-group select.selected { color: var(--white); }
-  .form-group textarea { resize: vertical; min-height: 120px; }
-  .form-submit { background: var(--accent); color: var(--black); padding: 1.1rem 2.5rem; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; border: none; cursor: none; transition: background 0.3s ease, transform 0.3s ease; align-self: flex-start; margin-top: 0.5rem; }
-  .form-submit:hover { background: var(--accent2); transform: translateY(-2px); }
-  .form-submit:disabled { opacity: 0.5; transform: none; }
-  .form-success { display: none; padding: 1.5rem; border: 1px solid rgba(200,169,110,0.3); background: rgba(200,169,110,0.05); text-align: center; }
-  .form-success h4 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--accent); margin-bottom: 0.5rem; }
-  .form-success p { font-size: 0.85rem; color: var(--light-gray); }
-
-  /* ABOUT */
-  .about {
-    padding: 8rem 4rem;
-    max-width: 1400px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8rem;
-    align-items: center;
-  }
-
-  .about-visual {
-    position: relative;
-  }
-
-  .about-img-main {
-    width: 100%;
-    aspect-ratio: 3/4;
-    background: linear-gradient(160deg, #141210 0%, #1e1a14 100%);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(255,255,255,0.05);
-    font-size: 0.7rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-  }
-
-  .about-img-accent {
-    position: absolute;
-    width: 55%;
-    aspect-ratio: 1;
-    background: linear-gradient(135deg, #1a1510, #252010);
-    bottom: -4%;
-    right: -8%;
-    border: 6px solid var(--black);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(255,255,255,0.04);
-    font-size: 0.6rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-  }
-
-  .about-badge {
-    position: absolute;
-    top: 2rem;
-    left: -2rem;
-    background: var(--accent);
-    color: var(--black);
-    padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.2rem;
-    z-index: 2;
-  }
-
-  .badge-number {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.2rem;
-    line-height: 1;
-  }
-
-  .badge-text {
-    font-size: 0.55rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    text-align: center;
-  }
-
-  .about-text {}
-
-  .about-heading {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(3rem, 5vw, 5.5rem);
-    line-height: 0.95;
-    margin: 1rem 0 2.5rem;
-  }
-  .about-heading .em { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--accent); }
-
-  .about-body {
-    font-size: 0.95rem;
-    line-height: 1.9;
-    color: var(--light-gray);
-    margin-bottom: 2rem;
-  }
-
-  .about-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    margin: 3rem 0;
-    padding: 2.5rem 0;
-    border-top: 1px solid #1a1a1a;
-    border-bottom: 1px solid #1a1a1a;
-  }
-
-  .stat-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.8rem;
-    color: var(--accent);
-    line-height: 1;
-  }
-
-  .stat-label {
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--light-gray);
-    margin-top: 0.4rem;
-  }
-
-  /* FOOTER */
-  footer { background: var(--mid); padding: 3rem 4rem; border-top: 1px solid #1a1a1a; }
-  .footer-bottom { display: flex; justify-content: space-between; align-items: center; }
-  .footer-copy { font-size: 0.75rem; color: var(--gray); letter-spacing: 0.1em; }
-  .footer-links { display: flex; gap: 2.5rem; list-style: none; }
-  .footer-links a { color: var(--gray); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.3s; }
-  .footer-links a:hover { color: var(--accent); }
-
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-  @keyframes scrollPulse {
-    0%, 100% { opacity: 0.3; transform: scaleY(1); }
-    50% { opacity: 1; transform: scaleY(1.2); }
-  }
-
-  /* REVEAL ON SCROLL */
-  .reveal {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
-
-  /* RESPONSIVE */
-  @media (max-width: 900px) {
-    nav { padding: 1.5rem 2rem; }
-    .hero { grid-template-columns: 1fr; min-height: 100svh; }
-    .hero-right { display: none; }
-    .hero-left { padding: 8rem 2rem 6rem; }
-    .services { padding: 5rem 2rem; }
-    .services-grid { grid-template-columns: 1fr; }
-    .portfolio { padding: 5rem 2rem; }
-    .port-filters { gap: 0.4rem; }
-    .port-filter-btn { padding: 0.5rem 1rem; font-size: 0.6rem; }
-    .portfolio-grid { grid-template-columns: 1fr 1fr; }
-    .port-item:nth-child(n) { grid-column: span 1; aspect-ratio: 1; }
-    .lightbox-gallery { grid-template-columns: 1fr 1fr; width: 95%; }
-    .lightbox-title { top: 1.5rem; left: 1.5rem; }
-    .lightbox-close { top: 1.5rem; right: 1.5rem; }
-    .about { grid-template-columns: 1fr; gap: 4rem; padding: 5rem 2rem; }
-    .contact-section { grid-template-columns: 1fr; gap: 3rem; padding: 5rem 2rem; }
-    .form-row { grid-template-columns: 1fr; }
-    footer { padding: 3rem 2rem 2rem; }
-    .footer-bottom { flex-direction: column; gap: 1.5rem; align-items: flex-start; }
-    .section-header { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
-  }
-
-  /* ═══════════════════════════════
-     VEGAS NEON GLOW & DICE
-  ═══════════════════════════════ */
-
-  /* Main hero italic title — golden neon breathing glow */
-  .hero-title .italic {
-    text-shadow:
-      0 0 8px rgba(200,169,110,0.6),
-      0 0 20px rgba(200,169,110,0.35),
-      0 0 40px rgba(200,169,110,0.15),
-      1px 1px 3px rgba(0,0,0,0.9);
-    animation: neonPulse 3s ease-in-out infinite alternate;
-  }
-
-  /* Main white title — clean, no glow so text stays readable */
-  .hero-title {
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
-  }
-
-  /* Hero eyebrow gold glow */
-  .hero-eyebrow {
-    text-shadow: 0 0 6px rgba(200,169,110,0.5);
-  }
-
-  /* Section italic accents */
-  .section-title .em,
-  .contact-heading .em,
-  .about-heading .em {
-    text-shadow:
-      0 0 8px rgba(200,169,110,0.4),
-      0 0 20px rgba(200,169,110,0.15);
-  }
-
-  /* Nav logo glow - subtle */
-  .nav-logo {
-    text-shadow: 0 0 6px rgba(200,169,110,0.3);
-  }
-
-  @keyframes neonPulse {
-    from {
-      text-shadow:
-        0 0 6px rgba(200,169,110,0.5),
-        0 0 15px rgba(200,169,110,0.25),
-        1px 1px 3px rgba(0,0,0,0.9);
-    }
-    to {
-      text-shadow:
-        0 0 10px rgba(200,169,110,0.75),
-        0 0 25px rgba(200,169,110,0.4),
-        0 0 45px rgba(200,169,110,0.15),
-        1px 1px 3px rgba(0,0,0,0.9);
-    }
-  }
-
-  /* Vegas neon accent strip under nav */
-  nav::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 4rem; right: 4rem;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(224,92,58,0.3), rgba(200,169,110,0.4), rgba(224,92,58,0.3), transparent);
-    opacity: 0;
-    animation: fadeIn 1s ease 1.2s forwards;
-  }
-
-  /* Floating Vegas Dice */
-  .vegas-dice-container {
-    position: absolute;
-    bottom: 5rem;
-    right: 3rem;
-    z-index: 6;
-    display: flex;
-    gap: 1rem;
-    opacity: 0;
-    animation: fadeIn 1s ease 1.8s forwards;
-    pointer-events: none;
-  }
-
-  .die {
-    width: 52px;
-    height: 52px;
-    background: linear-gradient(145deg, #f5f2ec 0%, #d4cfc6 100%);
-    border-radius: 10px;
-    position: relative;
-    box-shadow:
-      0 0 20px rgba(200,169,110,0.5),
-      0 0 40px rgba(200,169,110,0.2),
-      inset 0 1px 0 rgba(255,255,255,0.6),
-      3px 3px 8px rgba(0,0,0,0.7);
-    animation: diceFloat 4s ease-in-out infinite;
-  }
-
-  .die:nth-child(2) {
-    animation-delay: 0.6s;
-    animation-duration: 3.5s;
-  }
-
-  .die .pip {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background: #1a1a1a;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-  /* Die showing 4 */
-  .die-4 .pip:nth-child(1) { top: 28%; left: 28%; }
-  .die-4 .pip:nth-child(2) { top: 28%; left: 72%; }
-  .die-4 .pip:nth-child(3) { top: 72%; left: 28%; }
-  .die-4 .pip:nth-child(4) { top: 72%; left: 72%; }
-
-  /* Die showing 2 */
-  .die-2 .pip:nth-child(1) { top: 28%; left: 72%; }
-  .die-2 .pip:nth-child(2) { top: 72%; left: 28%; }
-
-  .die::after {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 13px;
-    background: transparent;
-    animation: diceGlow 2s ease-in-out infinite alternate;
-  }
-
-  @keyframes diceFloat {
-    0%, 100% { transform: translateY(0) rotate(-3deg); }
-    50%       { transform: translateY(-12px) rotate(3deg); }
-  }
-
-  @keyframes diceGlow {
-    from { box-shadow: 0 0 10px rgba(200,169,110,0.3); }
-    to   { box-shadow: 0 0 30px rgba(200,169,110,0.8), 0 0 60px rgba(200,169,110,0.3); }
-  }
-
-  /* ═══════════════════════════════
-     FULL-SCREEN PHOTO VIEWER
-  ═══════════════════════════════ */
-  .viewer { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 300; display: none; align-items: center; justify-content: center; cursor: none; }
-  .viewer.open { display: flex; }
-  .viewer-img { max-width: 90vw; max-height: 85vh; object-fit: contain; opacity: 0; transition: opacity 0.3s ease; user-select: none; -webkit-user-drag: none; }
-  .viewer-img.loaded { opacity: 1; }
-  .viewer-close { position: absolute; top: 2rem; right: 2.5rem; background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: none; opacity: 0.5; transition: opacity 0.3s; z-index: 310; font-family: 'DM Sans', sans-serif; letter-spacing: 0.1em; }
-  .viewer-close:hover { opacity: 1; }
-  .viewer-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(200,169,110,0.15); border: 1px solid rgba(200,169,110,0.3); color: var(--white); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: none; opacity: 0.6; transition: opacity 0.3s, background 0.3s; z-index: 310; font-size: 1.2rem; }
-  .viewer-arrow:hover { opacity: 1; background: rgba(200,169,110,0.3); }
-  .viewer-arrow.prev { left: 1.5rem; }
-  .viewer-arrow.next { right: 1.5rem; }
-  .viewer-counter { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); font-size: 0.7rem; letter-spacing: 0.25em; color: var(--light-gray); z-index: 310; }
-  @media (max-width: 900px) {
-    .viewer-arrow { width: 40px; height: 40px; font-size: 1rem; }
-    .viewer-arrow.prev { left: 0.75rem; }
-    .viewer-arrow.next { right: 0.75rem; }
-    .viewer-img { max-width: 95vw; max-height: 80vh; }
-  }
-
+:root{--black:#080808;--white:#f5f2ec;--cream:#e8e3d8;--accent:#c8a96e;--accent2:#e05c3a;--mid:#1a1a1a;--gray:#555;--light-gray:#999}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+.cursor{position:fixed;width:10px;height:10px;background:var(--accent);border-radius:2px;pointer-events:none;z-index:9999;transform:translate(-50%,-50%) rotate(45deg);transition:width .3s,height .3s,background .3s,box-shadow .3s;box-shadow:0 0 8px rgba(200,169,110,.6),0 0 20px rgba(200,169,110,.2)}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(200,169,110,.4);border-radius:3px;pointer-events:none;z-index:9998;transform:translate(-50%,-50%) rotate(45deg);transition:all .15s;box-shadow:0 0 12px rgba(200,169,110,.15)}
+body:has(a:hover) .cursor,body:has(button:hover) .cursor{width:18px;height:18px;background:var(--accent2);box-shadow:0 0 14px rgba(224,92,58,.7),0 0 30px rgba(224,92,58,.3)}
+body:has(a:hover) .cursor-ring,body:has(button:hover) .cursor-ring{width:44px;height:44px;border-color:rgba(224,92,58,.4)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:2rem 4rem}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.15em;color:var(--white);text-decoration:none;text-shadow:0 0 6px rgba(200,169,110,.3)}
+.nav-links{display:flex;gap:3rem;list-style:none}
+.nav-links a{color:var(--white);text-decoration:none;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;opacity:.7;transition:opacity .3s}
+.nav-links a:hover{opacity:1}
+nav::after{content:'';position:absolute;bottom:0;left:4rem;right:4rem;height:1px;background:linear-gradient(90deg,transparent,rgba(224,92,58,.3),rgba(200,169,110,.4),rgba(224,92,58,.3),transparent);opacity:0;animation:fadeIn 1s ease 1.2s forwards}
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden}
+.hero-left{display:flex;flex-direction:column;justify-content:flex-end;padding:8rem 4rem 5rem;position:relative;z-index:2}
+.hero-eyebrow{font-size:.7rem;letter-spacing:.35em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem;opacity:0;animation:fadeUp 1s ease .3s forwards;text-shadow:0 0 6px rgba(200,169,110,.5)}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,10vw,11rem);line-height:.92;letter-spacing:-.01em;color:var(--white);opacity:0;animation:fadeUp 1s ease .5s forwards;text-shadow:1px 1px 4px rgba(0,0,0,.8)}
+.hero-title .italic{font-family:'DM Serif Display',serif;font-style:italic;color:var(--accent);text-shadow:0 0 8px rgba(200,169,110,.6),0 0 20px rgba(200,169,110,.35),0 0 40px rgba(200,169,110,.15),1px 1px 3px rgba(0,0,0,.9);animation:neonPulse 3s ease-in-out infinite alternate}
+.hero-sub{margin-top:2.5rem;font-size:.95rem;line-height:1.7;color:var(--light-gray);max-width:360px;opacity:0;animation:fadeUp 1s ease .7s forwards}
+.hero-cta{margin-top:3rem;display:flex;gap:1.5rem;align-items:center;opacity:0;animation:fadeUp 1s ease .9s forwards}
+.btn-primary{background:var(--accent);color:var(--black);padding:1rem 2.5rem;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border:none;cursor:none;transition:background .3s,transform .3s;display:inline-block}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-2px)}
+.btn-ghost{color:var(--white);text-decoration:none;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;opacity:.6;display:flex;align-items:center;gap:.5rem;transition:opacity .3s,gap .3s}
+.btn-ghost:hover{opacity:1;gap:1rem}
+.hero-right{position:relative;overflow:hidden}
+.hero-img-container{position:absolute;inset:0;opacity:0;animation:fadeIn 1.4s ease .2s forwards}
+.hero-img-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:4px;height:100%;padding:8rem 3rem 3rem}
+.hero-img-block{overflow:hidden;position:relative}
+.hero-img-block:first-child{grid-row:span 2}
+.img-placeholder{width:100%;height:100%;transition:transform .8s;display:flex;align-items:center;justify-content:center;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.2)}
+.hero-img-block:hover .img-placeholder{transform:scale(1.05)}
+.img-ph-1{background:linear-gradient(135deg,#1c1c1c,#2a2520)}.img-ph-2{background:linear-gradient(135deg,#1f1a15,#252020)}.img-ph-3{background:linear-gradient(135deg,#151518,#1a1820)}
+.hero::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:10;opacity:.4}
+.hero-scroll-indicator{position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);z-index:5;display:flex;flex-direction:column;align-items:center;gap:.75rem;opacity:0;animation:fadeIn 1s ease 1.5s forwards}
+.scroll-line{width:1px;height:60px;background:linear-gradient(to bottom,var(--accent),transparent);animation:scrollPulse 2s ease-in-out infinite}
+.scroll-text{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--light-gray);writing-mode:vertical-rl}
+.marquee-section{border-top:1px solid #1e1e1e;border-bottom:1px solid #1e1e1e;padding:1.25rem 0;overflow:hidden;background:var(--mid)}
+.marquee-track{display:flex;gap:4rem;white-space:nowrap;animation:marquee 25s linear infinite}
+.marquee-item{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.15em;color:var(--accent);flex-shrink:0}
+.marquee-sep{color:#333;font-size:1.4rem}
+.services{padding:8rem 4rem;max-width:1400px;margin:0 auto}
+.section-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:5rem}
+.section-label{font-size:.65rem;letter-spacing:.35em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem;display:block}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,6rem);line-height:.95;color:var(--white)}
+.section-title .em{font-family:'DM Serif Display',serif;font-style:italic;color:var(--cream);text-shadow:0 0 8px rgba(200,169,110,.4),0 0 20px rgba(200,169,110,.15)}
+.section-desc{max-width:320px;font-size:.9rem;line-height:1.8;color:var(--light-gray);padding-bottom:.5rem}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#1a1a1a;border:1px solid #1a1a1a}
+.service-card{background:var(--black);padding:3.5rem 2.5rem;position:relative;overflow:hidden;transition:background .4s}
+.service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .5s}
+.service-card:hover{background:#0f0f0f}.service-card:hover::before{transform:scaleX(1)}
+.service-number{font-family:'Bebas Neue',sans-serif;font-size:4rem;color:#1a1a1a;line-height:1;margin-bottom:1.5rem;transition:color .4s}
+.service-card:hover .service-number{color:#222}
+.service-name{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--white);margin-bottom:1rem;line-height:1.2}
+.service-desc{font-size:.85rem;line-height:1.8;color:var(--light-gray);margin-bottom:2rem}
+.service-tags{display:flex;flex-wrap:wrap;gap:.5rem}
+.tag{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);border:1px solid #2a2318;padding:.3rem .75rem}
+.portfolio{padding:8rem 4rem;background:#060606}.portfolio-inner{max-width:1400px;margin:0 auto}
+.port-filters{display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap;margin-top:3rem;margin-bottom:3rem}
+.port-filter-btn{background:transparent;border:1px solid #1e1e1e;color:var(--light-gray);font-family:'DM Sans',sans-serif;font-size:.65rem;font-weight:400;letter-spacing:.2em;text-transform:uppercase;padding:.6rem 1.5rem;cursor:none;transition:all .35s}
+.port-filter-btn:hover,.port-filter-btn.active{color:var(--accent);border-color:var(--accent);background:rgba(200,169,110,.08)}
+.portfolio-grid{display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:auto;gap:4px}
+.port-item{overflow:hidden;position:relative;cursor:none;transition:opacity .4s,transform .4s}.port-item.hidden{display:none}
+.port-item:nth-child(1){grid-column:span 8;aspect-ratio:16/9}
+.port-item:nth-child(2){grid-column:span 4;aspect-ratio:1}
+.port-item:nth-child(3){grid-column:span 4;aspect-ratio:3/4}
+.port-item:nth-child(4){grid-column:span 4;aspect-ratio:3/4}
+.port-item:nth-child(5){grid-column:span 4;aspect-ratio:3/4}
+.port-item:nth-child(6){grid-column:span 6;aspect-ratio:4/3}
+.port-bg{width:100%;height:100%;transition:transform .8s cubic-bezier(.25,.46,.45,.94);display:flex;align-items:flex-end;padding:2rem;position:relative}
+.pg-street{background:linear-gradient(160deg,#0e0e18,#1a1530 50%,#0a0a12)}
+.pg-wedding{background:linear-gradient(160deg,#1a1510,#2d1f10 50%,#150e08)}
+.pg-couples{background:linear-gradient(160deg,#1a0e14,#2a1520 50%,#120a10)}
+.pg-events{background:linear-gradient(160deg,#0e1210,#152520 50%,#0a100e)}
+.pg-realestate{background:linear-gradient(160deg,#12100e,#201a10 50%,#0e0c08)}
+.pg-editorial{background:linear-gradient(160deg,#1a0a10,#2d1018 50%,#150810)}
+.port-item:hover .port-bg{transform:scale(1.06)}
+.port-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8) 0%,rgba(0,0,0,.15) 45%,transparent);opacity:0;transition:opacity .4s;display:flex;flex-direction:column;justify-content:flex-end;padding:2rem}
+.port-item:hover .port-overlay{opacity:1}
+.port-info{transform:translateY(10px);transition:transform .4s}.port-item:hover .port-info{transform:translateY(0)}
+.port-category{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);margin-bottom:.3rem}
+.port-title{font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--white);margin-bottom:.25rem}
+.port-count{font-size:.65rem;letter-spacing:.15em;color:rgba(255,255,255,.4);margin-top:.4rem}
+.port-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;color:rgba(255,255,255,.06);font-size:.65rem;letter-spacing:.25em;text-transform:uppercase}
+.port-icon{width:40px;height:40px;opacity:.08}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;cursor:none}
+.lightbox.open{display:flex}
+.lightbox-close{position:absolute;top:2rem;right:2.5rem;background:none;border:none;color:var(--white);font-size:1.5rem;cursor:none;opacity:.5;transition:opacity .3s;z-index:210;font-family:'DM Sans',sans-serif;letter-spacing:.1em}
+.lightbox-close:hover{opacity:1}
+.lightbox-title{position:absolute;top:2.2rem;left:2.5rem;z-index:210}
+.lightbox-title h3{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--white)}
+.lightbox-title span{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--accent)}
+.lightbox-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:4px;width:90%;max-width:1200px;max-height:75vh;overflow-y:auto;padding:1rem 0;scrollbar-width:thin;scrollbar-color:#333 transparent}
+.lightbox-img{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.5rem;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.1);transition:transform .3s}
+.lightbox-img:hover{transform:scale(1.02)}.lightbox-img svg{width:28px;height:28px;opacity:.15}
+.contact-section{padding:8rem 4rem;max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start}
+.contact-heading{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,5vw,5rem);line-height:.95;margin:1rem 0 2rem}
+.contact-heading .em{font-family:'DM Serif Display',serif;font-style:italic;color:var(--accent);text-shadow:0 0 8px rgba(200,169,110,.4),0 0 20px rgba(200,169,110,.15)}
+.contact-body{font-size:.95rem;line-height:1.9;color:var(--light-gray);margin-bottom:2.5rem;max-width:400px}
+.contact-details{display:flex;flex-direction:column;gap:1.2rem;margin-top:2rem}
+.contact-detail{display:flex;align-items:center;gap:1rem}
+.contact-detail-icon{width:40px;height:40px;border:1px solid #1e1e1e;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.contact-detail-icon svg{width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:1.5}
+.contact-detail-text{font-size:.85rem;color:var(--light-gray)}
+.contact-detail-label{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gray);margin-bottom:.15rem}
+.contact-form{display:flex;flex-direction:column;gap:1.2rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.form-group{display:flex;flex-direction:column;gap:.4rem}
+.form-group label{font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--light-gray)}
+.form-group input,.form-group select,.form-group textarea{background:#0e0e0e;border:1px solid #1e1e1e;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:300;padding:.9rem 1rem;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none;cursor:none}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent)}
+.form-group input::placeholder,.form-group textarea::placeholder{color:#333}
+.form-group select{color:#333;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem}
+.form-group select.selected{color:var(--white)}
+.form-group textarea{resize:vertical;min-height:120px}
+.form-submit{background:var(--accent);color:var(--black);padding:1.1rem 2.5rem;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;border:none;cursor:none;transition:background .3s,transform .3s;align-self:flex-start;margin-top:.5rem}
+.form-submit:hover{background:var(--accent2);transform:translateY(-2px)}
+.form-submit:disabled{opacity:.5;transform:none}
+.form-success{display:none;padding:1.5rem;border:1px solid rgba(200,169,110,.3);background:rgba(200,169,110,.05);text-align:center}
+.form-success h4{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--accent);margin-bottom:.5rem}
+.form-success p{font-size:.85rem;color:var(--light-gray)}
+.about{padding:8rem 4rem;max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:8rem;align-items:center}
+.about-visual{position:relative}
+.about-img-main{width:100%;aspect-ratio:3/4;background:linear-gradient(160deg,#141210,#1e1a14);position:relative;overflow:hidden}
+.about-img-accent{position:absolute;width:55%;aspect-ratio:1;background:linear-gradient(135deg,#1a1510,#252010);bottom:-4%;right:-8%;border:6px solid var(--black);overflow:hidden}
+.about-badge{position:absolute;top:2rem;left:-2rem;background:var(--accent);color:var(--black);padding:1.25rem;display:flex;flex-direction:column;align-items:center;gap:.2rem;z-index:2}
+.badge-number{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;line-height:1}
+.badge-text{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;text-align:center}
+.about-heading{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,5vw,5.5rem);line-height:.95;margin:1rem 0 2.5rem}
+.about-heading .em{font-family:'DM Serif Display',serif;font-style:italic;color:var(--accent);text-shadow:0 0 8px rgba(200,169,110,.4),0 0 20px rgba(200,169,110,.15)}
+.about-body{font-size:.95rem;line-height:1.9;color:var(--light-gray);margin-bottom:2rem}
+.about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin:3rem 0;padding:2.5rem 0;border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--accent);line-height:1}
+.stat-label{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--light-gray);margin-top:.4rem}
+footer{background:var(--mid);padding:3rem 4rem;border-top:1px solid #1a1a1a}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center}
+.footer-copy{font-size:.75rem;color:var(--gray);letter-spacing:.1em}
+.footer-links{display:flex;gap:2.5rem;list-style:none}
+.footer-links a{color:var(--gray);text-decoration:none;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;transition:color .3s}
+.footer-links a:hover{color:var(--accent)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes scrollPulse{0%,100%{opacity:.3;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.2)}}
+@keyframes neonPulse{from{text-shadow:0 0 6px rgba(200,169,110,.5),0 0 15px rgba(200,169,110,.25),1px 1px 3px rgba(0,0,0,.9)}to{text-shadow:0 0 10px rgba(200,169,110,.75),0 0 25px rgba(200,169,110,.4),0 0 45px rgba(200,169,110,.15),1px 1px 3px rgba(0,0,0,.9)}}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s,transform .8s}.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}.reveal-delay-2{transition-delay:.2s}.reveal-delay-3{transition-delay:.3s}
+.viewer{position:fixed;inset:0;background:rgba(0,0,0,.98);z-index:300;display:none;align-items:center;justify-content:center;cursor:none}
+.viewer.open{display:flex}
+.viewer-img{max-width:90vw;max-height:85vh;object-fit:contain;opacity:0;transition:opacity .3s;user-select:none;-webkit-user-drag:none}
+.viewer-img.loaded{opacity:1}
+.viewer-close{position:absolute;top:2rem;right:2.5rem;background:none;border:none;color:var(--white);font-size:1.5rem;cursor:none;opacity:.5;transition:opacity .3s;z-index:310;font-family:'DM Sans',sans-serif;letter-spacing:.1em}
+.viewer-close:hover{opacity:1}
+.viewer-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(200,169,110,.15);border:1px solid rgba(200,169,110,.3);color:var(--white);width:50px;height:50px;display:flex;align-items:center;justify-content:center;cursor:none;opacity:.6;transition:opacity .3s,background .3s;z-index:310;font-size:1.2rem}
+.viewer-arrow:hover{opacity:1;background:rgba(200,169,110,.3)}
+.viewer-arrow.prev{left:1.5rem}.viewer-arrow.next{right:1.5rem}
+.viewer-counter{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);font-size:.7rem;letter-spacing:.25em;color:var(--light-gray);z-index:310}
+@media(max-width:900px){nav{padding:1.5rem 2rem}.hero{grid-template-columns:1fr;min-height:100svh}.hero-right{display:none}.hero-left{padding:8rem 2rem 6rem}.services{padding:5rem 2rem}.services-grid{grid-template-columns:1fr}.portfolio{padding:5rem 2rem}.port-filters{gap:.4rem}.port-filter-btn{padding:.5rem 1rem;font-size:.6rem}.portfolio-grid{grid-template-columns:1fr 1fr}.port-item:nth-child(n){grid-column:span 1;aspect-ratio:1}.lightbox-gallery{grid-template-columns:1fr 1fr;width:95%}.lightbox-title{top:1.5rem;left:1.5rem}.lightbox-close{top:1.5rem;right:1.5rem}.about{grid-template-columns:1fr;gap:4rem;padding:5rem 2rem}.contact-section{grid-template-columns:1fr;gap:3rem;padding:5rem 2rem}.form-row{grid-template-columns:1fr}footer{padding:3rem 2rem 2rem}.footer-bottom{flex-direction:column;gap:1.5rem;align-items:flex-start}.section-header{flex-direction:column;align-items:flex-start;gap:1.5rem}.viewer-arrow{width:40px;height:40px;font-size:1rem}.viewer-arrow.prev{left:.75rem}.viewer-arrow.next{right:.75rem}.viewer-img{max-width:95vw;max-height:80vh}.cursor,.cursor-ring{display:none}}
 </style>
 </head>
 <body>
-
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-
-<!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo">Manny</a>
-  <ul class="nav-links">
-    <li><a href="#portfolio">Work</a></li>
-    <li><a href="#services">Services</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-left">
-    <p class="hero-eyebrow">Visual Storyteller · Las Vegas</p>
-    <h1 class="hero-title">
-      Making<br>
-      the <span class="italic">World</span><br>
-      Stand Still
-    </h1>
-    <p class="hero-sub">Photography that stops the scroll, holds the gaze, and lives in the memory. Every frame is a decision.</p>
-    <div class="hero-cta">
-      <a href="#portfolio" class="btn-primary">View Work</a>
-      <a href="#contact" class="btn-ghost">Book a Session →</a>
-    </div>
-  </div>
-  <div class="hero-right">
-    <div class="hero-img-container">
-      <div class="hero-img-grid">
-        <div class="hero-img-block">
-          <div class="img-placeholder img-ph-1">Portrait</div>
-        </div>
-        <div class="hero-img-block">
-          <div class="img-placeholder img-ph-2">Street</div>
-        </div>
-        <div class="hero-img-block">
-          <div class="img-placeholder img-ph-3">Studio</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="hero-scroll-indicator">
-    <span class="scroll-text">Scroll</span>
-    <div class="scroll-line"></div>
-  </div>
-
-  <!-- Vegas Floating Dice -->
-  <div class="vegas-dice-container">
-    <div class="die die-4">
-      <div class="pip"></div>
-      <div class="pip"></div>
-      <div class="pip"></div>
-      <div class="pip"></div>
-    </div>
-    <div class="die die-2">
-      <div class="pip"></div>
-      <div class="pip"></div>
-    </div>
-  </div>
-
-</section>
-
-<!-- MARQUEE -->
-<div class="marquee-section">
-  <div class="marquee-track">
-    <span class="marquee-item">Portrait</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Editorial</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Street</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Commercial</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Event</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Fine Art</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Podcast Production</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Portrait</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Editorial</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Street</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Commercial</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Event</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Fine Art</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Podcast Production</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-  </div>
-</div>
-
-<!-- SERVICES -->
-<section class="services" id="services">
-  <div class="section-header reveal">
-    <div>
-      <span class="section-label">What I Offer</span>
-      <h2 class="section-title">Services that<br><span class="em">Deliver</span></h2>
-    </div>
-    <p class="section-desc">From intimate portraits to full podcast production, every engagement is handled with the same obsessive attention to craft.</p>
-  </div>
-
-  <div class="services-grid">
-    <div class="service-card reveal">
-      <div class="service-number">01</div>
-      <h3 class="service-name">Portrait & Editorial</h3>
-      <p class="service-desc">Personal branding, headshots, and editorial work that communicate who you are before you say a word.</p>
-      <div class="service-tags">
-        <span class="tag">Branding</span>
-        <span class="tag">Editorial</span>
-        <span class="tag">Headshots</span>
-      </div>
-    </div>
-    <div class="service-card reveal reveal-delay-1">
-      <div class="service-number">02</div>
-      <h3 class="service-name">Podcast Production</h3>
-      <p class="service-desc">Dual-camera professional setups with broadcast-grade audio. Your show, elevated. Canon R5C + R7 rig available on location.</p>
-      <div class="service-tags">
-        <span class="tag">Video</span>
-        <span class="tag">Audio</span>
-        <span class="tag">Editing</span>
-      </div>
-    </div>
-    <div class="service-card reveal reveal-delay-2">
-      <div class="service-number">03</div>
-      <h3 class="service-name">Commercial & Events</h3>
-      <p class="service-desc">Product photography, brand campaigns, and events coverage that move fast without losing the detail.</p>
-      <div class="service-tags">
-        <span class="tag">Commercial</span>
-        <span class="tag">Events</span>
-        <span class="tag">Product</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PORTFOLIO -->
-<section class="portfolio" id="portfolio">
-  <div class="portfolio-inner">
-    <div class="section-header reveal">
-      <div>
-        <span class="section-label">Selected Work</span>
-        <h2 class="section-title">The <span class="em">Portfolio</span></h2>
-      </div>
-      <p class="section-desc">Projects organized by shoot. Click any project to explore the gallery.</p>
-    </div>
-
-    <div class="port-filters reveal">
-      <button class="port-filter-btn active" data-filter="all">All Projects</button>
-      <button class="port-filter-btn" data-filter="street">Street</button>
-      <button class="port-filter-btn" data-filter="wedding">Wedding</button>
-      <button class="port-filter-btn" data-filter="couples">Couples</button>
-      <button class="port-filter-btn" data-filter="events">Events</button>
-      <button class="port-filter-btn" data-filter="realestate">Real Estate</button>
-    </div>
-
-    <div class="portfolio-grid" id="portfolioGrid">
-      <div class="port-item reveal" data-category="street" data-project="vegas-after-dark" onclick="openLightbox('vegas-after-dark')">
-        <div class="port-bg pg-street">
-          <div class="port-placeholder">
-            <svg class="port-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            Cover Photo
-          </div>
-        </div>
-        <div class="port-overlay">
-          <div class="port-info">
-            <p class="port-category">Street Photography</p>
-            <p class="port-title">Vegas After Dark</p>
-            <p class="port-count">— Click to view gallery</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="port-item reveal reveal-delay-1" data-category="wedding" data-project="wedding" onclick="openLightbox('wedding')">
-        <div class="port-bg pg-wedding">
-          <img src="wedding-dq3a1613.jpg" loading="lazy" alt="Wedding Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
-        </div>
-        <div class="port-overlay">
-          <div class="port-info">
-            <p class="port-category">Wedding</p>
-            <p class="port-title">Wedding Photography</p>
-            <p class="port-count">— 18 photos · Click to view gallery</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="port-item reveal reveal-delay-1" data-category="couples" data-project="couples" onclick="openLightbox('couples')">
-        <div class="port-bg pg-couples">
-          <div class="port-placeholder">
-            <svg class="port-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            Cover Photo
-          </div>
-        </div>
-        <div class="port-overlay">
-          <div class="port-info">
-            <p class="port-category">Couples</p>
-            <p class="port-title">Couples & Engagements</p>
-            <p class="port-count">— Click to view gallery</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="port-item reveal reveal-delay-2" data-category="events" data-project="events" onclick="openLightbox('events')">
-        <div class="port-bg pg-events">
-          <div class="port-placeholder">
-            <svg class="port-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            Cover Photo
-          </div>
-        </div>
-        <div class="port-overlay">
-          <div class="port-info">
-            <p class="port-category">Events</p>
-            <p class="port-title">Events & Commercial</p>
-            <p class="port-count">— Click to view gallery</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- REAL ESTATE — UPDATED WITH COVER IMAGE -->
-      <div class="port-item reveal reveal-delay-2" data-category="realestate" data-project="realestate" onclick="openLightbox('realestate')">
-        <div class="port-bg pg-realestate">
-          <img src="images/realestate-dji-0115.jpg" loading="lazy" alt="Real Estate Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
-        </div>
-        <div class="port-overlay">
-          <div class="port-info">
-            <p class="port-category">Real Estate</p>
-            <p class="port-title">Real Estate & Architecture</p>
-            <p class="port-count">— 1 photo · Click to view gallery</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox">
-  <div class="lightbox-title">
-    <span id="lightboxCategory">Category</span>
-    <h3 id="lightboxTitle">Project Title</h3>
-  </div>
-  <button class="lightbox-close" onclick="closeLightbox()">✕ Close</button>
-  <div class="lightbox-gallery" id="lightboxGallery"></div>
-</div>
-
-<!-- FULL-SCREEN VIEWER -->
-<div class="viewer" id="viewer">
-  <button class="viewer-close" onclick="closeViewer()">✕ Close</button>
-  <button class="viewer-arrow prev" onclick="viewerNav(-1)">‹</button>
-  <img class="viewer-img" id="viewerImg" alt="Photo">
-  <button class="viewer-arrow next" onclick="viewerNav(1)">›</button>
-  <div class="viewer-counter" id="viewerCounter">1 / 18</div>
-</div>
-
-<!-- ABOUT -->
-<section class="about" id="about">
-  <div class="about-visual reveal">
-    <div class="about-badge">
-      <span class="badge-number">∞</span>
-      <span class="badge-text">Frames<br>Captured</span>
-    </div>
-    <div class="about-img-main"><img src="images/about-main_2.jpg" alt="Manny - Photographer" style="width:100%;height:100%;object-fit:cover;"></div>
-    <div class="about-img-accent"><img src="images/about-behind-lens.jpg" alt="Behind the Lens" style="width:100%;height:100%;object-fit:cover;"></div>
-  </div>
-
-  <div class="about-text">
-    <span class="section-label reveal">The Photographer</span>
-    <h2 class="about-heading reveal">
-      Driven by<br>
-      <span class="em">Light</span> &<br>
-      Intention
-    </h2>
-    <p class="about-body reveal">Self-taught and technically obsessed, I approach every shoot the same way — with curiosity, precision, and a refusal to settle for the obvious frame. Based in Las Vegas, working everywhere.</p>
-    <p class="about-body reveal">Photography isn't just a profession — it's the lens through which I understand the world. Whether I'm capturing a portrait or producing a full podcast episode, the mission is the same: make it undeniable.</p>
-
-    <div class="about-stats reveal">
-      <div>
-        <div class="stat-num">10+</div>
-        <div class="stat-label">Years Shooting</div>
-      </div>
-      <div>
-        <div class="stat-num">3</div>
-        <div class="stat-label">Genres Mastered</div>
-      </div>
-      <div>
-        <div class="stat-num">LV</div>
-        <div class="stat-label">Based In</div>
-      </div>
-    </div>
-
-    <a href="#contact" class="btn-primary reveal">Work With Me</a>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section class="contact-section" id="contact">
-  <div class="contact-left reveal">
-    <span class="section-label">Get In Touch</span>
-    <h2 class="contact-heading">Let's <span class="em">Create</span><br>Together</h2>
-    <p class="contact-body">Whether it's a wedding, engagement shoot, event coverage, or real estate walkthrough — every project starts with a conversation.</p>
-
-    <div class="contact-details">
-      <div class="contact-detail">
-        <div class="contact-detail-icon">
-          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        </div>
-        <div>
-          <div class="contact-detail-label">Based In</div>
-          <div class="contact-detail-text">Las Vegas, Nevada</div>
-        </div>
-      </div>
-      <div class="contact-detail">
-        <div class="contact-detail-icon">
-          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        </div>
-        <div>
-          <div class="contact-detail-label">Email</div>
-          <div class="contact-detail-text">pairofdicelv@gmail.com</div>
-        </div>
-      </div>
-      <div class="contact-detail">
-        <div class="contact-detail-icon">
-          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-        </div>
-        <div>
-          <div class="contact-detail-label">Instagram</div>
-          <div class="contact-detail-text"><a href="https://www.instagram.com/pairofdicelv/" target="_blank" style="color: var(--light-gray); text-decoration: none; transition: color 0.3s;">@pairofdicelv</a></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="contact-right reveal reveal-delay-1">
-    <form class="contact-form" id="contactForm" action="https://api.web3forms.com/submit" method="POST">
-      <input type="hidden" name="access_key" value="f611101c-9a41-4732-9657-9f3692fa8bab">
-      <input type="hidden" name="subject" value="New Lead from Portfolio Website">
-      <input type="hidden" name="from_name" value="Manny Photography Website">
-      <input type="checkbox" name="botcheck" style="display: none;">
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" placeholder="Your full name" required>
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" placeholder="your@email.com" required>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="phone">Phone</label>
-          <input type="tel" id="phone" name="phone" placeholder="(702) 555-0000">
-        </div>
-        <div class="form-group">
-          <label for="service">Service</label>
-          <select id="service" name="service" required onchange="this.classList.add('selected')">
-            <option value="" disabled selected>Select a service</option>
-            <option value="Wedding Photography">Wedding Photography</option>
-            <option value="Couples & Engagements">Couples & Engagements</option>
-            <option value="Events & Commercial">Events & Commercial</option>
-            <option value="Real Estate">Real Estate & Architecture</option>
-            <option value="Street / Editorial">Street / Editorial</option>
-            <option value="Podcast Production">Podcast Production</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="message">Message</label>
-        <textarea id="message" name="message" placeholder="Tell me about your project, timeline, and vision..." required></textarea>
-      </div>
-
-      <button type="submit" class="form-submit" id="submitBtn">Send Message</button>
-    </form>
-
-    <div class="form-success" id="formSuccess">
-      <h4>Message Sent</h4>
-      <p>Thanks for reaching out — I'll get back to you within 24 hours.</p>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-bottom">
-    <p class="footer-copy">© 2026 Manny Photography. Las Vegas, NV.</p>
-    <ul class="footer-links">
-      <li><a href="https://www.instagram.com/pairofdicelv/" target="_blank">Instagram</a></li>
-      <li><a href="#">LinkedIn</a></li>
-      <li><a href="#">Behance</a></li>
-    </ul>
-  </div>
-</footer>
-
+<div class="cursor" id="cursor"></div><div class="cursor-ring" id="cursorRing"></div>
+<nav><a href="#" class="nav-logo">Manny</a><ul class="nav-links"><li><a href="#portfolio">Work</a></li><li><a href="#services">Services</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul></nav>
+<section class="hero"><div class="hero-left"><p class="hero-eyebrow">Visual Storyteller · Las Vegas</p><h1 class="hero-title">Making<br>the <span class="italic">World</span><br>Stand Still</h1><p class="hero-sub">Photography that stops the scroll, holds the gaze, and lives in the memory. Every frame is a decision.</p><div class="hero-cta"><a href="#portfolio" class="btn-primary">View Work</a><a href="#contact" class="btn-ghost">Book a Session →</a></div></div><div class="hero-right"><div class="hero-img-container"><div class="hero-img-grid"><div class="hero-img-block"><div class="img-placeholder img-ph-1">Portrait</div></div><div class="hero-img-block"><div class="img-placeholder img-ph-2">Street</div></div><div class="hero-img-block"><div class="img-placeholder img-ph-3">Studio</div></div></div></div></div><div class="hero-scroll-indicator"><span class="scroll-text">Scroll</span><div class="scroll-line"></div></div></section>
+<div class="marquee-section"><div class="marquee-track"><span class="marquee-item">Portrait</span><span class="marquee-sep" style="font-size:.9rem;opacity:.7">◆</span><span class="marquee-item">Editorial</span><span class="marquee-sep" style="font-size:.9rem;opacity:.7">◆</span><span class="marquee-item">Street</span><span class="marquee-sep" style="font-size:.9rem;opacity:.7">◆</span><span class="marquee-item">Commercial</span><span class="marquee-sep" style="font-size:.9rem;opacity:.7">◆</span><span class="marquee-item">Event</span><span class="marquee-sep" style="font-size:.9rem;opacity:.7">◆</span><span class="marquee-item">Fine Art</span><span class="marquee-sep" style="font-size:.9rem;opacity:.7">◆</span><span class="marquee-item">Podcast Production</span><span class="marquee-sep" style="font-size:.9rem;opacity:.7">◆</span><span class="marquee-item">Portrait</span><span class="marquee-sep" style="font-size:.9rem;opacity:.7">◆</span><span class="marquee-item">Editorial</span><span class="marquee-sep" style="font-size:.9rem;opacity:.7">◆</span><span class="marquee-item">Street</span><span class="marquee-sep" style="font-size:.9rem;opacity:.7">◆</span><span class="marquee-item">Commercial</span><span class="marquee-sep" style="font-size:.9rem;opacity:.7">◆</span><span class="marquee-item">Event</span><span class="marquee-sep" style="font-size:.9rem;opacity:.7">◆</span><span class="marquee-item">Fine Art</span><span class="marquee-sep" style="font-size:.9rem;opacity:.7">◆</span><span class="marquee-item">Podcast Production</span><span class="marquee-sep" style="font-size:.9rem;opacity:.7">◆</span></div></div>
+<section class="services" id="services"><div class="section-header reveal"><div><span class="section-label">What I Offer</span><h2 class="section-title">Services that<br><span class="em">Deliver</span></h2></div><p class="section-desc">From intimate portraits to full podcast production, every engagement is handled with the same obsessive attention to craft.</p></div><div class="services-grid"><div class="service-card reveal"><div class="service-number">01</div><h3 class="service-name">Portrait & Editorial</h3><p class="service-desc">Personal branding, headshots, and editorial work that communicate who you are before you say a word.</p><div class="service-tags"><span class="tag">Branding</span><span class="tag">Editorial</span><span class="tag">Headshots</span></div></div><div class="service-card reveal reveal-delay-1"><div class="service-number">02</div><h3 class="service-name">Podcast Production</h3><p class="service-desc">Dual-camera professional setups with broadcast-grade audio. Your show, elevated. Canon R5C + R7 rig available on location.</p><div class="service-tags"><span class="tag">Video</span><span class="tag">Audio</span><span class="tag">Editing</span></div></div><div class="service-card reveal reveal-delay-2"><div class="service-number">03</div><h3 class="service-name">Commercial & Events</h3><p class="service-desc">Product photography, brand campaigns, and events coverage that move fast without losing the detail.</p><div class="service-tags"><span class="tag">Commercial</span><span class="tag">Events</span><span class="tag">Product</span></div></div></div></section>
+<section class="portfolio" id="portfolio"><div class="portfolio-inner"><div class="section-header reveal"><div><span class="section-label">Selected Work</span><h2 class="section-title">The <span class="em">Portfolio</span></h2></div><p class="section-desc">Projects organized by shoot. Click any project to explore the gallery.</p></div><div class="port-filters reveal"><button class="port-filter-btn active" data-filter="all">All Projects</button><button class="port-filter-btn" data-filter="street">Street</button><button class="port-filter-btn" data-filter="wedding">Wedding</button><button class="port-filter-btn" data-filter="couples">Couples</button><button class="port-filter-btn" data-filter="events">Events</button><button class="port-filter-btn" data-filter="realestate">Real Estate</button><button class="port-filter-btn" data-filter="editorial">Editorial</button></div><div class="portfolio-grid" id="portfolioGrid"><div class="port-item reveal" data-category="street" data-project="vegas-after-dark" onclick="openLightbox('vegas-after-dark')"><div class="port-bg pg-street"><div class="port-placeholder"><svg class="port-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Cover Photo</div></div><div class="port-overlay"><div class="port-info"><p class="port-category">Street Photography</p><p class="port-title">Vegas After Dark</p><p class="port-count">— Click to view gallery</p></div></div></div><div class="port-item reveal reveal-delay-1" data-category="wedding" data-project="wedding" onclick="openLightbox('wedding')"><div class="port-bg pg-wedding"><img src="wedding-dq3a1613.jpg" loading="lazy" alt="Wedding Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;"></div><div class="port-overlay"><div class="port-info"><p class="port-category">Wedding</p><p class="port-title">Wedding Photography</p><p class="port-count">— 18 photos · Click to view gallery</p></div></div></div><div class="port-item reveal reveal-delay-1" data-category="couples" data-project="couples" onclick="openLightbox('couples')"><div class="port-bg pg-couples"><div class="port-placeholder"><svg class="port-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Cover Photo</div></div><div class="port-overlay"><div class="port-info"><p class="port-category">Couples</p><p class="port-title">Couples & Engagements</p><p class="port-count">— Click to view gallery</p></div></div></div><div class="port-item reveal reveal-delay-2" data-category="events" data-project="events" onclick="openLightbox('events')"><div class="port-bg pg-events"><div class="port-placeholder"><svg class="port-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Cover Photo</div></div><div class="port-overlay"><div class="port-info"><p class="port-category">Events</p><p class="port-title">Events & Commercial</p><p class="port-count">— Click to view gallery</p></div></div></div><div class="port-item reveal reveal-delay-2" data-category="realestate" data-project="realestate" onclick="openLightbox('realestate')"><div class="port-bg pg-realestate"><img src="images/realestate-dji-0115.jpg" loading="lazy" alt="Real Estate Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;"></div><div class="port-overlay"><div class="port-info"><p class="port-category">Real Estate</p><p class="port-title">Real Estate & Architecture</p><p class="port-count">— 1 photo · Click to view gallery</p></div></div></div><div class="port-item reveal" data-category="editorial" data-project="editorial" onclick="openLightbox('editorial')"><div class="port-bg pg-editorial"><img src="images/editorial/editorial-gr3a4618.jpg" loading="lazy" alt="Editorial Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;"></div><div class="port-overlay"><div class="port-info"><p class="port-category">Editorial</p><p class="port-title">Editorial & Body Art</p><p class="port-count">— 12 photos · Click to view gallery</p></div></div></div></div></div></section>
+<div class="lightbox" id="lightbox"><div class="lightbox-title"><span id="lightboxCategory">Category</span><h3 id="lightboxTitle">Project Title</h3></div><button class="lightbox-close" onclick="closeLightbox()">✕ Close</button><div class="lightbox-gallery" id="lightboxGallery"></div></div>
+<div class="viewer" id="viewer"><button class="viewer-close" onclick="closeViewer()">✕ Close</button><button class="viewer-arrow prev" onclick="viewerNav(-1)">‹</button><img class="viewer-img" id="viewerImg" alt="Photo"><button class="viewer-arrow next" onclick="viewerNav(1)">›</button><div class="viewer-counter" id="viewerCounter">1 / 12</div></div>
+<section class="about" id="about"><div class="about-visual reveal"><div class="about-badge"><span class="badge-number">∞</span><span class="badge-text">Frames<br>Captured</span></div><div class="about-img-main"><img src="images/about-main_2.jpg" alt="Manny - Photographer" style="width:100%;height:100%;object-fit:cover;"></div><div class="about-img-accent"><img src="images/about-behind-lens.jpg" alt="Behind the Lens" style="width:100%;height:100%;object-fit:cover;"></div></div><div class="about-text"><span class="section-label reveal">The Photographer</span><h2 class="about-heading reveal">Driven by<br><span class="em">Light</span> &<br>Intention</h2><p class="about-body reveal">Self-taught and technically obsessed, I approach every shoot the same way — with curiosity, precision, and a refusal to settle for the obvious frame. Based in Las Vegas, working everywhere.</p><p class="about-body reveal">Photography isn't just a profession — it's the lens through which I understand the world. Whether I'm capturing a portrait or producing a full podcast episode, the mission is the same: make it undeniable.</p><div class="about-stats reveal"><div><div class="stat-num">10+</div><div class="stat-label">Years Shooting</div></div><div><div class="stat-num">3</div><div class="stat-label">Genres Mastered</div></div><div><div class="stat-num">LV</div><div class="stat-label">Based In</div></div></div><a href="#contact" class="btn-primary reveal">Work With Me</a></div></section>
+<section class="contact-section" id="contact"><div class="contact-left reveal"><span class="section-label">Get In Touch</span><h2 class="contact-heading">Let's <span class="em">Create</span><br>Together</h2><p class="contact-body">Whether it's a wedding, engagement shoot, event coverage, or real estate walkthrough — every project starts with a conversation.</p><div class="contact-details"><div class="contact-detail"><div class="contact-detail-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div class="contact-detail-label">Based In</div><div class="contact-detail-text">Las Vegas, Nevada</div></div></div><div class="contact-detail"><div class="contact-detail-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><div class="contact-detail-label">Email</div><div class="contact-detail-text">pairofdicelv@gmail.com</div></div></div><div class="contact-detail"><div class="contact-detail-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div><div><div class="contact-detail-label">Instagram</div><div class="contact-detail-text"><a href="https://www.instagram.com/pairofdicelv/" target="_blank" style="color:var(--light-gray);text-decoration:none;transition:color .3s">@pairofdicelv</a></div></div></div></div></div><div class="contact-right reveal reveal-delay-1"><form class="contact-form" id="contactForm" action="https://api.web3forms.com/submit" method="POST"><input type="hidden" name="access_key" value="f611101c-9a41-4732-9657-9f3692fa8bab"><input type="hidden" name="subject" value="New Lead from Portfolio Website"><input type="hidden" name="from_name" value="Manny Photography Website"><input type="checkbox" name="botcheck" style="display:none"><div class="form-row"><div class="form-group"><label for="name">Name</label><input type="text" id="name" name="name" placeholder="Your full name" required></div><div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="your@email.com" required></div></div><div class="form-row"><div class="form-group"><label for="phone">Phone</label><input type="tel" id="phone" name="phone" placeholder="(702) 555-0000"></div><div class="form-group"><label for="service">Service</label><select id="service" name="service" required onchange="this.classList.add('selected')"><option value="" disabled selected>Select a service</option><option value="Wedding Photography">Wedding Photography</option><option value="Couples & Engagements">Couples & Engagements</option><option value="Events & Commercial">Events & Commercial</option><option value="Real Estate">Real Estate & Architecture</option><option value="Street / Editorial">Street / Editorial</option><option value="Podcast Production">Podcast Production</option><option value="Other">Other</option></select></div></div><div class="form-group"><label for="message">Message</label><textarea id="message" name="message" placeholder="Tell me about your project, timeline, and vision..." required></textarea></div><button type="submit" class="form-submit" id="submitBtn">Send Message</button></form><div class="form-success" id="formSuccess"><h4>Message Sent</h4><p>Thanks for reaching out — I'll get back to you within 24 hours.</p></div></div></section>
+<footer><div class="footer-bottom"><p class="footer-copy">© 2026 Manny Photography. Las Vegas, NV.</p><ul class="footer-links"><li><a href="https://www.instagram.com/pairofdicelv/" target="_blank">Instagram</a></li><li><a href="#">LinkedIn</a></li><li><a href="#">Behance</a></li></ul></div></footer>
 <script>
-  // Custom cursor
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx + 'px';
-    cursor.style.top = my + 'px';
-  });
-
-  function animateRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
-    requestAnimationFrame(animateRing);
-  }
-  animateRing();
-
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1 });
-  reveals.forEach(el => observer.observe(el));
-
-  // ─── PORTFOLIO FILTER ───
-  const filterBtns = document.querySelectorAll('.port-filter-btn');
-  const portItems = document.querySelectorAll('.port-item');
-
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const filter = btn.getAttribute('data-filter');
-      portItems.forEach(item => {
-        if (filter === 'all' || item.getAttribute('data-category') === filter) {
-          item.classList.remove('hidden');
-        } else {
-          item.classList.add('hidden');
-        }
-      });
-    });
-  });
-
-  // ─── LIGHTBOX ───
-  const projectData = {
-    'vegas-after-dark': { title: 'Vegas After Dark', category: 'Street Photography', gradient: 'linear-gradient(160deg, #0e0e18 0%, #1a1530 50%, #0a0a12 100%)', count: 8 },
-    'wedding': { title: 'Wedding Photography', category: 'Wedding', images: [
-      'wedding-223a5341.jpg',
-      'wedding-dq3a1613.jpg',
-      'wedding-dq3a1596.jpg',
-      'wedding-dq3a4499.jpg',
-      'wedding-dq3a0513.jpg',
-      'wedding-dq3a4769-enhanced-nr.jpg',
-      'wedding-dq3a4811.jpg',
-      'wedding-dq3a4118.jpg',
-      'wedding-223a4520.jpg',
-      'wedding-223a4620.jpg',
-      'wedding-dq3a9252.jpg',
-      'wedding-dq3a9851.jpg',
-      'wedding-dsc07231.jpg',
-      'wedding-dsc07424.jpg',
-      'wedding-dq3a0099.jpg',
-      'wedding-dq3a0296.jpg',
-      'wedding-4l7a2082.jpg',
-      'wedding-dq3a1569.jpg'
-    ] },
-    'couples': { title: 'Couples & Engagements', category: 'Couples', gradient: 'linear-gradient(160deg, #1a0e14 0%, #2a1520 50%, #120a10 100%)', count: 8 },
-    'events': { title: 'Events & Commercial', category: 'Events', gradient: 'linear-gradient(160deg, #0e1210 0%, #152520 50%, #0a100e 100%)', count: 10 },
-    'realestate': { title: 'Real Estate & Architecture', category: 'Real Estate', images: [
-      'images/realestate-dji-0115.jpg'
-    ] }
-  };
-
-  function openLightbox(projectKey) {
-    const data = projectData[projectKey];
-    if (!data) return;
-    document.getElementById('lightboxTitle').textContent = data.title;
-    document.getElementById('lightboxCategory').textContent = data.category;
-    const gallery = document.getElementById('lightboxGallery');
-    gallery.innerHTML = '';
-    if (data.images) {
-      // Real images
-      data.images.forEach(function(src, index) {
-        const div = document.createElement('div');
-        div.className = 'lightbox-img';
-        div.style.cursor = 'pointer';
-        div.onclick = function() { openViewer(data.images, index); };
-        const img = document.createElement('img');
-        img.src = src;
-        img.loading = 'lazy';
-        img.alt = data.title;
-        img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:2px;';
-        div.appendChild(img);
-        gallery.appendChild(div);
-      });
-    } else {
-      // Placeholder projects
-      for (let i = 0; i < data.count; i++) {
-        const div = document.createElement('div');
-        div.className = 'lightbox-img';
-        div.style.background = data.gradient;
-        div.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Photo ' + (i + 1) + '</span>';
-        gallery.appendChild(div);
-      }
-    }
-    document.getElementById('lightbox').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeLightbox() {
-    document.getElementById('lightbox').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  document.getElementById('lightbox').addEventListener('click', function(e) {
-    if (e.target === this) closeLightbox();
-  });
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      if (document.getElementById('viewer').classList.contains('open')) {
-        closeViewer();
-      } else {
-        closeLightbox();
-      }
-    }
-  });
-
-  // ─── FULL-SCREEN VIEWER ───
-  let viewerImages = [];
-  let viewerIndex = 0;
-  let touchStartX = 0;
-
-  function openViewer(images, index) {
-    viewerImages = images;
-    viewerIndex = index;
-    showViewerImage();
-    document.getElementById('viewer').classList.add('open');
-  }
-
-  function closeViewer() {
-    document.getElementById('viewer').classList.remove('open');
-    viewerImages = [];
-  }
-
-  function viewerNav(dir) {
-    viewerIndex = (viewerIndex + dir + viewerImages.length) % viewerImages.length;
-    showViewerImage();
-  }
-
-  function showViewerImage() {
-    const img = document.getElementById('viewerImg');
-    img.classList.remove('loaded');
-    img.onload = function() { img.classList.add('loaded'); };
-    img.src = viewerImages[viewerIndex];
-    document.getElementById('viewerCounter').textContent = (viewerIndex + 1) + ' / ' + viewerImages.length;
-  }
-
-  document.addEventListener('keydown', function(e) {
-    if (!document.getElementById('viewer').classList.contains('open')) return;
-    if (e.key === 'ArrowRight') { e.preventDefault(); viewerNav(1); }
-    if (e.key === 'ArrowLeft') { e.preventDefault(); viewerNav(-1); }
-  });
-
-  document.getElementById('viewer').addEventListener('click', function(e) {
-    if (e.target === this) closeViewer();
-  });
-
-  document.getElementById('viewer').addEventListener('touchstart', function(e) {
-    touchStartX = e.changedTouches[0].screenX;
-  }, { passive: true });
-
-  document.getElementById('viewer').addEventListener('touchend', function(e) {
-    const diff = touchStartX - e.changedTouches[0].screenX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) viewerNav(1);
-      else viewerNav(-1);
-    }
-  }, { passive: true });
-
-  // ─── CONTACT FORM (Web3Forms) ───
-  const contactForm = document.getElementById('contactForm');
-  const submitBtn = document.getElementById('submitBtn');
-  const formSuccess = document.getElementById('formSuccess');
-
-  contactForm.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Sending...';
-
-    try {
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: new FormData(contactForm)
-      });
-
-      if (response.ok) {
-        contactForm.style.display = 'none';
-        formSuccess.style.display = 'block';
-        contactForm.reset();
-      } else {
-        alert('Something went wrong. Please try again.');
-      }
-    } catch (err) {
-      alert('Network error. Please try again.');
-    }
-
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Send Message';
-  });
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');let mx=0,my=0,rx=0,ry=0;document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});function animateRing(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animateRing)}animateRing();
+const reveals=document.querySelectorAll('.reveal');const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('visible')})},{threshold:.1});reveals.forEach(el=>observer.observe(el));
+const filterBtns=document.querySelectorAll('.port-filter-btn'),portItems=document.querySelectorAll('.port-item');filterBtns.forEach(btn=>{btn.addEventListener('click',()=>{filterBtns.forEach(b=>b.classList.remove('active'));btn.classList.add('active');const f=btn.getAttribute('data-filter');portItems.forEach(item=>{if(f==='all'||item.getAttribute('data-category')===f)item.classList.remove('hidden');else item.classList.add('hidden')})})});
+const projectData={'vegas-after-dark':{title:'Vegas After Dark',category:'Street Photography',gradient:'linear-gradient(160deg,#0e0e18,#1a1530 50%,#0a0a12)',count:8},'wedding':{title:'Wedding Photography',category:'Wedding',images:['wedding-223a5341.jpg','wedding-dq3a1613.jpg','wedding-dq3a1596.jpg','wedding-dq3a4499.jpg','wedding-dq3a0513.jpg','wedding-dq3a4769-enhanced-nr.jpg','wedding-dq3a4811.jpg','wedding-dq3a4118.jpg','wedding-223a4520.jpg','wedding-223a4620.jpg','wedding-dq3a9252.jpg','wedding-dq3a9851.jpg','wedding-dsc07231.jpg','wedding-dsc07424.jpg','wedding-dq3a0099.jpg','wedding-dq3a0296.jpg','wedding-4l7a2082.jpg','wedding-dq3a1569.jpg']},'couples':{title:'Couples & Engagements',category:'Couples',gradient:'linear-gradient(160deg,#1a0e14,#2a1520 50%,#120a10)',count:8},'events':{title:'Events & Commercial',category:'Events',gradient:'linear-gradient(160deg,#0e1210,#152520 50%,#0a100e)',count:10},'realestate':{title:'Real Estate & Architecture',category:'Real Estate',images:['images/realestate-dji-0115.jpg']},'editorial':{title:'Editorial & Body Art',category:'Editorial',images:['images/editorial/editorial-gr3a4618.jpg','images/editorial/editorial-1s0a0735-edit.jpg','images/editorial/editorial-1s0a0807-edit.jpg','images/editorial/editorial-1s0a0829-edit.jpg','images/editorial/editorial-1s0a0840-edit.jpg','images/editorial/editorial-1s0a0904-edit-2.jpg','images/editorial/editorial-1s0a0991-edit.jpg','images/editorial/editorial-1s0a1004-edit.jpg','images/editorial/editorial-4l7a7850-edit.jpg','images/editorial/editorial-4l7a7872.jpg','images/editorial/editorial-gr3a1597.jpg','images/editorial/editorial-ld-export-3.jpg']}};
+function openLightbox(key){const d=projectData[key];if(!d)return;document.getElementById('lightboxTitle').textContent=d.title;document.getElementById('lightboxCategory').textContent=d.category;const g=document.getElementById('lightboxGallery');g.innerHTML='';if(d.images){d.images.forEach(function(src,i){const div=document.createElement('div');div.className='lightbox-img';div.style.cursor='pointer';div.onclick=function(){openViewer(d.images,i)};const img=document.createElement('img');img.src=src;img.loading='lazy';img.alt=d.title;img.style.cssText='width:100%;height:100%;object-fit:cover;border-radius:2px';div.appendChild(img);g.appendChild(div)})}else{for(let i=0;i<d.count;i++){const div=document.createElement('div');div.className='lightbox-img';div.style.background=d.gradient;div.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Photo '+(i+1)+'</span>';g.appendChild(div)}}document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden'}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow=''}
+document.getElementById('lightbox').addEventListener('click',function(e){if(e.target===this)closeLightbox()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){if(document.getElementById('viewer').classList.contains('open'))closeViewer();else closeLightbox()}});
+let viewerImages=[],viewerIndex=0,touchStartX=0;
+function openViewer(images,index){viewerImages=images;viewerIndex=index;showViewerImage();document.getElementById('viewer').classList.add('open')}
+function closeViewer(){document.getElementById('viewer').classList.remove('open');viewerImages=[]}
+function viewerNav(dir){viewerIndex=(viewerIndex+dir+viewerImages.length)%viewerImages.length;showViewerImage()}
+function showViewerImage(){const img=document.getElementById('viewerImg');img.classList.remove('loaded');img.onload=function(){img.classList.add('loaded')};img.src=viewerImages[viewerIndex];document.getElementById('viewerCounter').textContent=(viewerIndex+1)+' / '+viewerImages.length}
+document.addEventListener('keydown',function(e){if(!document.getElementById('viewer').classList.contains('open'))return;if(e.key==='ArrowRight'){e.preventDefault();viewerNav(1)}if(e.key==='ArrowLeft'){e.preventDefault();viewerNav(-1)}});
+document.getElementById('viewer').addEventListener('click',function(e){if(e.target===this)closeViewer()});
+document.getElementById('viewer').addEventListener('touchstart',function(e){touchStartX=e.changedTouches[0].screenX},{passive:true});
+document.getElementById('viewer').addEventListener('touchend',function(e){const diff=touchStartX-e.changedTouches[0].screenX;if(Math.abs(diff)>50){if(diff>0)viewerNav(1);else viewerNav(-1)}},{passive:true});
+const contactForm=document.getElementById('contactForm'),submitBtn=document.getElementById('submitBtn'),formSuccess=document.getElementById('formSuccess');contactForm.addEventListener('submit',async function(e){e.preventDefault();submitBtn.disabled=true;submitBtn.textContent='Sending...';try{const r=await fetch('https://api.web3forms.com/submit',{method:'POST',body:new FormData(contactForm)});if(r.ok){contactForm.style.display='none';formSuccess.style.display='block';contactForm.reset()}else{alert('Something went wrong. Please try again.')}}catch(err){alert('Network error. Please try again.')}submitBtn.disabled=false;submitBtn.textContent='Send Message'});
 </script>
 </body>
 </html>
