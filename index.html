@@ -30,7 +30,6 @@
     cursor: none;
   }
 
-  /* CUSTOM CURSOR */
   .cursor {
     position: fixed;
     width: 10px; height: 10px;
@@ -54,7 +53,6 @@
   }
   body:has(a:hover) .cursor, body:has(button:hover) .cursor { width: 20px; height: 20px; }
 
-  /* NAV */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -87,7 +85,6 @@
   }
   .nav-links a:hover { opacity: 1; }
 
-  /* HERO */
   .hero {
     min-height: 100vh;
     display: grid;
@@ -229,7 +226,6 @@
   .img-ph-2 { background: linear-gradient(135deg, #1f1a15 0%, #252020 100%); }
   .img-ph-3 { background: linear-gradient(135deg, #151518 0%, #1a1820 100%); }
 
-  /* Decorative grain overlay */
   .hero::after {
     content: '';
     position: absolute;
@@ -267,7 +263,6 @@
     writing-mode: vertical-rl;
   }
 
-  /* MARQUEE */
   .marquee-section {
     border-top: 1px solid #1e1e1e;
     border-bottom: 1px solid #1e1e1e;
@@ -293,7 +288,6 @@
     font-size: 1.4rem;
   }
 
-  /* SERVICES */
   .services {
     padding: 8rem 4rem;
     max-width: 1400px;
@@ -400,7 +394,6 @@
     padding: 0.3rem 0.75rem;
   }
 
-  /* PORTFOLIO */
   .portfolio { padding: 8rem 4rem; background: #060606; }
   .portfolio-inner { max-width: 1400px; margin: 0 auto; }
 
@@ -416,6 +409,7 @@
   .port-item:nth-child(3) { grid-column: span 4; aspect-ratio: 3/4; }
   .port-item:nth-child(4) { grid-column: span 4; aspect-ratio: 3/4; }
   .port-item:nth-child(5) { grid-column: span 4; aspect-ratio: 3/4; }
+  .port-item:nth-child(6) { grid-column: span 4; aspect-ratio: 3/4; }
 
   .port-bg { width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; align-items: flex-end; padding: 2rem; position: relative; }
   .pg-street    { background: linear-gradient(160deg, #0e0e18 0%, #1a1530 50%, #0a0a12 100%); }
@@ -435,7 +429,6 @@
   .port-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; color: rgba(255,255,255,0.06); font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; }
   .port-icon { width: 40px; height: 40px; opacity: 0.08; }
 
-  /* Lightbox */
   .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 200; display: none; flex-direction: column; align-items: center; justify-content: center; cursor: none; }
   .lightbox.open { display: flex; }
   .lightbox-close { position: absolute; top: 2rem; right: 2.5rem; background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: none; opacity: 0.5; transition: opacity 0.3s; z-index: 210; font-family: 'DM Sans', sans-serif; letter-spacing: 0.1em; }
@@ -448,7 +441,6 @@
   .lightbox-img:hover { transform: scale(1.02); }
   .lightbox-img svg { width: 28px; height: 28px; opacity: 0.15; }
 
-  /* CONTACT FORM */
   .contact-section { padding: 8rem 4rem; max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
   .contact-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 5vw, 5rem); line-height: 0.95; margin: 1rem 0 2rem; }
   .contact-heading .em { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--accent); }
@@ -457,7 +449,8 @@
   .contact-detail { display: flex; align-items: center; gap: 1rem; }
   .contact-detail-icon { width: 40px; height: 40px; border: 1px solid #1e1e1e; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .contact-detail-icon svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
-  .contact-detail-text { font-size: 0.85rem; color: var(--light-gray); }<button class="port-filter-btn" data-filter="editorial">Editorial</button>  .contact-detail-label { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.15rem; }
+  .contact-detail-text { font-size: 0.85rem; color: var(--light-gray); }
+  .contact-detail-label { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.15rem; }
 
   .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
@@ -476,19 +469,6 @@
   .form-success h4 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--accent); margin-bottom: 0.5rem; }
   .form-success p { font-size: 0.85rem; color: var(--light-gray); }
 
-  /<!-- EDITORIAL GALLERY -->
-<div class="port-item reveal" data-category="editorial" data-project="editorial" onclick="openLightbox('editorial')">
-  <div class="port-bg" style="background: linear-gradient(160deg, #121212 0%, #1e1a2a 50%, #0c0a14 100%);">
-    <img src="images/editorial-gallery/YOUR_COVER_IMAGE.jpg" loading="lazy" alt="Editorial Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
-  </div>
-  <div class="port-overlay">
-    <div class="port-info">
-      <p class="port-category">Editorial</p>
-      <p class="port-title">Editorial & Fashion</p>
-      <p class="port-count">— X photos · Click to view gallery</p>
-    </div>
-  </div>
-</div>* ABOUT */
   .about {
     padding: 8rem 4rem;
     max-width: 1400px;
@@ -499,10 +479,7 @@
     align-items: center;
   }
 
-  .about-visual {
-    position: relative;
-  }
-
+  .about-visual { position: relative; }
   .about-img-main {
     width: 100%;
     aspect-ratio: 3/4;
@@ -517,7 +494,6 @@
     letter-spacing: 0.25em;
     text-transform: uppercase;
   }
-
   .about-img-accent {
     position: absolute;
     width: 55%;
@@ -534,7 +510,6 @@
     letter-spacing: 0.25em;
     text-transform: uppercase;
   }
-
   .about-badge {
     position: absolute;
     top: 2rem;
@@ -548,22 +523,17 @@
     gap: 0.2rem;
     z-index: 2;
   }
-
   .badge-number {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 2.2rem;
     line-height: 1;
   }
-
   .badge-text {
     font-size: 0.55rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     text-align: center;
   }
-
-  .about-text {}
-
   .about-heading {
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(3rem, 5vw, 5.5rem);
@@ -571,14 +541,12 @@
     margin: 1rem 0 2.5rem;
   }
   .about-heading .em { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--accent); }
-
   .about-body {
     font-size: 0.95rem;
     line-height: 1.9;
     color: var(--light-gray);
     margin-bottom: 2rem;
   }
-
   .about-stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -588,14 +556,12 @@
     border-top: 1px solid #1a1a1a;
     border-bottom: 1px solid #1a1a1a;
   }
-
   .stat-num {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 2.8rem;
     color: var(--accent);
     line-height: 1;
   }
-
   .stat-label {
     font-size: 0.7rem;
     letter-spacing: 0.15em;
@@ -604,7 +570,6 @@
     margin-top: 0.4rem;
   }
 
-  /* FOOTER */
   footer { background: var(--mid); padding: 3rem 4rem; border-top: 1px solid #1a1a1a; }
   .footer-bottom { display: flex; justify-content: space-between; align-items: center; }
   .footer-copy { font-size: 0.75rem; color: var(--gray); letter-spacing: 0.1em; }
@@ -612,7 +577,6 @@
   .footer-links a { color: var(--gray); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.3s; }
   .footer-links a:hover { color: var(--accent); }
 
-  /* ANIMATIONS */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
@@ -630,7 +594,6 @@
     50% { opacity: 1; transform: scaleY(1.2); }
   }
 
-  /* REVEAL ON SCROLL */
   .reveal {
     opacity: 0;
     transform: translateY(40px);
@@ -644,7 +607,6 @@
   .reveal-delay-2 { transition-delay: 0.2s; }
   .reveal-delay-3 { transition-delay: 0.3s; }
 
-  /* RESPONSIVE */
   @media (max-width: 900px) {
     nav { padding: 1.5rem 2rem; }
     .hero { grid-template-columns: 1fr; min-height: 100svh; }
@@ -668,11 +630,6 @@
     .section-header { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
   }
 
-  /* ═══════════════════════════════
-     VEGAS NEON GLOW & DICE
-  ═══════════════════════════════ */
-
-  /* Main hero italic title — golden neon breathing glow */
   .hero-title .italic {
     text-shadow:
       0 0 8px rgba(200,169,110,0.6),
@@ -681,48 +638,20 @@
       1px 1px 3px rgba(0,0,0,0.9);
     animation: neonPulse 3s ease-in-out infinite alternate;
   }
-
-  /* Main white title — clean, no glow so text stays readable */
-  .hero-title {
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
-  }
-
-  /* Hero eyebrow gold glow */
-  .hero-eyebrow {
-    text-shadow: 0 0 6px rgba(200,169,110,0.5);
-  }
-
-  /* Section italic accents */
+  .hero-title { text-shadow: 1px 1px 4px rgba(0,0,0,0.8); }
+  .hero-eyebrow { text-shadow: 0 0 6px rgba(200,169,110,0.5); }
   .section-title .em,
   .contact-heading .em,
   .about-heading .em {
-    text-shadow:
-      0 0 8px rgba(200,169,110,0.4),
-      0 0 20px rgba(200,169,110,0.15);
+    text-shadow: 0 0 8px rgba(200,169,110,0.4), 0 0 20px rgba(200,169,110,0.15);
   }
-
-  /* Nav logo glow - subtle */
-  .nav-logo {
-    text-shadow: 0 0 6px rgba(200,169,110,0.3);
-  }
+  .nav-logo { text-shadow: 0 0 6px rgba(200,169,110,0.3); }
 
   @keyframes neonPulse {
-    from {
-      text-shadow:
-        0 0 6px rgba(200,169,110,0.5),
-        0 0 15px rgba(200,169,110,0.25),
-        1px 1px 3px rgba(0,0,0,0.9);
-    }
-    to {
-      text-shadow:
-        0 0 10px rgba(200,169,110,0.75),
-        0 0 25px rgba(200,169,110,0.4),
-        0 0 45px rgba(200,169,110,0.15),
-        1px 1px 3px rgba(0,0,0,0.9);
-    }
+    from { text-shadow: 0 0 6px rgba(200,169,110,0.5), 0 0 15px rgba(200,169,110,0.25), 1px 1px 3px rgba(0,0,0,0.9); }
+    to { text-shadow: 0 0 10px rgba(200,169,110,0.75), 0 0 25px rgba(200,169,110,0.4), 0 0 45px rgba(200,169,110,0.15), 1px 1px 3px rgba(0,0,0,0.9); }
   }
 
-  /* Vegas neon accent strip under nav */
   nav::after {
     content: '';
     position: absolute;
@@ -733,7 +662,6 @@
     animation: fadeIn 1s ease 1.2s forwards;
   }
 
-  /* Floating Vegas Dice */
   .vegas-dice-container {
     position: absolute;
     bottom: 5rem;
@@ -745,7 +673,6 @@
     animation: fadeIn 1s ease 1.8s forwards;
     pointer-events: none;
   }
-
   .die {
     width: 52px;
     height: 52px;
@@ -759,12 +686,7 @@
       3px 3px 8px rgba(0,0,0,0.7);
     animation: diceFloat 4s ease-in-out infinite;
   }
-
-  .die:nth-child(2) {
-    animation-delay: 0.6s;
-    animation-duration: 3.5s;
-  }
-
+  .die:nth-child(2) { animation-delay: 0.6s; animation-duration: 3.5s; }
   .die .pip {
     position: absolute;
     width: 8px;
@@ -773,17 +695,12 @@
     border-radius: 50%;
     transform: translate(-50%, -50%);
   }
-
-  /* Die showing 4 */
   .die-4 .pip:nth-child(1) { top: 28%; left: 28%; }
   .die-4 .pip:nth-child(2) { top: 28%; left: 72%; }
   .die-4 .pip:nth-child(3) { top: 72%; left: 28%; }
   .die-4 .pip:nth-child(4) { top: 72%; left: 72%; }
-
-  /* Die showing 2 */
   .die-2 .pip:nth-child(1) { top: 28%; left: 72%; }
   .die-2 .pip:nth-child(2) { top: 72%; left: 28%; }
-
   .die::after {
     content: '';
     position: absolute;
@@ -795,17 +712,13 @@
 
   @keyframes diceFloat {
     0%, 100% { transform: translateY(0) rotate(-3deg); }
-    50%       { transform: translateY(-12px) rotate(3deg); }
+    50% { transform: translateY(-12px) rotate(3deg); }
   }
-
   @keyframes diceGlow {
     from { box-shadow: 0 0 10px rgba(200,169,110,0.3); }
-    to   { box-shadow: 0 0 30px rgba(200,169,110,0.8), 0 0 60px rgba(200,169,110,0.3); }
+    to { box-shadow: 0 0 30px rgba(200,169,110,0.8), 0 0 60px rgba(200,169,110,0.3); }
   }
 
-  /* ═══════════════════════════════
-     FULL-SCREEN PHOTO VIEWER
-  ═══════════════════════════════ */
   .viewer { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 300; display: none; align-items: center; justify-content: center; cursor: none; }
   .viewer.open { display: flex; }
   .viewer-img { max-width: 90vw; max-height: 85vh; object-fit: contain; opacity: 0; transition: opacity 0.3s ease; user-select: none; -webkit-user-drag: none; }
@@ -823,7 +736,6 @@
     .viewer-arrow.next { right: 0.75rem; }
     .viewer-img { max-width: 95vw; max-height: 80vh; }
   }
-
 </style>
 </head>
 <body>
@@ -831,7 +743,6 @@
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
-<!-- NAV -->
 <nav>
   <a href="#" class="nav-logo">Manny</a>
   <ul class="nav-links">
@@ -842,7 +753,6 @@
   </ul>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-left">
     <p class="hero-eyebrow">Visual Storyteller · Las Vegas</p>
@@ -860,15 +770,9 @@
   <div class="hero-right">
     <div class="hero-img-container">
       <div class="hero-img-grid">
-        <div class="hero-img-block">
-          <div class="img-placeholder img-ph-1">Portrait</div>
-        </div>
-        <div class="hero-img-block">
-          <div class="img-placeholder img-ph-2">Street</div>
-        </div>
-        <div class="hero-img-block">
-          <div class="img-placeholder img-ph-3">Studio</div>
-        </div>
+        <div class="hero-img-block"><div class="img-placeholder img-ph-1">Portrait</div></div>
+        <div class="hero-img-block"><div class="img-placeholder img-ph-2">Street</div></div>
+        <div class="hero-img-block"><div class="img-placeholder img-ph-3">Studio</div></div>
       </div>
     </div>
   </div>
@@ -876,58 +780,31 @@
     <span class="scroll-text">Scroll</span>
     <div class="scroll-line"></div>
   </div>
-
-  <!-- Vegas Floating Dice -->
   <div class="vegas-dice-container">
-    <div class="die die-4">
-      <div class="pip"></div>
-      <div class="pip"></div>
-      <div class="pip"></div>
-      <div class="pip"></div>
-    </div>
-    <div class="die die-2">
-      <div class="pip"></div>
-      <div class="pip"></div>
-    </div>
+    <div class="die die-4"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+    <div class="die die-2"><div class="pip"></div><div class="pip"></div></div>
   </div>
-
 </section>
 
-<!-- MARQUEE -->
 <div class="marquee-section">
   <div class="marquee-track">
-    <span class="marquee-item">Portrait</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Editorial</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Street</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Commercial</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Event</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Fine Art</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Podcast Production</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Portrait</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Editorial</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Street</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Commercial</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Event</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Fine Art</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
-    <span class="marquee-item">Podcast Production</span>
-    <span class="marquee-sep" style="font-size:0.9rem;opacity:0.7;">🎲</span>
+    <span class="marquee-item">Portrait</span><span class="marquee-sep">🎲</span>
+    <span class="marquee-item">Editorial</span><span class="marquee-sep">🎲</span>
+    <span class="marquee-item">Street</span><span class="marquee-sep">🎲</span>
+    <span class="marquee-item">Commercial</span><span class="marquee-sep">🎲</span>
+    <span class="marquee-item">Event</span><span class="marquee-sep">🎲</span>
+    <span class="marquee-item">Fine Art</span><span class="marquee-sep">🎲</span>
+    <span class="marquee-item">Podcast Production</span><span class="marquee-sep">🎲</span>
+    <span class="marquee-item">Portrait</span><span class="marquee-sep">🎲</span>
+    <span class="marquee-item">Editorial</span><span class="marquee-sep">🎲</span>
+    <span class="marquee-item">Street</span><span class="marquee-sep">🎲</span>
+    <span class="marquee-item">Commercial</span><span class="marquee-sep">🎲</span>
+    <span class="marquee-item">Event</span><span class="marquee-sep">🎲</span>
+    <span class="marquee-item">Fine Art</span><span class="marquee-sep">🎲</span>
+    <span class="marquee-item">Podcast Production</span><span class="marquee-sep">🎲</span>
   </div>
 </div>
 
-<!-- SERVICES -->
 <section class="services" id="services">
   <div class="section-header reveal">
     <div>
@@ -936,42 +813,28 @@
     </div>
     <p class="section-desc">From intimate portraits to full podcast production, every engagement is handled with the same obsessive attention to craft.</p>
   </div>
-
   <div class="services-grid">
     <div class="service-card reveal">
       <div class="service-number">01</div>
       <h3 class="service-name">Portrait & Editorial</h3>
       <p class="service-desc">Personal branding, headshots, and editorial work that communicate who you are before you say a word.</p>
-      <div class="service-tags">
-        <span class="tag">Branding</span>
-        <span class="tag">Editorial</span>
-        <span class="tag">Headshots</span>
-      </div>
+      <div class="service-tags"><span class="tag">Branding</span><span class="tag">Editorial</span><span class="tag">Headshots</span></div>
     </div>
     <div class="service-card reveal reveal-delay-1">
       <div class="service-number">02</div>
       <h3 class="service-name">Podcast Production</h3>
       <p class="service-desc">Dual-camera professional setups with broadcast-grade audio. Your show, elevated. Canon R5C + R7 rig available on location.</p>
-      <div class="service-tags">
-        <span class="tag">Video</span>
-        <span class="tag">Audio</span>
-        <span class="tag">Editing</span>
-      </div>
+      <div class="service-tags"><span class="tag">Video</span><span class="tag">Audio</span><span class="tag">Editing</span></div>
     </div>
     <div class="service-card reveal reveal-delay-2">
       <div class="service-number">03</div>
       <h3 class="service-name">Commercial & Events</h3>
       <p class="service-desc">Product photography, brand campaigns, and events coverage that move fast without losing the detail.</p>
-      <div class="service-tags">
-        <span class="tag">Commercial</span>
-        <span class="tag">Events</span>
-        <span class="tag">Product</span>
-      </div>
+      <div class="service-tags"><span class="tag">Commercial</span><span class="tag">Events</span><span class="tag">Product</span></div>
     </div>
   </div>
 </section>
 
-<!-- PORTFOLIO -->
 <section class="portfolio" id="portfolio">
   <div class="portfolio-inner">
     <div class="section-header reveal">
@@ -989,9 +852,11 @@
       <button class="port-filter-btn" data-filter="couples">Couples</button>
       <button class="port-filter-btn" data-filter="events">Events</button>
       <button class="port-filter-btn" data-filter="realestate">Real Estate</button>
+      <button class="port-filter-btn" data-filter="editorial">Editorial</button>
     </div>
 
     <div class="portfolio-grid" id="portfolioGrid">
+      <!-- Street -->
       <div class="port-item reveal" data-category="street" data-project="vegas-after-dark" onclick="openLightbox('vegas-after-dark')">
         <div class="port-bg pg-street">
           <div class="port-placeholder">
@@ -1008,6 +873,7 @@
         </div>
       </div>
 
+      <!-- Wedding -->
       <div class="port-item reveal reveal-delay-1" data-category="wedding" data-project="wedding" onclick="openLightbox('wedding')">
         <div class="port-bg pg-wedding">
           <img src="wedding-dq3a1613.jpg" loading="lazy" alt="Wedding Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
@@ -1021,6 +887,7 @@
         </div>
       </div>
 
+      <!-- Couples -->
       <div class="port-item reveal reveal-delay-1" data-category="couples" data-project="couples" onclick="openLightbox('couples')">
         <div class="port-bg pg-couples">
           <div class="port-placeholder">
@@ -1037,6 +904,7 @@
         </div>
       </div>
 
+      <!-- Events -->
       <div class="port-item reveal reveal-delay-2" data-category="events" data-project="events" onclick="openLightbox('events')">
         <div class="port-bg pg-events">
           <div class="port-placeholder">
@@ -1053,7 +921,7 @@
         </div>
       </div>
 
-      <!-- REAL ESTATE — UPDATED WITH COVER IMAGE -->
+      <!-- Real Estate -->
       <div class="port-item reveal reveal-delay-2" data-category="realestate" data-project="realestate" onclick="openLightbox('realestate')">
         <div class="port-bg pg-realestate">
           <img src="images/realestate-dji-0115.jpg" loading="lazy" alt="Real Estate Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
@@ -1066,11 +934,24 @@
           </div>
         </div>
       </div>
+
+      <!-- Editorial Gallery (NEW) -->
+      <div class="port-item reveal" data-category="editorial" data-project="editorial" onclick="openLightbox('editorial')">
+        <div class="port-bg" style="background: linear-gradient(160deg, #121212 0%, #1e1a2a 50%, #0c0a14 100%);">
+          <img src="editorials/editorials-1e0e0328-edit.jpg" loading="lazy" alt="Editorial Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+        </div>
+        <div class="port-overlay">
+          <div class="port-info">
+            <p class="port-category">Editorial</p>
+            <p class="port-title">Editorial & Fashion</p>
+            <p class="port-count">— 12 photos · Click to view gallery</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
   <div class="lightbox-title">
     <span id="lightboxCategory">Category</span>
@@ -1080,7 +961,6 @@
   <div class="lightbox-gallery" id="lightboxGallery"></div>
 </div>
 
-<!-- FULL-SCREEN VIEWER -->
 <div class="viewer" id="viewer">
   <button class="viewer-close" onclick="closeViewer()">✕ Close</button>
   <button class="viewer-arrow prev" onclick="viewerNav(-1)">‹</button>
@@ -1089,107 +969,49 @@
   <div class="viewer-counter" id="viewerCounter">1 / 18</div>
 </div>
 
-<!-- ABOUT -->
 <section class="about" id="about">
   <div class="about-visual reveal">
-    <div class="about-badge">
-      <span class="badge-number">∞</span>
-      <span class="badge-text">Frames<br>Captured</span>
-    </div>
+    <div class="about-badge"><span class="badge-number">∞</span><span class="badge-text">Frames<br>Captured</span></div>
     <div class="about-img-main"><img src="images/about-main_2.jpg" alt="Manny - Photographer" style="width:100%;height:100%;object-fit:cover;"></div>
     <div class="about-img-accent"><img src="images/about-behind-lens.jpg" alt="Behind the Lens" style="width:100%;height:100%;object-fit:cover;"></div>
   </div>
-
   <div class="about-text">
     <span class="section-label reveal">The Photographer</span>
-    <h2 class="about-heading reveal">
-      Driven by<br>
-      <span class="em">Light</span> &<br>
-      Intention
-    </h2>
+    <h2 class="about-heading reveal">Driven by<br><span class="em">Light</span> &<br>Intention</h2>
     <p class="about-body reveal">Self-taught and technically obsessed, I approach every shoot the same way — with curiosity, precision, and a refusal to settle for the obvious frame. Based in Las Vegas, working everywhere.</p>
     <p class="about-body reveal">Photography isn't just a profession — it's the lens through which I understand the world. Whether I'm capturing a portrait or producing a full podcast episode, the mission is the same: make it undeniable.</p>
-
     <div class="about-stats reveal">
-      <div>
-        <div class="stat-num">10+</div>
-        <div class="stat-label">Years Shooting</div>
-      </div>
-      <div>
-        <div class="stat-num">3</div>
-        <div class="stat-label">Genres Mastered</div>
-      </div>
-      <div>
-        <div class="stat-num">LV</div>
-        <div class="stat-label">Based In</div>
-      </div>
+      <div><div class="stat-num">10+</div><div class="stat-label">Years Shooting</div></div>
+      <div><div class="stat-num">3</div><div class="stat-label">Genres Mastered</div></div>
+      <div><div class="stat-num">LV</div><div class="stat-label">Based In</div></div>
     </div>
-
     <a href="#contact" class="btn-primary reveal">Work With Me</a>
   </div>
 </section>
 
-<!-- CONTACT -->
 <section class="contact-section" id="contact">
   <div class="contact-left reveal">
     <span class="section-label">Get In Touch</span>
     <h2 class="contact-heading">Let's <span class="em">Create</span><br>Together</h2>
     <p class="contact-body">Whether it's a wedding, engagement shoot, event coverage, or real estate walkthrough — every project starts with a conversation.</p>
-
     <div class="contact-details">
-      <div class="contact-detail">
-        <div class="contact-detail-icon">
-          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        </div>
-        <div>
-          <div class="contact-detail-label">Based In</div>
-          <div class="contact-detail-text">Las Vegas, Nevada</div>
-        </div>
-      </div>
-      <div class="contact-detail">
-        <div class="contact-detail-icon">
-          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        </div>
-        <div>
-          <div class="contact-detail-label">Email</div>
-          <div class="contact-detail-text">pairofdicelv@gmail.com</div>
-        </div>
-      </div>
-      <div class="contact-detail">
-        <div class="contact-detail-icon">
-          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-        </div>
-        <div>
-          <div class="contact-detail-label">Instagram</div>
-          <div class="contact-detail-text"><a href="https://www.instagram.com/pairofdicelv/" target="_blank" style="color: var(--light-gray); text-decoration: none; transition: color 0.3s;">@pairofdicelv</a></div>
-        </div>
-      </div>
+      <div class="contact-detail"><div class="contact-detail-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div class="contact-detail-label">Based In</div><div class="contact-detail-text">Las Vegas, Nevada</div></div></div>
+      <div class="contact-detail"><div class="contact-detail-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><div class="contact-detail-label">Email</div><div class="contact-detail-text">pairofdicelv@gmail.com</div></div></div>
+      <div class="contact-detail"><div class="contact-detail-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div><div><div class="contact-detail-label">Instagram</div><div class="contact-detail-text"><a href="https://www.instagram.com/pairofdicelv/" target="_blank" style="color: var(--light-gray); text-decoration: none; transition: color 0.3s;">@pairofdicelv</a></div></div></div>
     </div>
   </div>
-
   <div class="contact-right reveal reveal-delay-1">
     <form class="contact-form" id="contactForm" action="https://api.web3forms.com/submit" method="POST">
       <input type="hidden" name="access_key" value="f611101c-9a41-4732-9657-9f3692fa8bab">
       <input type="hidden" name="subject" value="New Lead from Portfolio Website">
       <input type="hidden" name="from_name" value="Manny Photography Website">
       <input type="checkbox" name="botcheck" style="display: none;">
-
       <div class="form-row">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" placeholder="Your full name" required>
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" placeholder="your@email.com" required>
-        </div>
+        <div class="form-group"><label for="name">Name</label><input type="text" id="name" name="name" placeholder="Your full name" required></div>
+        <div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="your@email.com" required></div>
       </div>
-
       <div class="form-row">
-        <div class="form-group">
-          <label for="phone">Phone</label>
-          <input type="tel" id="phone" name="phone" placeholder="(702) 555-0000">
-        </div>
+        <div class="form-group"><label for="phone">Phone</label><input type="tel" id="phone" name="phone" placeholder="(702) 555-0000"></div>
         <div class="form-group">
           <label for="service">Service</label>
           <select id="service" name="service" required onchange="this.classList.add('selected')">
@@ -1204,23 +1026,13 @@
           </select>
         </div>
       </div>
-
-      <div class="form-group">
-        <label for="message">Message</label>
-        <textarea id="message" name="message" placeholder="Tell me about your project, timeline, and vision..." required></textarea>
-      </div>
-
+      <div class="form-group"><label for="message">Message</label><textarea id="message" name="message" placeholder="Tell me about your project, timeline, and vision..." required></textarea></div>
       <button type="submit" class="form-submit" id="submitBtn">Send Message</button>
     </form>
-
-    <div class="form-success" id="formSuccess">
-      <h4>Message Sent</h4>
-      <p>Thanks for reaching out — I'll get back to you within 24 hours.</p>
-    </div>
+    <div class="form-success" id="formSuccess"><h4>Message Sent</h4><p>Thanks for reaching out — I'll get back to you within 24 hours.</p></div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-bottom">
     <p class="footer-copy">© 2026 Manny Photography. Las Vegas, NV.</p>
@@ -1233,229 +1045,217 @@
 </footer>
 
 <script>
-  // Custom cursor
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx + 'px';
-    cursor.style.top = my + 'px';
-  'editorial': {
-  title: 'Editorial & Fashion',
-  category: 'Editorial',
-  images: [
-    'images/editorial-gallery/filename1.jpg',
-    'images/editorial-gallery/filename2.jpg',
-    'images/editorial-gallery/filename3.jpg'});
-
-  function animateRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
-    requestAnimationFrame(animateRing);
-  }
-  animateRing();
-
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
+  (function() {
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
     });
-  }, { threshold: 0.1 });
-  reveals.forEach(el => observer.observe(el));
+    function animateRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
 
-  // ─── PORTFOLIO FILTER ───
-  const filterBtns = document.querySelectorAll('.port-filter-btn');
-  const portItems = document.querySelectorAll('.port-item');
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
 
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const filter = btn.getAttribute('data-filter');
-      portItems.forEach(item => {
-        if (filter === 'all' || item.getAttribute('data-category') === filter) {
-          item.classList.remove('hidden');
-        } else {
-          item.classList.add('hidden');
+    // Portfolio filter
+    const filterBtns = document.querySelectorAll('.port-filter-btn');
+    const portItems = document.querySelectorAll('.port-item');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.getAttribute('data-filter');
+        portItems.forEach(item => {
+          if (filter === 'all' || item.getAttribute('data-category') === filter) {
+            item.classList.remove('hidden');
+          } else {
+            item.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // Lightbox data
+    const projectData = {
+      'vegas-after-dark': { title: 'Vegas After Dark', category: 'Street Photography', gradient: 'linear-gradient(160deg, #0e0e18 0%, #1a1530 50%, #0a0a12 100%)', count: 8 },
+      'wedding': { title: 'Wedding Photography', category: 'Wedding', images: [
+        'wedding-223a5341.jpg','wedding-dq3a1613.jpg','wedding-dq3a1596.jpg','wedding-dq3a4499.jpg','wedding-dq3a0513.jpg',
+        'wedding-dq3a4769-enhanced-nr.jpg','wedding-dq3a4811.jpg','wedding-dq3a4118.jpg','wedding-223a4520.jpg','wedding-223a4620.jpg',
+        'wedding-dq3a9252.jpg','wedding-dq3a9851.jpg','wedding-dsc07231.jpg','wedding-dsc07424.jpg','wedding-dq3a0099.jpg',
+        'wedding-dq3a0296.jpg','wedding-4l7a2082.jpg','wedding-dq3a1569.jpg'
+      ] },
+      'couples': { title: 'Couples & Engagements', category: 'Couples', gradient: 'linear-gradient(160deg, #1a0e14 0%, #2a1520 50%, #120a10 100%)', count: 8 },
+      'events': { title: 'Events & Commercial', category: 'Events', gradient: 'linear-gradient(160deg, #0e1210 0%, #152520 50%, #0a100e 100%)', count: 10 },
+      'realestate': { title: 'Real Estate & Architecture', category: 'Real Estate', images: ['images/realestate-dji-0115.jpg'] },
+      'editorial': {
+        title: 'Editorial & Fashion',
+        category: 'Editorial',
+        images: [
+          'editorials/editorial-1e0e0735-edit.jpg',
+          'editorials/editorial-1e0e0907-edit.jpg',
+          'editorials/editorials-1e0e0328-edit.jpg',
+          'editorials/editorials-1e00b040-edit.jpg',
+          'editorials/editorials-t6e0004-edits-2.jpg',
+          'editorials/editorials-t6a0001-edits.jpg',
+          'editorials/editorials-t6o1004-edits.jpg',
+          'editorials/editorials-47b7850-edits.jpg',
+          'editorials/editorials-d7b7872.jpg',
+          'editorials/editorials-g3a1507.jpg',
+          'editorials/editorials-g2a4818.jpg',
+          'editorials/editorials-td-export-3.jpg'
+        ]
+      }
+    };
+
+    window.openLightbox = function(projectKey) {
+      const data = projectData[projectKey];
+      if (!data) return;
+      document.getElementById('lightboxTitle').textContent = data.title;
+      document.getElementById('lightboxCategory').textContent = data.category;
+      const gallery = document.getElementById('lightboxGallery');
+      gallery.innerHTML = '';
+      if (data.images) {
+        data.images.forEach(function(src, index) {
+          const div = document.createElement('div');
+          div.className = 'lightbox-img';
+          div.style.cursor = 'pointer';
+          div.onclick = function() { window.openViewer(data.images, index); };
+          const img = document.createElement('img');
+          img.src = src;
+          img.loading = 'lazy';
+          img.alt = data.title;
+          img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:2px;';
+          div.appendChild(img);
+          gallery.appendChild(div);
+        });
+      } else {
+        for (let i = 0; i < data.count; i++) {
+          const div = document.createElement('div');
+          div.className = 'lightbox-img';
+          div.style.background = data.gradient;
+          div.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Photo ' + (i + 1) + '</span>';
+          gallery.appendChild(div);
         }
-      });
+      }
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeLightbox = function() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+      if (e.target === this) closeLightbox();
     });
-  });
 
-  // ─── LIGHTBOX ───
-  const projectData = {
-    'vegas-after-dark': { title: 'Vegas After Dark', category: 'Street Photography', gradient: 'linear-gradient(160deg, #0e0e18 0%, #1a1530 50%, #0a0a12 100%)', count: 8 },
-    'wedding': { title: 'Wedding Photography', category: 'Wedding', images: [
-      'wedding-223a5341.jpg',
-      'wedding-dq3a1613.jpg',
-      'wedding-dq3a1596.jpg',
-      'wedding-dq3a4499.jpg',
-      'wedding-dq3a0513.jpg',
-      'wedding-dq3a4769-enhanced-nr.jpg',
-      'wedding-dq3a4811.jpg',
-      'wedding-dq3a4118.jpg',
-      'wedding-223a4520.jpg',
-      'wedding-223a4620.jpg',
-      'wedding-dq3a9252.jpg',
-      'wedding-dq3a9851.jpg',
-      'wedding-dsc07231.jpg',
-      'wedding-dsc07424.jpg',
-      'wedding-dq3a0099.jpg',
-      'wedding-dq3a0296.jpg',
-      'wedding-4l7a2082.jpg',
-      'wedding-dq3a1569.jpg'
-    ] },
-    'couples': { title: 'Couples & Engagements', category: 'Couples', gradient: 'linear-gradient(160deg, #1a0e14 0%, #2a1520 50%, #120a10 100%)', count: 8 },
-    'events': { title: 'Events & Commercial', category: 'Events', gradient: 'linear-gradient(160deg, #0e1210 0%, #152520 50%, #0a100e 100%)', count: 10 },
-    'realestate': { title: 'Real Estate & Architecture', category: 'Real Estate', images: [
-      'images/realestate-dji-0115.jpg'
-    ] }
-  };
-
-  function openLightbox(projectKey) {
-    const data = projectData[projectKey];
-    if (!data) return;
-    document.getElementById('lightboxTitle').textContent = data.title;
-    document.getElementById('lightboxCategory').textContent = data.category;
-    const gallery = document.getElementById('lightboxGallery');
-    gallery.innerHTML = '';
-    if (data.images) {
-      // Real images
-      data.images.forEach(function(src, index) {
-        const div = document.createElement('div');
-        div.className = 'lightbox-img';
-        div.style.cursor = 'pointer';
-        div.onclick = function() { openViewer(data.images, index); };
-        const img = document.createElement('img');
-        img.src = src;
-        img.loading = 'lazy';
-        img.alt = data.title;
-        img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:2px;';
-        div.appendChild(img);
-        gallery.appendChild(div);
-      });
-    } else {
-      // Placeholder projects
-      for (let i = 0; i < data.count; i++) {
-        const div = document.createElement('div');
-        div.className = 'lightbox-img';
-        div.style.background = data.gradient;
-        div.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Photo ' + (i + 1) + '</span>';
-        gallery.appendChild(div);
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        if (document.getElementById('viewer').classList.contains('open')) {
+          closeViewer();
+        } else {
+          closeLightbox();
+        }
       }
+    });
+
+    // Fullscreen viewer
+    let viewerImages = [];
+    let viewerIndex = 0;
+    let touchStartX = 0;
+
+    window.openViewer = function(images, index) {
+      viewerImages = images;
+      viewerIndex = index;
+      showViewerImage();
+      document.getElementById('viewer').classList.add('open');
+    };
+
+    window.closeViewer = function() {
+      document.getElementById('viewer').classList.remove('open');
+      viewerImages = [];
+    };
+
+    window.viewerNav = function(dir) {
+      viewerIndex = (viewerIndex + dir + viewerImages.length) % viewerImages.length;
+      showViewerImage();
+    };
+
+    function showViewerImage() {
+      const img = document.getElementById('viewerImg');
+      img.classList.remove('loaded');
+      img.onload = function() { img.classList.add('loaded'); };
+      img.src = viewerImages[viewerIndex];
+      document.getElementById('viewerCounter').textContent = (viewerIndex + 1) + ' / ' + viewerImages.length;
     }
-    document.getElementById('lightbox').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
 
-  function closeLightbox() {
-    document.getElementById('lightbox').classList.remove('open');
-    document.body.style.overflow = '';
-  }
+    document.addEventListener('keydown', function(e) {
+      if (!document.getElementById('viewer').classList.contains('open')) return;
+      if (e.key === 'ArrowRight') { e.preventDefault(); viewerNav(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); viewerNav(-1); }
+    });
 
-  document.getElementById('lightbox').addEventListener('click', function(e) {
-    if (e.target === this) closeLightbox();
-  });
+    document.getElementById('viewer').addEventListener('click', function(e) {
+      if (e.target === this) closeViewer();
+    });
 
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      if (document.getElementById('viewer').classList.contains('open')) {
-        closeViewer();
-      } else {
-        closeLightbox();
+    document.getElementById('viewer').addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    document.getElementById('viewer').addEventListener('touchend', function(e) {
+      const diff = touchStartX - e.changedTouches[0].screenX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) viewerNav(1);
+        else viewerNav(-1);
       }
-    }
-  });
+    }, { passive: true });
 
-  // ─── FULL-SCREEN VIEWER ───
-  let viewerImages = [];
-  let viewerIndex = 0;
-  let touchStartX = 0;
+    // Contact form
+    const contactForm = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const formSuccess = document.getElementById('formSuccess');
 
-  function openViewer(images, index) {
-    viewerImages = images;
-    viewerIndex = index;
-    showViewerImage();
-    document.getElementById('viewer').classList.add('open');
-  }
-
-  function closeViewer() {
-    document.getElementById('viewer').classList.remove('open');
-    viewerImages = [];
-  }
-
-  function viewerNav(dir) {
-    viewerIndex = (viewerIndex + dir + viewerImages.length) % viewerImages.length;
-    showViewerImage();
-  }
-
-  function showViewerImage() {
-    const img = document.getElementById('viewerImg');
-    img.classList.remove('loaded');
-    img.onload = function() { img.classList.add('loaded'); };
-    img.src = viewerImages[viewerIndex];
-    document.getElementById('viewerCounter').textContent = (viewerIndex + 1) + ' / ' + viewerImages.length;
-  }
-
-  document.addEventListener('keydown', function(e) {
-    if (!document.getElementById('viewer').classList.contains('open')) return;
-    if (e.key === 'ArrowRight') { e.preventDefault(); viewerNav(1); }
-    if (e.key === 'ArrowLeft') { e.preventDefault(); viewerNav(-1); }
-  });
-
-  document.getElementById('viewer').addEventListener('click', function(e) {
-    if (e.target === this) closeViewer();
-  });
-
-  document.getElementById('viewer').addEventListener('touchstart', function(e) {
-    touchStartX = e.changedTouches[0].screenX;
-  }, { passive: true });
-
-  document.getElementById('viewer').addEventListener('touchend', function(e) {
-    const diff = touchStartX - e.changedTouches[0].screenX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) viewerNav(1);
-      else viewerNav(-1);
-    }
-  }, { passive: true });
-
-  // ─── CONTACT FORM (Web3Forms) ───
-  const contactForm = document.getElementById('contactForm');
-  const submitBtn = document.getElementById('submitBtn');
-  const formSuccess = document.getElementById('formSuccess');
-
-  contactForm.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Sending...';
-
-    try {
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: new FormData(contactForm)
-      });
-
-      if (response.ok) {
-        contactForm.style.display = 'none';
-        formSuccess.style.display = 'block';
-        contactForm.reset();
-      } else {
-        alert('Something went wrong. Please try again.');
+    contactForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: new FormData(contactForm)
+        });
+        if (response.ok) {
+          contactForm.style.display = 'none';
+          formSuccess.style.display = 'block';
+          contactForm.reset();
+        } else {
+          alert('Something went wrong. Please try again.');
+        }
+      } catch (err) {
+        alert('Network error. Please try again.');
       }
-    } catch (err) {
-      alert('Network error. Please try again.');
-    }
-
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Send Message';
-  });
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send Message';
+    });
+  })();
 </script>
 </body>
 </html>
