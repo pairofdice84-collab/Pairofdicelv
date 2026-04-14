@@ -30,25 +30,24 @@
     cursor: none;
   }
 
+  /* ── DIAMOND CURSOR ── */
   .cursor {
     position: fixed;
-    width: 10px; height: 10px;
+    width: 12px; height: 12px;
     background: var(--accent);
-    border-radius: 50%;
     pointer-events: none;
     z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+    transform: translate(-50%, -50%) rotate(45deg);
+    transition: width 0.3s ease, height 0.3s ease, background 0.3s ease;
     mix-blend-mode: difference;
   }
   .cursor-ring {
     position: fixed;
-    width: 40px; height: 40px;
+    width: 36px; height: 36px;
     border: 1px solid rgba(200,169,110,0.5);
-    border-radius: 50%;
     pointer-events: none;
     z-index: 9998;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) rotate(45deg);
     transition: all 0.15s ease;
   }
   body:has(a:hover) .cursor, body:has(button:hover) .cursor { width: 20px; height: 20px; }
@@ -212,13 +211,27 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.8s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
+    position: relative;
+    overflow: hidden;
+  }
+  .img-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .img-placeholder .img-label {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.6);
+    z-index: 2;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
   }
   .hero-img-block:hover .img-placeholder { transform: scale(1.05); }
 
@@ -284,8 +297,19 @@
     flex-shrink: 0;
   }
   .marquee-sep {
-    color: #333;
-    font-size: 1.4rem;
+    color: var(--accent);
+    font-size: 1rem;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+  }
+  .marquee-diamond {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    transform: rotate(45deg);
+    display: inline-block;
+    opacity: 0.6;
   }
 
   .services {
@@ -437,7 +461,7 @@
   .lightbox-title h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--white); }
   .lightbox-title span { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); }
   .lightbox-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 4px; width: 90%; max-width: 1200px; max-height: 75vh; overflow-y: auto; padding: 1rem 0; scrollbar-width: thin; scrollbar-color: #333 transparent; }
-  .lightbox-img { aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.5rem; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.1); transition: transform 0.3s ease; }
+  .lightbox-img { aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.5rem; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.1); transition: transform 0.3s ease; overflow: hidden; }
   .lightbox-img:hover { transform: scale(1.02); }
   .lightbox-img svg { width: 28px; height: 28px; opacity: 0.15; }
 
@@ -509,6 +533,7 @@
     font-size: 0.6rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
+    overflow: hidden;
   }
   .about-badge {
     position: absolute;
@@ -628,6 +653,7 @@
     footer { padding: 3rem 2rem 2rem; }
     .footer-bottom { flex-direction: column; gap: 1.5rem; align-items: flex-start; }
     .section-header { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+    .vegas-dice-container { bottom: 3rem; right: 2rem; }
   }
 
   .hero-title .italic {
@@ -656,6 +682,7 @@
     animation: fadeIn 1s ease 1.2s forwards;
   }
 
+  /* ── FLOATING DIAMONDS (replaces dice) ── */
   .vegas-dice-container {
     position: absolute;
     bottom: 5rem;
@@ -754,9 +781,24 @@
   <div class="hero-right">
     <div class="hero-img-container">
       <div class="hero-img-grid">
-        <div class="hero-img-block"><div class="img-placeholder img-ph-1">Portrait</div></div>
-        <div class="hero-img-block"><div class="img-placeholder img-ph-2">Street</div></div>
-        <div class="hero-img-block"><div class="img-placeholder img-ph-3">Studio</div></div>
+        <div class="hero-img-block">
+          <div class="img-placeholder img-ph-1">
+            <img src="images/hero-portrait.jpg" alt="Portrait Photography" loading="eager">
+            <span class="img-label">Portrait</span>
+          </div>
+        </div>
+        <div class="hero-img-block">
+          <div class="img-placeholder img-ph-2">
+            <img src="images/hero-street.jpg" alt="Street Photography" loading="eager">
+            <span class="img-label">Street</span>
+          </div>
+        </div>
+        <div class="hero-img-block">
+          <div class="img-placeholder img-ph-3">
+            <img src="images/hero-studio.jpg" alt="Studio Photography" loading="eager">
+            <span class="img-label">Studio</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -764,6 +806,7 @@
     <span class="scroll-text">Scroll</span>
     <div class="scroll-line"></div>
   </div>
+  <!-- Floating Dice -->
   <div class="vegas-dice-container">
     <div class="die die-4"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
     <div class="die die-2"><div class="pip"></div><div class="pip"></div></div>
@@ -772,20 +815,20 @@
 
 <div class="marquee-section">
   <div class="marquee-track">
-    <span class="marquee-item">Portrait</span><span class="marquee-sep">🎲</span>
-    <span class="marquee-item">Editorial</span><span class="marquee-sep">🎲</span>
-    <span class="marquee-item">Street</span><span class="marquee-sep">🎲</span>
-    <span class="marquee-item">Commercial</span><span class="marquee-sep">🎲</span>
-    <span class="marquee-item">Event</span><span class="marquee-sep">🎲</span>
-    <span class="marquee-item">Fine Art</span><span class="marquee-sep">🎲</span>
-    <span class="marquee-item">Podcast Production</span><span class="marquee-sep">🎲</span>
-    <span class="marquee-item">Portrait</span><span class="marquee-sep">🎲</span>
-    <span class="marquee-item">Editorial</span><span class="marquee-sep">🎲</span>
-    <span class="marquee-item">Street</span><span class="marquee-sep">🎲</span>
-    <span class="marquee-item">Commercial</span><span class="marquee-sep">🎲</span>
-    <span class="marquee-item">Event</span><span class="marquee-sep">🎲</span>
-    <span class="marquee-item">Fine Art</span><span class="marquee-sep">🎲</span>
-    <span class="marquee-item">Podcast Production</span><span class="marquee-sep">🎲</span>
+    <span class="marquee-item">Portrait</span><span class="marquee-sep"><span class="marquee-diamond"></span></span>
+    <span class="marquee-item">Editorial</span><span class="marquee-sep"><span class="marquee-diamond"></span></span>
+    <span class="marquee-item">Street</span><span class="marquee-sep"><span class="marquee-diamond"></span></span>
+    <span class="marquee-item">Commercial</span><span class="marquee-sep"><span class="marquee-diamond"></span></span>
+    <span class="marquee-item">Event</span><span class="marquee-sep"><span class="marquee-diamond"></span></span>
+    <span class="marquee-item">Fine Art</span><span class="marquee-sep"><span class="marquee-diamond"></span></span>
+    <span class="marquee-item">Podcast Production</span><span class="marquee-sep"><span class="marquee-diamond"></span></span>
+    <span class="marquee-item">Portrait</span><span class="marquee-sep"><span class="marquee-diamond"></span></span>
+    <span class="marquee-item">Editorial</span><span class="marquee-sep"><span class="marquee-diamond"></span></span>
+    <span class="marquee-item">Street</span><span class="marquee-sep"><span class="marquee-diamond"></span></span>
+    <span class="marquee-item">Commercial</span><span class="marquee-sep"><span class="marquee-diamond"></span></span>
+    <span class="marquee-item">Event</span><span class="marquee-sep"><span class="marquee-diamond"></span></span>
+    <span class="marquee-item">Fine Art</span><span class="marquee-sep"><span class="marquee-diamond"></span></span>
+    <span class="marquee-item">Podcast Production</span><span class="marquee-sep"><span class="marquee-diamond"></span></span>
   </div>
 </div>
 
