@@ -632,11 +632,52 @@
   .reveal-delay-2 { transition-delay: 0.2s; }
   .reveal-delay-3 { transition-delay: 0.3s; }
 
+  /* ── MOBILE HERO IMAGE STRIP ── */
+  .hero-mobile-strip {
+    display: none;
+  }
+
   @media (max-width: 900px) {
     nav { padding: 1.5rem 2rem; }
-    .hero { grid-template-columns: 1fr; min-height: 100svh; }
+    .hero { grid-template-columns: 1fr; min-height: auto; }
     .hero-right { display: none; }
-    .hero-left { padding: 8rem 2rem 6rem; }
+    .hero-left { padding: 8rem 2rem 3rem; }
+    .hero-mobile-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 3px;
+      margin-top: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 1s forwards;
+    }
+    .hero-mobile-img {
+      position: relative;
+      aspect-ratio: 3/4;
+      overflow: hidden;
+    }
+    .hero-mobile-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hero-mobile-label {
+      position: absolute;
+      bottom: 0.6rem;
+      left: 0.6rem;
+      font-size: 0.5rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+      z-index: 2;
+    }
+    .hero-mobile-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%);
+      pointer-events: none;
+    }
     .services { padding: 5rem 2rem; }
     .services-grid { grid-template-columns: 1fr; }
     .portfolio { padding: 5rem 2rem; }
@@ -776,6 +817,21 @@
     <div class="hero-cta">
       <a href="#portfolio" class="btn-primary">View Work</a>
       <a href="#contact" class="btn-ghost">Book a Session →</a>
+    </div>
+    <!-- Mobile-only hero image strip -->
+    <div class="hero-mobile-strip">
+      <div class="hero-mobile-img">
+        <img src="images/1S0A1004-Edit.jpg" alt="Portrait Photography" loading="eager">
+        <span class="hero-mobile-label">Portrait</span>
+      </div>
+      <div class="hero-mobile-img">
+        <img src="images/F7DEE688-1DF6-4A44-B5DB-2EFA2F02FC7D-2.jpg" alt="Street Photography" loading="eager">
+        <span class="hero-mobile-label">Street</span>
+      </div>
+      <div class="hero-mobile-img">
+        <img src="images/IMG_8841.JPG" alt="Studio Photography" loading="eager">
+        <span class="hero-mobile-label">Studio</span>
+      </div>
     </div>
   </div>
   <div class="hero-right">
