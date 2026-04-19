@@ -991,16 +991,13 @@
       <!-- Street -->
       <div class="port-item reveal" data-category="street" data-project="vegas-after-dark" onclick="openLightbox('vegas-after-dark')">
         <div class="port-bg pg-street">
-          <div class="port-placeholder">
-            <svg class="port-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            Cover Photo
-          </div>
+          <img src="images/vegas/vegas-allegiant-hero.jpg" loading="lazy" alt="Vegas After Dark" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
         </div>
         <div class="port-overlay">
           <div class="port-info">
             <p class="port-category" data-i18n="port.street.cat">Street Photography</p>
             <p class="port-title" data-i18n="port.street.title">Vegas After Dark</p>
-            <p class="port-count" data-i18n="port.street.count">— Click to view gallery</p>
+            <p class="port-count" data-i18n="port.street.count">— 8 photos · Click to view gallery</p>
           </div>
         </div>
       </div>
@@ -1234,7 +1231,20 @@
     });
 
     const projectData = {
-      'vegas-after-dark': { title: 'Vegas After Dark', category: 'Street Photography', gradient: 'linear-gradient(160deg, #0e0e18 0%, #1a1530 50%, #0a0a12 100%)', count: 8 },
+      'vegas-after-dark': {
+        title: 'Vegas After Dark',
+        category: 'Street Photography',
+        images: [
+          'images/vegas/vegas-allegiant-hero.jpg',
+          'images/vegas/vegas-dji-0061.jpg',
+          'images/vegas/vegas-dji-0079.jpg',
+          'images/vegas/vegas-dji-0011.jpg',
+          'images/vegas/vegas-dsc09222.jpg',
+          'images/vegas/vegas-dsc09457.jpg',
+          'images/vegas/vegas-dsc09383.jpg',
+          'images/vegas/vegas-dtbaby.jpg'
+        ]
+      },
       'wedding': { title: 'Wedding Photography', category: 'Wedding', images: [
         'wedding-223a5341.jpg','wedding-dq3a1613.jpg','wedding-dq3a1596.jpg','wedding-dq3a4499.jpg','wedding-dq3a0513.jpg',
         'wedding-dq3a4769-enhanced-nr.jpg','wedding-dq3a4811.jpg','wedding-dq3a4118.jpg','wedding-223a4520.jpg','wedding-223a4620.jpg',
@@ -1441,7 +1451,7 @@
         'portfolio.filter.editorial': 'Editorial',
         'port.street.cat': 'Street Photography',
         'port.street.title': 'Vegas After Dark',
-        'port.street.count': '— Click to view gallery',
+        'port.street.count': '— 8 photos · Click to view gallery',
         'port.wedding.cat': 'Wedding',
         'port.wedding.title': 'Wedding Photography',
         'port.wedding.count': '— 22 photos · Click to view gallery',
@@ -1541,7 +1551,7 @@
         'portfolio.filter.editorial': 'Editorial',
         'port.street.cat': 'Fotografía Urbana',
         'port.street.title': 'Vegas de Noche',
-        'port.street.count': '— Haz clic para ver la galería',
+        'port.street.count': '— 8 fotos · Haz clic para ver la galería',
         'port.wedding.cat': 'Bodas',
         'port.wedding.title': 'Fotografía de Bodas',
         'port.wedding.count': '— 22 fotos · Haz clic para ver la galería',
