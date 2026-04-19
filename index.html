@@ -84,6 +84,40 @@
   }
   .nav-links a:hover { opacity: 1; }
 
+  /* ── LANGUAGE TOGGLE ── */
+  .lang-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-left: 1px solid rgba(200,169,110,0.2);
+    padding-left: 1.5rem;
+    margin-left: 0.5rem;
+  }
+  .lang-btn {
+    background: transparent;
+    border: none;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    cursor: none;
+    opacity: 0.4;
+    transition: opacity 0.3s, color 0.3s;
+    padding: 0;
+  }
+  .lang-btn:hover { opacity: 0.8; }
+  .lang-btn.active {
+    opacity: 1;
+    color: var(--accent);
+    text-shadow: 0 0 6px rgba(200,169,110,0.5);
+  }
+  .lang-divider {
+    color: var(--gray);
+    font-size: 0.7rem;
+    opacity: 0.5;
+  }
+
   .hero {
     min-height: 100vh;
     display: grid;
@@ -433,7 +467,8 @@
   .port-item:nth-child(3) { grid-column: span 4; aspect-ratio: 3/4; }
   .port-item:nth-child(4) { grid-column: span 4; aspect-ratio: 3/4; }
   .port-item:nth-child(5) { grid-column: span 4; aspect-ratio: 3/4; }
-  .port-item:nth-child(6) { grid-column: span 4; aspect-ratio: 3/4; }
+  .port-item:nth-child(6) { grid-column: span 6; aspect-ratio: 3/2; }
+  .port-item:nth-child(7) { grid-column: span 6; aspect-ratio: 3/2; }
 
   .port-bg { width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; align-items: flex-end; padding: 2rem; position: relative; }
   .pg-street    { background: linear-gradient(160deg, #0e0e18 0%, #1a1530 50%, #0a0a12 100%); }
@@ -441,6 +476,7 @@
   .pg-couples   { background: linear-gradient(160deg, #1a0e14 0%, #2a1520 50%, #120a10 100%); }
   .pg-events    { background: linear-gradient(160deg, #0e1210 0%, #152520 50%, #0a100e 100%); }
   .pg-realestate { background: linear-gradient(160deg, #12100e 0%, #201a10 50%, #0e0c08 100%); }
+  .pg-quinceaneras { background: linear-gradient(160deg, #1a0e1a 0%, #2a1530 50%, #10081a 100%); }
   .port-item:hover .port-bg { transform: scale(1.06); }
 
   .port-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.15) 45%, transparent 100%); opacity: 0; transition: opacity 0.4s; display: flex; flex-direction: column; justify-content: flex-end; padding: 2rem; }
@@ -638,7 +674,13 @@
   }
 
   @media (max-width: 900px) {
-    nav { padding: 1.5rem 2rem; }
+    nav { padding: 1.5rem 1rem; }
+    .nav-logo { font-size: 1.3rem; }
+    .nav-links { gap: 1.2rem; }
+    .nav-links li:not(.lang-toggle):not(:last-of-type) { display: none; }
+    .nav-links a[href="#contact"] { display: none; }
+    .nav-links a[href="#portfolio"] { display: inline; }
+    .lang-toggle { padding-left: 1rem; margin-left: 0; }
     .hero { grid-template-columns: 1fr; min-height: auto; }
     .hero-right { display: none; }
     .hero-left { padding: 8rem 2rem 3rem; }
@@ -802,35 +844,40 @@
 <nav>
   <a href="#" class="nav-logo">Manny</a>
   <ul class="nav-links">
-    <li><a href="#portfolio">Work</a></li>
-    <li><a href="#services">Services</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#portfolio" data-i18n="nav.work">Work</a></li>
+    <li><a href="#services" data-i18n="nav.services">Services</a></li>
+    <li><a href="#about" data-i18n="nav.about">About</a></li>
+    <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+    <li class="lang-toggle">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <span class="lang-divider">|</span>
+      <button class="lang-btn" data-lang="es">ES</button>
+    </li>
   </ul>
 </nav>
 
 <section class="hero">
   <div class="hero-left">
-    <p class="hero-eyebrow">Visual Storyteller · Las Vegas</p>
-    <h1 class="hero-title">Making<br>the <span class="italic">World</span><br>Stand Still</h1>
-    <p class="hero-sub">Photography that stops the scroll, holds the gaze, and lives in the memory. Every frame is a decision.</p>
+    <p class="hero-eyebrow" data-i18n="hero.eyebrow">Visual Storyteller · Las Vegas</p>
+    <h1 class="hero-title" data-i18n-html="hero.title">Making<br>the <span class="italic">World</span><br>Stand Still</h1>
+    <p class="hero-sub" data-i18n="hero.sub">Photography that stops the scroll, holds the gaze, and lives in the memory. Every frame is a decision.</p>
     <div class="hero-cta">
-      <a href="#portfolio" class="btn-primary">View Work</a>
-      <a href="#contact" class="btn-ghost">Book a Session →</a>
+      <a href="#portfolio" class="btn-primary" data-i18n="hero.cta1">View Work</a>
+      <a href="#contact" class="btn-ghost" data-i18n="hero.cta2">Book a Session →</a>
     </div>
     <!-- Mobile-only hero image strip -->
     <div class="hero-mobile-strip">
       <div class="hero-mobile-img">
         <img src="images/1S0A1004-Edit.jpg" alt="Portrait Photography" loading="eager">
-        <span class="hero-mobile-label">Portrait</span>
+        <span class="hero-mobile-label" data-i18n="hero.label.portrait">Portrait</span>
       </div>
       <div class="hero-mobile-img">
         <img src="images/F7DEE688-1DF6-4A44-B5DB-2EFA2F02FC7D-2.jpg" alt="Street Photography" loading="eager">
-        <span class="hero-mobile-label">Street</span>
+        <span class="hero-mobile-label" data-i18n="hero.label.street">Street</span>
       </div>
       <div class="hero-mobile-img">
         <img src="images/IMG_8841.JPG" alt="Studio Photography" loading="eager">
-        <span class="hero-mobile-label">Studio</span>
+        <span class="hero-mobile-label" data-i18n="hero.label.studio">Studio</span>
       </div>
     </div>
   </div>
@@ -840,26 +887,26 @@
         <div class="hero-img-block">
           <div class="img-placeholder img-ph-1">
             <img src="images/1S0A1004-Edit.jpg" alt="Portrait Photography" loading="eager">
-            <span class="img-label">Portrait</span>
+            <span class="img-label" data-i18n="hero.label.portrait">Portrait</span>
           </div>
         </div>
         <div class="hero-img-block">
           <div class="img-placeholder img-ph-2">
             <img src="images/F7DEE688-1DF6-4A44-B5DB-2EFA2F02FC7D-2.jpg" alt="Street Photography" loading="eager">
-            <span class="img-label">Street</span>
+            <span class="img-label" data-i18n="hero.label.street">Street</span>
           </div>
         </div>
         <div class="hero-img-block">
           <div class="img-placeholder img-ph-3">
             <img src="images/IMG_8841.JPG" alt="Studio Photography" loading="eager">
-            <span class="img-label">Studio</span>
+            <span class="img-label" data-i18n="hero.label.studio">Studio</span>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="hero-scroll-indicator">
-    <span class="scroll-text">Scroll</span>
+    <span class="scroll-text" data-i18n="hero.scroll">Scroll</span>
     <div class="scroll-line"></div>
   </div>
   <!-- Floating Dice -->
@@ -891,29 +938,29 @@
 <section class="services" id="services">
   <div class="section-header reveal">
     <div>
-      <span class="section-label">What I Offer</span>
-      <h2 class="section-title">Services that<br><span class="em">Deliver</span></h2>
+      <span class="section-label" data-i18n="services.label">What I Offer</span>
+      <h2 class="section-title" data-i18n-html="services.title">Services that<br><span class="em">Deliver</span></h2>
     </div>
-    <p class="section-desc">From intimate portraits to full podcast production, every engagement is handled with the same obsessive attention to craft.</p>
+    <p class="section-desc" data-i18n="services.desc">From intimate portraits to full podcast production, every engagement is handled with the same obsessive attention to craft.</p>
   </div>
   <div class="services-grid">
     <div class="service-card reveal">
       <div class="service-number">01</div>
-      <h3 class="service-name">Portrait & Editorial</h3>
-      <p class="service-desc">Personal branding, headshots, and editorial work that communicate who you are before you say a word.</p>
-      <div class="service-tags"><span class="tag">Branding</span><span class="tag">Editorial</span><span class="tag">Headshots</span></div>
+      <h3 class="service-name" data-i18n="services.s1.name">Portrait & Editorial</h3>
+      <p class="service-desc" data-i18n="services.s1.desc">Personal branding, headshots, and editorial work that communicate who you are before you say a word.</p>
+      <div class="service-tags"><span class="tag" data-i18n="services.s1.tag1">Branding</span><span class="tag" data-i18n="services.s1.tag2">Editorial</span><span class="tag" data-i18n="services.s1.tag3">Headshots</span></div>
     </div>
     <div class="service-card reveal reveal-delay-1">
       <div class="service-number">02</div>
-      <h3 class="service-name">Podcast Production</h3>
-      <p class="service-desc">Dual-camera professional setups with broadcast-grade audio. Your show, elevated. Canon R5C + R7 rig available on location.</p>
-      <div class="service-tags"><span class="tag">Video</span><span class="tag">Audio</span><span class="tag">Editing</span></div>
+      <h3 class="service-name" data-i18n="services.s2.name">Podcast Production</h3>
+      <p class="service-desc" data-i18n="services.s2.desc">Dual-camera professional setups with broadcast-grade audio. Your show, elevated. Canon R5C + R7 rig available on location.</p>
+      <div class="service-tags"><span class="tag" data-i18n="services.s2.tag1">Video</span><span class="tag" data-i18n="services.s2.tag2">Audio</span><span class="tag" data-i18n="services.s2.tag3">Editing</span></div>
     </div>
     <div class="service-card reveal reveal-delay-2">
       <div class="service-number">03</div>
-      <h3 class="service-name">Commercial & Events</h3>
-      <p class="service-desc">Product photography, brand campaigns, and events coverage that move fast without losing the detail.</p>
-      <div class="service-tags"><span class="tag">Commercial</span><span class="tag">Events</span><span class="tag">Product</span></div>
+      <h3 class="service-name" data-i18n="services.s3.name">Commercial & Events</h3>
+      <p class="service-desc" data-i18n="services.s3.desc">Product photography, brand campaigns, and events coverage that move fast without losing the detail.</p>
+      <div class="service-tags"><span class="tag" data-i18n="services.s3.tag1">Commercial</span><span class="tag" data-i18n="services.s3.tag2">Events</span><span class="tag" data-i18n="services.s3.tag3">Product</span></div>
     </div>
   </div>
 </section>
@@ -922,23 +969,25 @@
   <div class="portfolio-inner">
     <div class="section-header reveal">
       <div>
-        <span class="section-label">Selected Work</span>
-        <h2 class="section-title">The <span class="em">Portfolio</span></h2>
+        <span class="section-label" data-i18n="portfolio.label">Selected Work</span>
+        <h2 class="section-title" data-i18n-html="portfolio.title">The <span class="em">Portfolio</span></h2>
       </div>
-      <p class="section-desc">Projects organized by shoot. Click any project to explore the gallery.</p>
+      <p class="section-desc" data-i18n="portfolio.desc">Projects organized by shoot. Click any project to explore the gallery.</p>
     </div>
 
     <div class="port-filters reveal">
-      <button class="port-filter-btn active" data-filter="all">All Projects</button>
-      <button class="port-filter-btn" data-filter="street">Street</button>
-      <button class="port-filter-btn" data-filter="wedding">Wedding</button>
-      <button class="port-filter-btn" data-filter="couples">Couples</button>
-      <button class="port-filter-btn" data-filter="events">Events</button>
-      <button class="port-filter-btn" data-filter="realestate">Real Estate</button>
-      <button class="port-filter-btn" data-filter="editorial">Editorial</button>
+      <button class="port-filter-btn active" data-filter="all" data-i18n="portfolio.filter.all">All Projects</button>
+      <button class="port-filter-btn" data-filter="street" data-i18n="portfolio.filter.street">Street</button>
+      <button class="port-filter-btn" data-filter="wedding" data-i18n="portfolio.filter.wedding">Wedding</button>
+      <button class="port-filter-btn" data-filter="quinceaneras" data-i18n="portfolio.filter.quinceaneras">Quinceañeras</button>
+      <button class="port-filter-btn" data-filter="couples" data-i18n="portfolio.filter.couples">Couples</button>
+      <button class="port-filter-btn" data-filter="events" data-i18n="portfolio.filter.events">Events</button>
+      <button class="port-filter-btn" data-filter="realestate" data-i18n="portfolio.filter.realestate">Real Estate</button>
+      <button class="port-filter-btn" data-filter="editorial" data-i18n="portfolio.filter.editorial">Editorial</button>
     </div>
 
     <div class="portfolio-grid" id="portfolioGrid">
+      <!-- Street -->
       <!-- Street -->
       <div class="port-item reveal" data-category="street" data-project="vegas-after-dark" onclick="openLightbox('vegas-after-dark')">
         <div class="port-bg pg-street">
@@ -949,9 +998,9 @@
         </div>
         <div class="port-overlay">
           <div class="port-info">
-            <p class="port-category">Street Photography</p>
-            <p class="port-title">Vegas After Dark</p>
-            <p class="port-count">— Click to view gallery</p>
+            <p class="port-category" data-i18n="port.street.cat">Street Photography</p>
+            <p class="port-title" data-i18n="port.street.title">Vegas After Dark</p>
+            <p class="port-count" data-i18n="port.street.count">— Click to view gallery</p>
           </div>
         </div>
       </div>
@@ -963,15 +1012,29 @@
         </div>
         <div class="port-overlay">
           <div class="port-info">
-            <p class="port-category">Wedding</p>
-            <p class="port-title">Wedding Photography</p>
-            <p class="port-count">— 22 photos · Click to view gallery</p>
+            <p class="port-category" data-i18n="port.wedding.cat">Wedding</p>
+            <p class="port-title" data-i18n="port.wedding.title">Wedding Photography</p>
+            <p class="port-count" data-i18n="port.wedding.count">— 22 photos · Click to view gallery</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quinceañeras -->
+      <div class="port-item reveal reveal-delay-2" data-category="quinceaneras" data-project="quinceaneras" onclick="openLightbox('quinceaneras')">
+        <div class="port-bg pg-quinceaneras">
+          <img src="images/quinceaneras/1S0A1115.JPG" loading="lazy" alt="Quinceañera Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+        </div>
+        <div class="port-overlay">
+          <div class="port-info">
+            <p class="port-category" data-i18n="port.quince.cat">Quinceañeras</p>
+            <p class="port-title" data-i18n="port.quince.title">Mis XV Años</p>
+            <p class="port-count" data-i18n="port.quince.count">— 19 photos · Click to view gallery</p>
           </div>
         </div>
       </div>
 
       <!-- Couples -->
-      <div class="port-item reveal reveal-delay-1" data-category="couples" data-project="couples" onclick="openLightbox('couples')">
+      <div class="port-item reveal" data-category="couples" data-project="couples" onclick="openLightbox('couples')">
         <div class="port-bg pg-couples">
           <div class="port-placeholder">
             <svg class="port-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
@@ -980,15 +1043,15 @@
         </div>
         <div class="port-overlay">
           <div class="port-info">
-            <p class="port-category">Couples</p>
-            <p class="port-title">Couples & Engagements</p>
-            <p class="port-count">— Click to view gallery</p>
+            <p class="port-category" data-i18n="port.couples.cat">Couples</p>
+            <p class="port-title" data-i18n="port.couples.title">Couples & Engagements</p>
+            <p class="port-count" data-i18n="port.couples.count">— Click to view gallery</p>
           </div>
         </div>
       </div>
 
       <!-- Events -->
-      <div class="port-item reveal reveal-delay-2" data-category="events" data-project="events" onclick="openLightbox('events')">
+      <div class="port-item reveal reveal-delay-1" data-category="events" data-project="events" onclick="openLightbox('events')">
         <div class="port-bg pg-events">
           <div class="port-placeholder">
             <svg class="port-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
@@ -997,9 +1060,9 @@
         </div>
         <div class="port-overlay">
           <div class="port-info">
-            <p class="port-category">Events</p>
-            <p class="port-title">Events & Commercial</p>
-            <p class="port-count">— Click to view gallery</p>
+            <p class="port-category" data-i18n="port.events.cat">Events</p>
+            <p class="port-title" data-i18n="port.events.title">Events & Commercial</p>
+            <p class="port-count" data-i18n="port.events.count">— Click to view gallery</p>
           </div>
         </div>
       </div>
@@ -1011,9 +1074,9 @@
         </div>
         <div class="port-overlay">
           <div class="port-info">
-            <p class="port-category">Real Estate</p>
-            <p class="port-title">Real Estate & Architecture</p>
-            <p class="port-count">— 1 photo · Click to view gallery</p>
+            <p class="port-category" data-i18n="port.realestate.cat">Real Estate</p>
+            <p class="port-title" data-i18n="port.realestate.title">Real Estate & Architecture</p>
+            <p class="port-count" data-i18n="port.realestate.count">— 1 photo · Click to view gallery</p>
           </div>
         </div>
       </div>
@@ -1025,9 +1088,9 @@
         </div>
         <div class="port-overlay">
           <div class="port-info">
-            <p class="port-category">Editorial</p>
-            <p class="port-title">Editorial & Fashion</p>
-            <p class="port-count">— 12 photos · Click to view gallery</p>
+            <p class="port-category" data-i18n="port.editorial.cat">Editorial</p>
+            <p class="port-title" data-i18n="port.editorial.title">Editorial & Fashion</p>
+            <p class="port-count" data-i18n="port.editorial.count">— 12 photos · Click to view gallery</p>
           </div>
         </div>
       </div>
@@ -1054,32 +1117,32 @@
 
 <section class="about" id="about">
   <div class="about-visual reveal">
-    <div class="about-badge"><span class="badge-number">∞</span><span class="badge-text">Frames<br>Captured</span></div>
+    <div class="about-badge"><span class="badge-number">∞</span><span class="badge-text" data-i18n-html="about.badge">Frames<br>Captured</span></div>
     <div class="about-img-main"><img src="images/about-main_2.jpg" alt="Manny - Photographer" style="width:100%;height:100%;object-fit:cover;"></div>
     <div class="about-img-accent"><img src="images/about-behind-lens.jpg" alt="Behind the Lens" style="width:100%;height:100%;object-fit:cover;"></div>
   </div>
   <div class="about-text">
-    <span class="section-label reveal">The Photographer</span>
-    <h2 class="about-heading reveal">Driven by<br><span class="em">Light</span> &<br>Intention</h2>
-    <p class="about-body reveal">Self-taught and technically obsessed, I approach every shoot the same way — with curiosity, precision, and a refusal to settle for the obvious frame. Based in Las Vegas, working everywhere.</p>
-    <p class="about-body reveal">Photography isn't just a profession — it's the lens through which I understand the world. Whether I'm capturing a portrait or producing a full podcast episode, the mission is the same: make it undeniable.</p>
+    <span class="section-label reveal" data-i18n="about.label">The Photographer</span>
+    <h2 class="about-heading reveal" data-i18n-html="about.heading">Driven by<br><span class="em">Light</span> &<br>Intention</h2>
+    <p class="about-body reveal" data-i18n="about.p1">Self-taught and technically obsessed, I approach every shoot the same way — with curiosity, precision, and a refusal to settle for the obvious frame. Based in Las Vegas, working everywhere.</p>
+    <p class="about-body reveal" data-i18n="about.p2">Photography isn't just a profession — it's the lens through which I understand the world. Whether I'm capturing a portrait or producing a full podcast episode, the mission is the same: make it undeniable.</p>
     <div class="about-stats reveal">
-      <div><div class="stat-num">10+</div><div class="stat-label">Years Shooting</div></div>
-      <div><div class="stat-num">3</div><div class="stat-label">Genres Mastered</div></div>
-      <div><div class="stat-num">LV</div><div class="stat-label">Based In</div></div>
+      <div><div class="stat-num">10+</div><div class="stat-label" data-i18n="about.stat1">Years Shooting</div></div>
+      <div><div class="stat-num">4</div><div class="stat-label" data-i18n="about.stat2">Genres Mastered</div></div>
+      <div><div class="stat-num">LV</div><div class="stat-label" data-i18n="about.stat3">Based In</div></div>
     </div>
-    <a href="#contact" class="btn-primary reveal">Work With Me</a>
+    <a href="#contact" class="btn-primary reveal" data-i18n="about.cta">Work With Me</a>
   </div>
 </section>
 
 <section class="contact-section" id="contact">
   <div class="contact-left reveal">
-    <span class="section-label">Get In Touch</span>
-    <h2 class="contact-heading">Let's <span class="em">Create</span><br>Together</h2>
-    <p class="contact-body">Whether it's a wedding, engagement shoot, event coverage, or real estate walkthrough — every project starts with a conversation.</p>
+    <span class="section-label" data-i18n="contact.label">Get In Touch</span>
+    <h2 class="contact-heading" data-i18n-html="contact.heading">Let's <span class="em">Create</span><br>Together</h2>
+    <p class="contact-body" data-i18n="contact.body">Whether it's a wedding, engagement shoot, event coverage, or real estate walkthrough — every project starts with a conversation.</p>
     <div class="contact-details">
-      <div class="contact-detail"><div class="contact-detail-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div class="contact-detail-label">Based In</div><div class="contact-detail-text">Las Vegas, Nevada</div></div></div>
-      <div class="contact-detail"><div class="contact-detail-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><div class="contact-detail-label">Email</div><div class="contact-detail-text">pairofdicelv@gmail.com</div></div></div>
+      <div class="contact-detail"><div class="contact-detail-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div class="contact-detail-label" data-i18n="contact.basedLabel">Based In</div><div class="contact-detail-text" data-i18n="contact.basedText">Las Vegas, Nevada</div></div></div>
+      <div class="contact-detail"><div class="contact-detail-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><div class="contact-detail-label" data-i18n="contact.emailLabel">Email</div><div class="contact-detail-text">pairofdicelv@gmail.com</div></div></div>
       <div class="contact-detail"><div class="contact-detail-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div><div><div class="contact-detail-label">Instagram</div><div class="contact-detail-text"><a href="https://www.instagram.com/pairofdicelv/" target="_blank" style="color: var(--light-gray); text-decoration: none;">@pairofdicelv</a></div></div></div>
     </div>
   </div>
@@ -1090,35 +1153,36 @@
       <input type="hidden" name="from_name" value="Manny Photography Website">
       <input type="checkbox" name="botcheck" style="display: none;">
       <div class="form-row">
-        <div class="form-group"><label for="name">Name</label><input type="text" id="name" name="name" placeholder="Your full name" required></div>
-        <div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="your@email.com" required></div>
+        <div class="form-group"><label for="name" data-i18n="form.name">Name</label><input type="text" id="name" name="name" data-i18n-placeholder="form.namePh" placeholder="Your full name" required></div>
+        <div class="form-group"><label for="email" data-i18n="form.email">Email</label><input type="email" id="email" name="email" placeholder="your@email.com" required></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label for="phone">Phone</label><input type="tel" id="phone" name="phone" placeholder="(702) 555-0000"></div>
+        <div class="form-group"><label for="phone" data-i18n="form.phone">Phone</label><input type="tel" id="phone" name="phone" placeholder="(702) 555-0000"></div>
         <div class="form-group">
-          <label for="service">Service</label>
+          <label for="service" data-i18n="form.service">Service</label>
           <select id="service" name="service" required onchange="this.classList.add('selected')">
-            <option value="" disabled selected>Select a service</option>
-            <option value="Wedding Photography">Wedding Photography</option>
-            <option value="Couples & Engagements">Couples & Engagements</option>
-            <option value="Events & Commercial">Events & Commercial</option>
-            <option value="Real Estate">Real Estate & Architecture</option>
-            <option value="Street / Editorial">Street / Editorial</option>
-            <option value="Podcast Production">Podcast Production</option>
-            <option value="Other">Other</option>
+            <option value="" disabled selected data-i18n="form.selectPh">Select a service</option>
+            <option value="Wedding Photography" data-i18n="form.opt1">Wedding Photography</option>
+            <option value="Quinceañeras" data-i18n="form.opt2">Quinceañeras</option>
+            <option value="Couples & Engagements" data-i18n="form.opt3">Couples & Engagements</option>
+            <option value="Events & Commercial" data-i18n="form.opt4">Events & Commercial</option>
+            <option value="Real Estate" data-i18n="form.opt5">Real Estate & Architecture</option>
+            <option value="Street / Editorial" data-i18n="form.opt6">Street / Editorial</option>
+            <option value="Podcast Production" data-i18n="form.opt7">Podcast Production</option>
+            <option value="Other" data-i18n="form.opt8">Other</option>
           </select>
         </div>
       </div>
-      <div class="form-group"><label for="message">Message</label><textarea id="message" name="message" placeholder="Tell me about your project..." required></textarea></div>
-      <button type="submit" class="form-submit" id="submitBtn">Send Message</button>
+      <div class="form-group"><label for="message" data-i18n="form.message">Message</label><textarea id="message" name="message" data-i18n-placeholder="form.messagePh" placeholder="Tell me about your project..." required></textarea></div>
+      <button type="submit" class="form-submit" id="submitBtn" data-i18n="form.submit">Send Message</button>
     </form>
-    <div class="form-success" id="formSuccess"><h4>Message Sent</h4><p>Thanks for reaching out — I'll get back to you within 24 hours.</p></div>
+    <div class="form-success" id="formSuccess"><h4 data-i18n="form.successTitle">Message Sent</h4><p data-i18n="form.successBody">Thanks for reaching out — I'll get back to you within 24 hours.</p></div>
   </div>
 </section>
 
 <footer>
   <div class="footer-bottom">
-    <p class="footer-copy">© 2026 Manny Photography. Las Vegas, NV.</p>
+    <p class="footer-copy" data-i18n="footer.copy">© 2026 Manny Photography. Las Vegas, NV.</p>
     <ul class="footer-links">
       <li><a href="https://www.instagram.com/pairofdicelv/" target="_blank">Instagram</a></li>
       <li><a href="#">LinkedIn</a></li>
@@ -1181,6 +1245,31 @@
       'couples': { title: 'Couples & Engagements', category: 'Couples', gradient: 'linear-gradient(160deg, #1a0e14 0%, #2a1520 50%, #120a10 100%)', count: 8 },
       'events': { title: 'Events & Commercial', category: 'Events', gradient: 'linear-gradient(160deg, #0e1210 0%, #152520 50%, #0a100e 100%)', count: 10 },
       'realestate': { title: 'Real Estate & Architecture', category: 'Real Estate', images: ['images/realestate-dji-0115.jpg'] },
+      'quinceaneras': {
+        title: 'Mis XV Años',
+        category: 'Quinceañeras',
+        images: [
+          'images/quinceaneras/1S0A1115.JPG',
+          'images/quinceaneras/DSC02175.jpg',
+          'images/quinceaneras/DSC02176.jpg',
+          'images/quinceaneras/4L7A6066.jpg',
+          'images/quinceaneras/4L7A6295.jpg',
+          'images/quinceaneras/4L7A6378.jpg',
+          'images/quinceaneras/4L7A6724-Edit.jpg',
+          'images/quinceaneras/4L7A6731-Edit.jpg',
+          'images/quinceaneras/4L7A6758.jpg',
+          'images/quinceaneras/4L7A6796.jpg',
+          'images/quinceaneras/4L7A6995.jpg',
+          'images/quinceaneras/4L7A7000.jpg',
+          'images/quinceaneras/4L7A7085.jpg',
+          'images/quinceaneras/4L7A7153.jpg',
+          'images/quinceaneras/223A2500.JPG',
+          'images/quinceaneras/223A2577.JPG',
+          'images/quinceaneras/223A2607.JPG',
+          'images/quinceaneras/223A9880.jpg',
+          'images/quinceaneras/DSC02485.jpg'
+        ]
+      },
       'editorial': {
         title: 'Editorial & Fashion',
         category: 'Editorial',
@@ -1302,8 +1391,246 @@
         alert('Network error. Please try again.');
       }
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Send Message';
+      submitBtn.textContent = currentLang === 'es' ? 'Enviar Mensaje' : 'Send Message';
     });
+
+    // ── BILINGUAL TRANSLATION ENGINE ──
+    const translations = {
+      en: {
+        'nav.work': 'Work',
+        'nav.services': 'Services',
+        'nav.about': 'About',
+        'nav.contact': 'Contact',
+        'hero.eyebrow': 'Visual Storyteller · Las Vegas',
+        'hero.title': 'Making<br>the <span class="italic">World</span><br>Stand Still',
+        'hero.sub': 'Photography that stops the scroll, holds the gaze, and lives in the memory. Every frame is a decision.',
+        'hero.cta1': 'View Work',
+        'hero.cta2': 'Book a Session →',
+        'hero.scroll': 'Scroll',
+        'hero.label.portrait': 'Portrait',
+        'hero.label.street': 'Street',
+        'hero.label.studio': 'Studio',
+        'services.label': 'What I Offer',
+        'services.title': 'Services that<br><span class="em">Deliver</span>',
+        'services.desc': 'From intimate portraits to full podcast production, every engagement is handled with the same obsessive attention to craft.',
+        'services.s1.name': 'Portrait & Editorial',
+        'services.s1.desc': 'Personal branding, headshots, and editorial work that communicate who you are before you say a word.',
+        'services.s1.tag1': 'Branding',
+        'services.s1.tag2': 'Editorial',
+        'services.s1.tag3': 'Headshots',
+        'services.s2.name': 'Podcast Production',
+        'services.s2.desc': 'Dual-camera professional setups with broadcast-grade audio. Your show, elevated. Canon R5C + R7 rig available on location.',
+        'services.s2.tag1': 'Video',
+        'services.s2.tag2': 'Audio',
+        'services.s2.tag3': 'Editing',
+        'services.s3.name': 'Commercial & Events',
+        'services.s3.desc': 'Product photography, brand campaigns, and events coverage that move fast without losing the detail.',
+        'services.s3.tag1': 'Commercial',
+        'services.s3.tag2': 'Events',
+        'services.s3.tag3': 'Product',
+        'portfolio.label': 'Selected Work',
+        'portfolio.title': 'The <span class="em">Portfolio</span>',
+        'portfolio.desc': 'Projects organized by shoot. Click any project to explore the gallery.',
+        'portfolio.filter.all': 'All Projects',
+        'portfolio.filter.street': 'Street',
+        'portfolio.filter.wedding': 'Wedding',
+        'portfolio.filter.quinceaneras': 'Quinceañeras',
+        'portfolio.filter.couples': 'Couples',
+        'portfolio.filter.events': 'Events',
+        'portfolio.filter.realestate': 'Real Estate',
+        'portfolio.filter.editorial': 'Editorial',
+        'port.street.cat': 'Street Photography',
+        'port.street.title': 'Vegas After Dark',
+        'port.street.count': '— Click to view gallery',
+        'port.wedding.cat': 'Wedding',
+        'port.wedding.title': 'Wedding Photography',
+        'port.wedding.count': '— 22 photos · Click to view gallery',
+        'port.quince.cat': 'Quinceañeras',
+        'port.quince.title': 'Mis XV Años',
+        'port.quince.count': '— 19 photos · Click to view gallery',
+        'port.couples.cat': 'Couples',
+        'port.couples.title': 'Couples & Engagements',
+        'port.couples.count': '— Click to view gallery',
+        'port.events.cat': 'Events',
+        'port.events.title': 'Events & Commercial',
+        'port.events.count': '— Click to view gallery',
+        'port.realestate.cat': 'Real Estate',
+        'port.realestate.title': 'Real Estate & Architecture',
+        'port.realestate.count': '— 1 photo · Click to view gallery',
+        'port.editorial.cat': 'Editorial',
+        'port.editorial.title': 'Editorial & Fashion',
+        'port.editorial.count': '— 12 photos · Click to view gallery',
+        'about.badge': 'Frames<br>Captured',
+        'about.label': 'The Photographer',
+        'about.heading': 'Driven by<br><span class="em">Light</span> &<br>Intention',
+        'about.p1': 'Self-taught and technically obsessed, I approach every shoot the same way — with curiosity, precision, and a refusal to settle for the obvious frame. Based in Las Vegas, working everywhere.',
+        'about.p2': "Photography isn't just a profession — it's the lens through which I understand the world. Whether I'm capturing a portrait or producing a full podcast episode, the mission is the same: make it undeniable.",
+        'about.stat1': 'Years Shooting',
+        'about.stat2': 'Genres Mastered',
+        'about.stat3': 'Based In',
+        'about.cta': 'Work With Me',
+        'contact.label': 'Get In Touch',
+        'contact.heading': "Let's <span class=\"em\">Create</span><br>Together",
+        'contact.body': "Whether it's a wedding, quinceañera, engagement shoot, event coverage, or real estate walkthrough — every project starts with a conversation.",
+        'contact.basedLabel': 'Based In',
+        'contact.basedText': 'Las Vegas, Nevada',
+        'contact.emailLabel': 'Email',
+        'form.name': 'Name',
+        'form.namePh': 'Your full name',
+        'form.email': 'Email',
+        'form.phone': 'Phone',
+        'form.service': 'Service',
+        'form.selectPh': 'Select a service',
+        'form.opt1': 'Wedding Photography',
+        'form.opt2': 'Quinceañeras',
+        'form.opt3': 'Couples & Engagements',
+        'form.opt4': 'Events & Commercial',
+        'form.opt5': 'Real Estate & Architecture',
+        'form.opt6': 'Street / Editorial',
+        'form.opt7': 'Podcast Production',
+        'form.opt8': 'Other',
+        'form.message': 'Message',
+        'form.messagePh': 'Tell me about your project...',
+        'form.submit': 'Send Message',
+        'form.successTitle': 'Message Sent',
+        'form.successBody': "Thanks for reaching out — I'll get back to you within 24 hours.",
+        'footer.copy': '© 2026 Manny Photography. Las Vegas, NV.'
+      },
+      es: {
+        'nav.work': 'Trabajo',
+        'nav.services': 'Servicios',
+        'nav.about': 'Sobre Mí',
+        'nav.contact': 'Contacto',
+        'hero.eyebrow': 'Narrador Visual · Las Vegas',
+        'hero.title': 'Deteniendo<br>el <span class="italic">Mundo</span><br>en un Instante',
+        'hero.sub': 'Fotografía que detiene el scroll, captura la mirada y vive en la memoria. Cada toma es una decisión.',
+        'hero.cta1': 'Ver Trabajo',
+        'hero.cta2': 'Reservar Sesión →',
+        'hero.scroll': 'Desliza',
+        'hero.label.portrait': 'Retrato',
+        'hero.label.street': 'Calle',
+        'hero.label.studio': 'Estudio',
+        'services.label': 'Lo Que Ofrezco',
+        'services.title': 'Servicios que<br><span class="em">Entregan</span>',
+        'services.desc': 'Desde retratos íntimos hasta producción completa de podcast, cada proyecto recibe la misma atención obsesiva al detalle.',
+        'services.s1.name': 'Retrato & Editorial',
+        'services.s1.desc': 'Branding personal, headshots y trabajo editorial que comunican quién eres antes de decir una palabra.',
+        'services.s1.tag1': 'Branding',
+        'services.s1.tag2': 'Editorial',
+        'services.s1.tag3': 'Headshots',
+        'services.s2.name': 'Producción de Podcast',
+        'services.s2.desc': 'Setups profesionales de doble cámara con audio de calidad broadcast. Tu show, elevado. Equipo Canon R5C + R7 disponible en locación.',
+        'services.s2.tag1': 'Video',
+        'services.s2.tag2': 'Audio',
+        'services.s2.tag3': 'Edición',
+        'services.s3.name': 'Comercial & Eventos',
+        'services.s3.desc': 'Fotografía de producto, campañas de marca y cobertura de eventos que se mueven rápido sin perder el detalle.',
+        'services.s3.tag1': 'Comercial',
+        'services.s3.tag2': 'Eventos',
+        'services.s3.tag3': 'Producto',
+        'portfolio.label': 'Trabajo Seleccionado',
+        'portfolio.title': 'El <span class="em">Portafolio</span>',
+        'portfolio.desc': 'Proyectos organizados por sesión. Haz clic en cualquier proyecto para explorar la galería.',
+        'portfolio.filter.all': 'Todos los Proyectos',
+        'portfolio.filter.street': 'Calle',
+        'portfolio.filter.wedding': 'Bodas',
+        'portfolio.filter.quinceaneras': 'Quinceañeras',
+        'portfolio.filter.couples': 'Parejas',
+        'portfolio.filter.events': 'Eventos',
+        'portfolio.filter.realestate': 'Bienes Raíces',
+        'portfolio.filter.editorial': 'Editorial',
+        'port.street.cat': 'Fotografía Urbana',
+        'port.street.title': 'Vegas de Noche',
+        'port.street.count': '— Haz clic para ver la galería',
+        'port.wedding.cat': 'Bodas',
+        'port.wedding.title': 'Fotografía de Bodas',
+        'port.wedding.count': '— 22 fotos · Haz clic para ver la galería',
+        'port.quince.cat': 'Quinceañeras',
+        'port.quince.title': 'Mis XV Años',
+        'port.quince.count': '— 19 fotos · Haz clic para ver la galería',
+        'port.couples.cat': 'Parejas',
+        'port.couples.title': 'Parejas & Compromisos',
+        'port.couples.count': '— Haz clic para ver la galería',
+        'port.events.cat': 'Eventos',
+        'port.events.title': 'Eventos & Comercial',
+        'port.events.count': '— Haz clic para ver la galería',
+        'port.realestate.cat': 'Bienes Raíces',
+        'port.realestate.title': 'Bienes Raíces & Arquitectura',
+        'port.realestate.count': '— 1 foto · Haz clic para ver la galería',
+        'port.editorial.cat': 'Editorial',
+        'port.editorial.title': 'Editorial & Moda',
+        'port.editorial.count': '— 12 fotos · Haz clic para ver la galería',
+        'about.badge': 'Tomas<br>Capturadas',
+        'about.label': 'El Fotógrafo',
+        'about.heading': 'Impulsado por<br><span class="em">Luz</span> &<br>Intención',
+        'about.p1': 'Autodidacta y técnicamente obsesivo, enfoco cada sesión de la misma manera — con curiosidad, precisión, y la negación a conformarme con la toma obvia. Basado en Las Vegas, trabajando en todas partes.',
+        'about.p2': 'La fotografía no es solo una profesión — es el lente a través del cual entiendo el mundo. Ya sea capturando un retrato o produciendo un episodio completo de podcast, la misión es la misma: hacerlo innegable.',
+        'about.stat1': 'Años Fotografiando',
+        'about.stat2': 'Géneros Dominados',
+        'about.stat3': 'Ubicado En',
+        'about.cta': 'Trabaja Conmigo',
+        'contact.label': 'Ponte en Contacto',
+        'contact.heading': 'Vamos a <span class="em">Crear</span><br>Juntos',
+        'contact.body': 'Ya sea una boda, quinceañera, sesión de compromiso, cobertura de evento, o tour de bienes raíces — todo proyecto empieza con una conversación.',
+        'contact.basedLabel': 'Ubicado En',
+        'contact.basedText': 'Las Vegas, Nevada',
+        'contact.emailLabel': 'Correo',
+        'form.name': 'Nombre',
+        'form.namePh': 'Tu nombre completo',
+        'form.email': 'Correo',
+        'form.phone': 'Teléfono',
+        'form.service': 'Servicio',
+        'form.selectPh': 'Selecciona un servicio',
+        'form.opt1': 'Fotografía de Bodas',
+        'form.opt2': 'Quinceañeras',
+        'form.opt3': 'Parejas & Compromisos',
+        'form.opt4': 'Eventos & Comercial',
+        'form.opt5': 'Bienes Raíces & Arquitectura',
+        'form.opt6': 'Calle / Editorial',
+        'form.opt7': 'Producción de Podcast',
+        'form.opt8': 'Otro',
+        'form.message': 'Mensaje',
+        'form.messagePh': 'Cuéntame sobre tu proyecto...',
+        'form.submit': 'Enviar Mensaje',
+        'form.successTitle': 'Mensaje Enviado',
+        'form.successBody': 'Gracias por contactarme — te responderé dentro de 24 horas.',
+        'footer.copy': '© 2026 Manny Photography. Las Vegas, NV.'
+      }
+    };
+
+    let currentLang = localStorage.getItem('pairofdice-lang') || 'en';
+
+    function applyTranslations(lang) {
+      const dict = translations[lang];
+      if (!dict) return;
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key] !== undefined) el.textContent = dict[key];
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (dict[key] !== undefined) el.innerHTML = dict[key];
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (dict[key] !== undefined) el.setAttribute('placeholder', dict[key]);
+      });
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lang = btn.getAttribute('data-lang');
+        currentLang = lang;
+        localStorage.setItem('pairofdice-lang', lang);
+        applyTranslations(lang);
+      });
+    });
+
+    applyTranslations(currentLang);
   })();
 </script>
 </body>
