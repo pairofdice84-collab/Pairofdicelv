@@ -817,22 +817,61 @@
     to { box-shadow: 0 0 30px rgba(200,169,110,0.8), 0 0 60px rgba(200,169,110,0.3); }
   }
 
-  .viewer { position: fixed; inset: 0; background: #000; z-index: 300; display: none; align-items: center; justify-content: center; cursor: none; }
+  .viewer {
+    position: fixed; inset: 0; z-index: 300; display: none; align-items: center; justify-content: center; cursor: none; overflow: hidden;
+    background:
+      radial-gradient(ellipse 55% 50% at 22% 18%, rgba(200,169,110,0.16), transparent 60%),
+      radial-gradient(ellipse 50% 45% at 82% 85%, rgba(224,92,58,0.12), transparent 60%),
+      #000;
+  }
   .viewer.open { display: flex; }
-  .viewer-img { max-width: 90vw; max-height: 85vh; object-fit: contain; opacity: 0; transition: opacity 0.3s ease; user-select: none; -webkit-user-drag: none; }
+  .viewer::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='vn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23vn)' opacity='0.05'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .viewer-sparkles { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
+  .viewer-sparkle {
+    position: absolute; width: 6px; height: 6px; background: var(--accent); transform: rotate(45deg); opacity: 0;
+    animation: viewerSparkle 7s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(200,169,110,0.7), 0 0 18px rgba(200,169,110,0.35);
+  }
+  @keyframes viewerSparkle {
+    0%, 100% { opacity: 0; transform: translateY(16px) rotate(45deg) scale(0.4); }
+    15% { opacity: 0.9; }
+    50% { opacity: 0.4; transform: translateY(-18px) rotate(45deg) scale(1); }
+    85% { opacity: 0.8; }
+  }
+  .viewer-img {
+    max-width: 90vw; max-height: 85vh; object-fit: contain; opacity: 0; user-select: none; -webkit-user-drag: none;
+    position: relative; z-index: 3; border-radius: 2px;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.7), 0 0 0 1px rgba(200,169,110,0.18);
+    transition: opacity 0.3s ease, transform 0.15s ease-out;
+  }
   .viewer-img.loaded { opacity: 1; }
-  .viewer-close { position: absolute; top: 2rem; right: 2.5rem; background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: none; opacity: 0.5; transition: opacity 0.3s; z-index: 310; font-family: 'DM Sans', sans-serif; letter-spacing: 0.1em; }
-  .viewer-close:hover { opacity: 1; }
-  .viewer-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(200,169,110,0.15); border: 1px solid rgba(200,169,110,0.3); color: var(--white); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: none; opacity: 0.6; transition: opacity 0.3s, background 0.3s; z-index: 310; font-size: 1.2rem; }
-  .viewer-arrow:hover { opacity: 1; background: rgba(200,169,110,0.3); }
+  .viewer-close { position: absolute; top: 2rem; right: 2.5rem; background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: none; opacity: 0.5; transition: opacity 0.3s, text-shadow 0.3s; z-index: 310; font-family: 'DM Sans', sans-serif; letter-spacing: 0.1em; }
+  .viewer-close:hover { opacity: 1; text-shadow: 0 0 10px rgba(200,169,110,0.6); }
+  .viewer-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(200,169,110,0.15); border: 1px solid rgba(200,169,110,0.3); color: var(--white); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: none; opacity: 0.6; transition: opacity 0.3s, background 0.3s, box-shadow 0.3s; z-index: 310; font-size: 1.2rem; }
+  .viewer-arrow:hover { opacity: 1; background: rgba(200,169,110,0.3); box-shadow: 0 0 20px rgba(200,169,110,0.4); }
   .viewer-arrow.prev { left: 1.5rem; }
   .viewer-arrow.next { right: 1.5rem; }
-  .viewer-counter { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); font-size: 0.7rem; letter-spacing: 0.25em; color: var(--light-gray); z-index: 310; }
+  .viewer-counter { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); font-size: 0.7rem; letter-spacing: 0.25em; color: var(--light-gray); z-index: 310; display: flex; align-items: center; gap: 0.6rem; }
+  .viewer-counter-diamond { width: 5px; height: 5px; background: var(--accent); transform: rotate(45deg); opacity: 0.6; flex-shrink: 0; }
+  .viewer-filmstrip { position: absolute; bottom: 4.5rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.6rem; max-width: 85vw; overflow-x: auto; padding: 0.4rem; z-index: 310; scrollbar-width: none; }
+  .viewer-filmstrip::-webkit-scrollbar { display: none; }
+  .viewer-thumb { width: 58px; height: 58px; flex-shrink: 0; object-fit: cover; opacity: 0.35; cursor: pointer; border: 1px solid transparent; border-radius: 2px; transition: opacity 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; }
+  .viewer-thumb:hover { opacity: 0.75; transform: translateY(-3px); }
+  .viewer-thumb.active { opacity: 1; border-color: var(--accent); box-shadow: 0 0 14px rgba(200,169,110,0.55); transform: translateY(-3px); }
   @media (max-width: 900px) {
     .viewer-arrow { width: 40px; height: 40px; font-size: 1rem; }
     .viewer-arrow.prev { left: 0.75rem; }
     .viewer-arrow.next { right: 0.75rem; }
     .viewer-img { max-width: 95vw; max-height: 80vh; }
+    .viewer-filmstrip { bottom: 3.5rem; max-width: 92vw; }
+    .viewer-thumb { width: 42px; height: 42px; }
   }
 </style>
 </head>
@@ -1105,11 +1144,22 @@
 </div>
 
 <div class="viewer" id="viewer">
+  <div class="viewer-sparkles">
+    <span class="viewer-sparkle" style="top:12%;left:8%;animation-delay:0s;"></span>
+    <span class="viewer-sparkle" style="top:22%;left:88%;animation-delay:1.2s;"></span>
+    <span class="viewer-sparkle" style="top:75%;left:6%;animation-delay:2.4s;"></span>
+    <span class="viewer-sparkle" style="top:82%;left:92%;animation-delay:0.6s;"></span>
+    <span class="viewer-sparkle" style="top:8%;left:50%;animation-delay:3s;"></span>
+    <span class="viewer-sparkle" style="top:90%;left:45%;animation-delay:1.8s;"></span>
+    <span class="viewer-sparkle" style="top:45%;left:4%;animation-delay:2.7s;"></span>
+    <span class="viewer-sparkle" style="top:40%;left:95%;animation-delay:0.9s;"></span>
+  </div>
   <button class="viewer-close" onclick="closeViewer()">✕ Close</button>
   <button class="viewer-arrow prev" onclick="viewerNav(-1)">‹</button>
   <img class="viewer-img" id="viewerImg" alt="Photo">
   <button class="viewer-arrow next" onclick="viewerNav(1)">›</button>
-  <div class="viewer-counter" id="viewerCounter">1 / 18</div>
+  <div class="viewer-filmstrip" id="viewerFilmstrip"></div>
+  <div class="viewer-counter"><span class="viewer-counter-diamond"></span><span id="viewerCounterText">1 / 18</span><span class="viewer-counter-diamond"></span></div>
 </div>
 
 <section class="about" id="about">
@@ -1361,6 +1411,7 @@
     window.openViewer = function(images, index) {
       viewerImages = images;
       viewerIndex = index;
+      buildFilmstrip();
       showViewerImage();
       document.getElementById('viewer').classList.add('open');
     };
@@ -1372,12 +1423,29 @@
       viewerIndex = (viewerIndex + dir + viewerImages.length) % viewerImages.length;
       showViewerImage();
     };
+    function buildFilmstrip() {
+      const strip = document.getElementById('viewerFilmstrip');
+      strip.innerHTML = '';
+      viewerImages.forEach((src, i) => {
+        const thumb = document.createElement('img');
+        thumb.className = 'viewer-thumb';
+        thumb.src = src;
+        thumb.loading = 'lazy';
+        thumb.alt = '';
+        thumb.onclick = () => { viewerIndex = i; showViewerImage(); };
+        strip.appendChild(thumb);
+      });
+    }
     function showViewerImage() {
       const img = document.getElementById('viewerImg');
       img.classList.remove('loaded');
+      img.style.transform = '';
       img.onload = () => img.classList.add('loaded');
       img.src = viewerImages[viewerIndex];
-      document.getElementById('viewerCounter').textContent = (viewerIndex + 1) + ' / ' + viewerImages.length;
+      document.getElementById('viewerCounterText').textContent = (viewerIndex + 1) + ' / ' + viewerImages.length;
+      const thumbs = document.getElementById('viewerFilmstrip').querySelectorAll('.viewer-thumb');
+      thumbs.forEach((t, i) => t.classList.toggle('active', i === viewerIndex));
+      if (thumbs[viewerIndex]) thumbs[viewerIndex].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
     document.addEventListener('keydown', e => {
       if (!document.getElementById('viewer').classList.contains('open')) return;
@@ -1390,6 +1458,23 @@
       const diff = touchStartX - e.changedTouches[0].screenX;
       if (Math.abs(diff) > 50) { if (diff > 0) viewerNav(1); else viewerNav(-1); }
     }, { passive: true });
+    document.getElementById('viewer').addEventListener('mousemove', e => {
+      const img = document.getElementById('viewerImg');
+      if (!img.classList.contains('loaded')) return;
+      const rect = img.getBoundingClientRect();
+      if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) {
+        img.style.transform = '';
+        return;
+      }
+      const px = (e.clientX - rect.left) / rect.width;
+      const py = (e.clientY - rect.top) / rect.height;
+      const rotY = (px - 0.5) * 10;
+      const rotX = (0.5 - py) * 8;
+      img.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.015)`;
+    });
+    document.getElementById('viewer').addEventListener('mouseleave', () => {
+      document.getElementById('viewerImg').style.transform = '';
+    });
 
     const contactForm = document.getElementById('contactForm');
     const submitBtn = document.getElementById('submitBtn');
