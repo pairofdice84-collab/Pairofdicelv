@@ -873,6 +873,31 @@
     .viewer-filmstrip { bottom: 3.5rem; max-width: 92vw; }
     .viewer-thumb { width: 42px; height: 42px; }
   }
+
+  /* ═══════════════════════════════
+     AMBIENT GOLD DUST + CURSOR GLARE
+  ═══════════════════════════════ */
+  .page-ambience { position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
+  .page-glare {
+    position: absolute; inset: -20%;
+    background: radial-gradient(650px circle at var(--mx, 50%) var(--my, 25%), rgba(200,169,110,0.09), transparent 60%);
+    transition: background 0.5s ease;
+  }
+  .dust-mote {
+    position: absolute; top: -5%;
+    background: var(--accent); border-radius: 50%;
+    box-shadow: 0 0 6px rgba(200,169,110,0.8), 0 0 12px rgba(200,169,110,0.4);
+    animation: dustFall linear infinite;
+  }
+  @keyframes dustFall {
+    0%   { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+    8%   { opacity: var(--mote-opacity, 0.6); }
+    92%  { opacity: var(--mote-opacity, 0.6); }
+    100% { transform: translateY(110vh) translateX(var(--drift, 40px)) rotate(180deg); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dust-mote { animation: none; opacity: 0; }
+  }
 </style>
 </head>
 <body>
@@ -1736,6 +1761,37 @@
     });
 
     applyTranslations(currentLang);
+
+    // ── AMBIENT GOLD DUST + CURSOR GLARE ──
+    const ambience = document.createElement('div');
+    ambience.className = 'page-ambience';
+    const glare = document.createElement('div');
+    glare.className = 'page-glare';
+    ambience.appendChild(glare);
+    const MOTE_COUNT = window.innerWidth < 900 ? 16 : 28;
+    for (let i = 0; i < MOTE_COUNT; i++) {
+      const mote = document.createElement('div');
+      mote.className = 'dust-mote';
+      const size = (Math.random() * 2.5 + 1.5).toFixed(1);
+      const left = (Math.random() * 100).toFixed(1);
+      const duration = (Math.random() * 10 + 12).toFixed(1);
+      const delay = (Math.random() * -22).toFixed(1);
+      const drift = (Math.random() * 80 - 40).toFixed(0);
+      const opacity = (Math.random() * 0.4 + 0.3).toFixed(2);
+      mote.style.cssText = `left:${left}%; width:${size}px; height:${size}px; animation-duration:${duration}s; animation-delay:${delay}s; --drift:${drift}px; --mote-opacity:${opacity};`;
+      ambience.appendChild(mote);
+    }
+    document.body.appendChild(ambience);
+
+    document.addEventListener('mousemove', e => {
+      glare.style.setProperty('--mx', (e.clientX / window.innerWidth * 100).toFixed(1) + '%');
+      glare.style.setProperty('--my', (e.clientY / window.innerHeight * 100).toFixed(1) + '%');
+    });
+    document.addEventListener('touchmove', e => {
+      if (!e.touches[0]) return;
+      glare.style.setProperty('--mx', (e.touches[0].clientX / window.innerWidth * 100).toFixed(1) + '%');
+      glare.style.setProperty('--my', (e.touches[0].clientY / window.innerHeight * 100).toFixed(1) + '%');
+    }, { passive: true });
   })();
 </script>
 </body>
