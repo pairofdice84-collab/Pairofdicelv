@@ -452,15 +452,7 @@
     padding: 0.3rem 0.75rem;
   }
 
-  .portfolio {
-    padding: 8rem 4rem;
-    position: relative;
-    /* Dark scrim keeps headings/filters legible over the gold geometry */
-    background:
-      linear-gradient(rgba(4,4,4,0.82), rgba(4,4,4,0.88)),
-      url('images/bg-portfolio.jpg') center / cover no-repeat,
-      #060606;
-  }
+  .portfolio { padding: 8rem 4rem; background: #060606; }
   .portfolio-inner { max-width: 1400px; margin: 0 auto; }
 
   .port-filters { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 3rem; margin-bottom: 3rem; }
@@ -825,13 +817,9 @@
 
   .viewer {
     position: fixed; inset: 0; z-index: 300; display: none; align-items: center; justify-content: center; cursor: none; overflow: hidden;
-    /* Layers stay fully opaque — a translucent backdrop is what caused the
-       old thumbnail bleed-through behind the fullscreen photo. */
     background:
-      radial-gradient(ellipse 55% 50% at 22% 18%, rgba(200,169,110,0.14), transparent 60%),
-      radial-gradient(ellipse 50% 45% at 82% 85%, rgba(224,92,58,0.10), transparent 60%),
-      linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.62)),
-      url('images/bg-viewer.jpg') center / cover no-repeat,
+      radial-gradient(ellipse 55% 50% at 22% 18%, rgba(200,169,110,0.16), transparent 60%),
+      radial-gradient(ellipse 50% 45% at 82% 85%, rgba(224,92,58,0.12), transparent 60%),
       #000;
   }
   .viewer.open { display: flex; }
