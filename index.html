@@ -897,6 +897,37 @@
     100%     { transform: translateX(320%) rotate(12deg); opacity: 0; }
   }
   /* Soft neon breathing pool at the base of the viewport */
+  /* Flowing gold silk lines — two layers drifting opposite ways for depth.
+     Each SVG tile is a whole number of wave periods, so the loop is seamless. */
+  .page-silk, .page-silk-2 {
+    position: absolute;
+    top: -8%; bottom: -8%;
+    left: -800px;
+    width: calc(100% + 1600px);
+    pointer-events: none;
+    will-change: transform;
+  }
+  .page-silk {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cg fill='none' stroke='%23c8a96e' stroke-width='1'%3E%3Cpath d='M0,40 q50,-22 100,0 t100,0 t100,0 t100,0' opacity='.55'/%3E%3Cpath d='M0,120 q50,18 100,0 t100,0 t100,0 t100,0' opacity='.4'/%3E%3Cpath d='M0,200 q50,-28 100,0 t100,0 t100,0 t100,0' opacity='.6'/%3E%3Cpath d='M0,280 q50,20 100,0 t100,0 t100,0 t100,0' opacity='.35'/%3E%3Cpath d='M0,360 q50,-16 100,0 t100,0 t100,0 t100,0' opacity='.5'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 400px 400px;
+    opacity: 0.5;
+    animation: silkDriftA 75s linear infinite;
+  }
+  .page-silk-2 {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cg fill='none' stroke='%23c8a96e' stroke-width='1.4'%3E%3Cpath d='M0,70 q87.5,-52 175,0 t175,0 t175,0 t175,0' opacity='.4'/%3E%3Cpath d='M0,210 q87.5,44 175,0 t175,0 t175,0 t175,0' opacity='.3'/%3E%3Cpath d='M0,350 q87.5,-60 175,0 t175,0 t175,0 t175,0' opacity='.45'/%3E%3Cpath d='M0,490 q87.5,48 175,0 t175,0 t175,0 t175,0' opacity='.28'/%3E%3Cpath d='M0,630 q87.5,-40 175,0 t175,0 t175,0 t175,0' opacity='.38'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 700px 700px;
+    opacity: 0.34;
+    animation: silkDriftB 110s linear infinite;
+  }
+  @keyframes silkDriftA {
+    from { transform: translateX(0); }
+    to   { transform: translateX(400px); }
+  }
+  @keyframes silkDriftB {
+    from { transform: translateX(700px); }
+    to   { transform: translateX(0); }
+  }
+
   .page-neon-pool {
     position: absolute; bottom: -30%; left: 50%; width: 90%; height: 60%;
     transform: translateX(-50%);
@@ -987,7 +1018,7 @@
   .footer-links a:hover { text-shadow: 0 0 10px rgba(200,169,110,0.5); }
 
   @media (prefers-reduced-motion: reduce) {
-    .page-sweep, .page-neon-pool { animation: none; }
+    .page-sweep, .page-neon-pool, .page-silk, .page-silk-2 { animation: none; }
     .btn-primary::after { transition: none; }
     .port-item:hover, .service-card:hover, .port-filter-btn:hover { transform: none; }
   }
@@ -1969,7 +2000,7 @@
     // ── VEGAS AMBIENCE: cursor glare + marquee sweep + neon pool ──
     const ambience = document.createElement('div');
     ambience.className = 'page-ambience';
-    ambience.innerHTML = '<div class="page-glare"></div><div class="page-sweep"></div><div class="page-neon-pool"></div>';
+    ambience.innerHTML = '<div class="page-silk-2"></div><div class="page-silk"></div><div class="page-glare"></div><div class="page-sweep"></div><div class="page-neon-pool"></div>';
 
     // Vegas glitter — fixed points that twinkle in place (deliberately not falling)
     const GLITTER_COUNT = window.innerWidth < 900 ? 10 : 18;
