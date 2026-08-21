@@ -936,17 +936,30 @@
   .port-filter-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(200,169,110,0.18); }
   .port-filter-btn.active { box-shadow: 0 0 14px rgba(200,169,110,0.25); }
 
-  /* Portfolio tiles: gold frame ignites on hover */
+  /* Portfolio tiles: gold frame ignites on hover — tiles stay anchored in place */
   .port-item::after {
     content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 4;
     border: 1px solid transparent;
     transition: border-color 0.45s ease, box-shadow 0.45s ease;
   }
   .port-item:hover::after {
-    border-color: rgba(200,169,110,0.55);
-    box-shadow: inset 0 0 22px rgba(200,169,110,0.16), 0 0 26px rgba(200,169,110,0.14);
+    border-color: rgba(200,169,110,0.35);
+    box-shadow: inset 0 0 22px rgba(200,169,110,0.14);
   }
-  .port-item:hover { transform: translateY(-4px); }
+  /* Cursor-tracking golden border light — brightest where the pointer is */
+  .port-item::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 6;
+    padding: 1px;
+    background: radial-gradient(170px circle at var(--px, 50%) var(--py, 50%),
+      rgba(255,231,178,0.95), rgba(200,169,110,0.55) 35%, rgba(200,169,110,0.12) 60%, transparent 78%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .port-item:hover::before { opacity: 1; }
 
   /* Service cards: lift with a warm cast */
   .service-card { transition: background 0.4s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease; }
@@ -1034,35 +1047,30 @@
     90%           { opacity: 0.4; transform: scale(0.7); }
   }
 
-  /* Welcome to Fabulous Las Vegas sign */
-  .vegas-sign {
-    width: 132px; padding: 2px; margin-bottom: 1.6rem;
-    background: linear-gradient(180deg, rgba(200,169,110,0.95), rgba(224,92,58,0.7));
-    clip-path: polygon(50% 0%, 100% 18%, 100% 100%, 0% 100%, 0% 18%);
-    filter: drop-shadow(0 0 12px rgba(200,169,110,0.35));
-    opacity: 0;
-    animation: fadeUp 1s ease 0.15s forwards;
+  /* Gallery section: interactive golden frame that follows the cursor */
+  .portfolio-inner { position: relative; padding: 2.5rem 2rem; }
+  .portfolio-inner > * { position: relative; z-index: 1; }
+  .portfolio-inner::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    padding: 1px;
+    background: radial-gradient(460px circle at var(--gx, 50%) var(--gy, 50%),
+      rgba(255,231,178,0.9), rgba(224,92,58,0.45) 28%, rgba(200,169,110,0.16) 52%, rgba(200,169,110,0.07) 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    transition: opacity 0.5s ease;
   }
-  .vegas-sign-inner {
-    clip-path: polygon(50% 0%, 100% 18%, 100% 100%, 0% 100%, 0% 18%);
-    background: linear-gradient(165deg, #14100b 0%, #0a0806 100%);
-    padding: 1.45rem 0.6rem 0.75rem;
-    display: flex; flex-direction: column; align-items: center; gap: 0.1rem;
-    animation: signGlow 4.5s ease-in-out infinite alternate;
+  .portfolio-inner::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    box-shadow: inset 0 0 70px rgba(200,169,110,0.05);
+    opacity: 0; transition: opacity 0.6s ease;
   }
-  @keyframes signGlow {
-    from { box-shadow: inset 0 0 18px rgba(200,169,110,0.10); }
-    to   { box-shadow: inset 0 0 28px rgba(200,169,110,0.24); }
+  .portfolio-inner:hover::after { opacity: 1; }
+
+  @media (max-width: 900px) {
+    .portfolio-inner { padding: 1.5rem 1rem; }
   }
-  .vs-star { color: var(--accent); font-size: 0.6rem; line-height: 1; text-shadow: 0 0 8px rgba(200,169,110,0.95); }
-  .vs-welcome { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 0.74rem; color: var(--white); text-shadow: 0 0 8px rgba(255,255,255,0.35); }
-  .vs-to { font-size: 0.42rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--light-gray); }
-  .vs-lv {
-    font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; line-height: 1.05; letter-spacing: 0.05em;
-    color: var(--accent);
-    text-shadow: 0 0 8px rgba(200,169,110,0.9), 0 0 18px rgba(200,169,110,0.45);
-  }
-  .vs-nv { font-size: 0.42rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--light-gray); }
 
   /* Vegas glitter — twinkles in place (never falls) */
   .glitter {
@@ -1082,7 +1090,7 @@
   .port-filter-btn.active { box-shadow: 0 0 16px rgba(200,169,110,0.3), inset 0 0 10px rgba(200,169,110,0.08); }
 
   @media (prefers-reduced-motion: reduce) {
-    .lang-globe, .globe-glint, .glitter, .vegas-sign-inner { animation: none; }
+    .lang-globe, .globe-glint, .glitter { animation: none; }
     .glitter { opacity: 0.5; }
   }
 
@@ -1090,9 +1098,6 @@
     .nav-left { gap: 0.75rem; }
     .lang-toggle { padding: 0.3rem 0.6rem; gap: 0.35rem; }
     .lang-btn { font-size: 0.68rem; }
-    .vegas-sign { width: 108px; margin-bottom: 1.2rem; }
-    .vegas-sign-inner { padding: 1.15rem 0.5rem 0.6rem; }
-    .vs-lv { font-size: 0.88rem; }
   }
 </style>
 </head>
@@ -1121,15 +1126,6 @@
 
 <section class="hero">
   <div class="hero-left">
-    <div class="vegas-sign" aria-hidden="true">
-      <div class="vegas-sign-inner">
-        <span class="vs-star">★</span>
-        <span class="vs-welcome">Welcome</span>
-        <span class="vs-to">to fabulous</span>
-        <span class="vs-lv">Las Vegas</span>
-        <span class="vs-nv">Nevada</span>
-      </div>
-    </div>
     <p class="hero-eyebrow" data-i18n="hero.eyebrow">Visual Storyteller · Las Vegas</p>
     <h1 class="hero-title" data-i18n-html="hero.title">Making<br>the <span class="italic">World</span><br>Stand Still</h1>
     <p class="hero-sub" data-i18n="hero.sub">Photography that stops the scroll, holds the gaze, and lives in the memory. Every frame is a decision.</p>
@@ -2007,6 +2003,29 @@
     document.addEventListener('touchmove', e => {
       if (e.touches[0]) queueGlare(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
+
+    // ── GALLERY GLOW: section frame + per-tile border light follow the cursor ──
+    const galleryInner = document.querySelector('.portfolio-inner');
+    if (galleryInner) {
+      let glowEvt = null, glowQueued = false;
+      const flushGlow = () => {
+        glowQueued = false;
+        if (!glowEvt) return;
+        const sr = galleryInner.getBoundingClientRect();
+        galleryInner.style.setProperty('--gx', ((glowEvt.clientX - sr.left) / sr.width * 100).toFixed(1) + '%');
+        galleryInner.style.setProperty('--gy', ((glowEvt.clientY - sr.top) / sr.height * 100).toFixed(1) + '%');
+        const tile = glowEvt.target.closest && glowEvt.target.closest('.port-item');
+        if (tile) {
+          const tr = tile.getBoundingClientRect();
+          tile.style.setProperty('--px', ((glowEvt.clientX - tr.left) / tr.width * 100).toFixed(1) + '%');
+          tile.style.setProperty('--py', ((glowEvt.clientY - tr.top) / tr.height * 100).toFixed(1) + '%');
+        }
+      };
+      galleryInner.addEventListener('pointermove', e => {
+        glowEvt = e;
+        if (!glowQueued) { glowQueued = true; requestAnimationFrame(flushGlow); }
+      }, { passive: true });
+    }
 
     // ── STAT COUNTER COUNT-UP (fires once when scrolled into view) ──
     const statsBlock = document.querySelector('.about-stats');
