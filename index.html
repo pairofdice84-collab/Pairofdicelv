@@ -875,28 +875,110 @@
   }
 
   /* ═══════════════════════════════
-     AMBIENT GOLD DUST + CURSOR GLARE
+     VEGAS AMBIENCE + MICRO-INTERACTIONS
   ═══════════════════════════════ */
   .page-ambience { position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
   .page-glare {
     position: absolute; inset: -20%;
-    background: radial-gradient(650px circle at var(--mx, 50%) var(--my, 25%), rgba(200,169,110,0.09), transparent 60%);
+    background: radial-gradient(650px circle at var(--mx, 50%) var(--my, 25%), rgba(200,169,110,0.10), transparent 60%);
     transition: background 0.5s ease;
+    will-change: background;
   }
-  .dust-mote {
-    position: absolute; top: -5%;
-    background: var(--accent); border-radius: 50%;
-    box-shadow: 0 0 6px rgba(200,169,110,0.8), 0 0 12px rgba(200,169,110,0.4);
-    animation: dustFall linear infinite;
+  /* Slow marquee light sweep — like a rotating casino sign catching the room */
+  .page-sweep {
+    position: absolute; top: -50%; left: -60%; width: 45%; height: 200%;
+    background: linear-gradient(100deg, transparent, rgba(200,169,110,0.055) 45%, rgba(224,92,58,0.035) 60%, transparent);
+    transform: rotate(12deg);
+    animation: vegasSweep 14s ease-in-out infinite;
+    will-change: transform;
   }
-  @keyframes dustFall {
-    0%   { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
-    8%   { opacity: var(--mote-opacity, 0.6); }
-    92%  { opacity: var(--mote-opacity, 0.6); }
-    100% { transform: translateY(110vh) translateX(var(--drift, 40px)) rotate(180deg); opacity: 0; }
+  @keyframes vegasSweep {
+    0%, 100% { transform: translateX(0) rotate(12deg); opacity: 0; }
+    15%      { opacity: 1; }
+    85%      { opacity: 1; }
+    100%     { transform: translateX(320%) rotate(12deg); opacity: 0; }
   }
+  /* Soft neon breathing pool at the base of the viewport */
+  .page-neon-pool {
+    position: absolute; bottom: -30%; left: 50%; width: 90%; height: 60%;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, rgba(224,92,58,0.06), transparent 65%);
+    animation: neonBreathe 9s ease-in-out infinite alternate;
+  }
+  @keyframes neonBreathe {
+    from { opacity: 0.5; }
+    to   { opacity: 1; }
+  }
+
+  /* ── MICRO-INTERACTIONS ── */
+  /* Nav links: gold underline sweeps in */
+  .nav-links a { position: relative; }
+  .nav-links a::after {
+    content: ''; position: absolute; left: 0; bottom: -6px; width: 100%; height: 1px;
+    background: var(--accent); transform: scaleX(0); transform-origin: right;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 0 8px rgba(200,169,110,0.7);
+  }
+  .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+
+  /* Primary buttons: neon shine wipes across on hover */
+  .btn-primary { position: relative; overflow: hidden; }
+  .btn-primary::after {
+    content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+    transition: left 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+  .btn-primary:hover::after { left: 140%; }
+  .btn-primary:hover { box-shadow: 0 6px 24px rgba(224,92,58,0.35); }
+  .btn-primary:active { transform: translateY(0) scale(0.98); }
+
+  /* Filter chips: subtle lift + glow */
+  .port-filter-btn { position: relative; }
+  .port-filter-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(200,169,110,0.18); }
+  .port-filter-btn.active { box-shadow: 0 0 14px rgba(200,169,110,0.25); }
+
+  /* Portfolio tiles: gold frame ignites on hover */
+  .port-item::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 4;
+    border: 1px solid transparent;
+    transition: border-color 0.45s ease, box-shadow 0.45s ease;
+  }
+  .port-item:hover::after {
+    border-color: rgba(200,169,110,0.55);
+    box-shadow: inset 0 0 22px rgba(200,169,110,0.16), 0 0 26px rgba(200,169,110,0.14);
+  }
+  .port-item:hover { transform: translateY(-4px); }
+
+  /* Service cards: lift with a warm cast */
+  .service-card { transition: background 0.4s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease; }
+  .service-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(0,0,0,0.5), 0 0 26px rgba(200,169,110,0.08); }
+  .service-card .tag { transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+  .service-card:hover .tag { border-color: rgba(200,169,110,0.5); background: rgba(200,169,110,0.07); }
+
+  /* Stat numbers: gently pulse into focus when revealed */
+  .stat-num { transition: text-shadow 0.6s ease; }
+  .about-stats.visible .stat-num { text-shadow: 0 0 18px rgba(200,169,110,0.45); }
+
+  /* Form fields: glow ring on focus */
+  .form-group input, .form-group select, .form-group textarea { transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    box-shadow: 0 0 0 1px rgba(200,169,110,0.35), 0 0 18px rgba(200,169,110,0.15);
+    background: #101010;
+  }
+
+  /* Contact detail icons: warm up on hover */
+  .contact-detail-icon { transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease; }
+  .contact-detail:hover .contact-detail-icon { border-color: rgba(200,169,110,0.5); box-shadow: 0 0 16px rgba(200,169,110,0.2); transform: translateY(-2px); }
+
+  /* Footer links: gold glow on hover */
+  .footer-links a { transition: color 0.3s ease, text-shadow 0.3s ease; }
+  .footer-links a:hover { text-shadow: 0 0 10px rgba(200,169,110,0.5); }
+
   @media (prefers-reduced-motion: reduce) {
-    .dust-mote { animation: none; opacity: 0; }
+    .page-sweep, .page-neon-pool { animation: none; }
+    .btn-primary::after { transition: none; }
+    .port-item:hover, .service-card:hover, .port-filter-btn:hover { transform: none; }
   }
 </style>
 </head>
@@ -1762,36 +1844,61 @@
 
     applyTranslations(currentLang);
 
-    // ── AMBIENT GOLD DUST + CURSOR GLARE ──
+    // ── VEGAS AMBIENCE: cursor glare + marquee sweep + neon pool ──
     const ambience = document.createElement('div');
     ambience.className = 'page-ambience';
-    const glare = document.createElement('div');
-    glare.className = 'page-glare';
-    ambience.appendChild(glare);
-    const MOTE_COUNT = window.innerWidth < 900 ? 16 : 28;
-    for (let i = 0; i < MOTE_COUNT; i++) {
-      const mote = document.createElement('div');
-      mote.className = 'dust-mote';
-      const size = (Math.random() * 2.5 + 1.5).toFixed(1);
-      const left = (Math.random() * 100).toFixed(1);
-      const duration = (Math.random() * 10 + 12).toFixed(1);
-      const delay = (Math.random() * -22).toFixed(1);
-      const drift = (Math.random() * 80 - 40).toFixed(0);
-      const opacity = (Math.random() * 0.4 + 0.3).toFixed(2);
-      mote.style.cssText = `left:${left}%; width:${size}px; height:${size}px; animation-duration:${duration}s; animation-delay:${delay}s; --drift:${drift}px; --mote-opacity:${opacity};`;
-      ambience.appendChild(mote);
-    }
+    ambience.innerHTML = '<div class="page-glare"></div><div class="page-sweep"></div><div class="page-neon-pool"></div>';
     document.body.appendChild(ambience);
+    const glare = ambience.querySelector('.page-glare');
 
-    document.addEventListener('mousemove', e => {
-      glare.style.setProperty('--mx', (e.clientX / window.innerWidth * 100).toFixed(1) + '%');
-      glare.style.setProperty('--my', (e.clientY / window.innerHeight * 100).toFixed(1) + '%');
-    });
+    // rAF-throttled so pointer tracking never thrashes the main thread
+    let pointerX = 0, pointerY = 0, glareQueued = false;
+    function flushGlare() {
+      glareQueued = false;
+      glare.style.setProperty('--mx', (pointerX / window.innerWidth * 100).toFixed(1) + '%');
+      glare.style.setProperty('--my', (pointerY / window.innerHeight * 100).toFixed(1) + '%');
+    }
+    function queueGlare(x, y) {
+      pointerX = x; pointerY = y;
+      if (!glareQueued) { glareQueued = true; requestAnimationFrame(flushGlare); }
+    }
+    document.addEventListener('mousemove', e => queueGlare(e.clientX, e.clientY));
     document.addEventListener('touchmove', e => {
-      if (!e.touches[0]) return;
-      glare.style.setProperty('--mx', (e.touches[0].clientX / window.innerWidth * 100).toFixed(1) + '%');
-      glare.style.setProperty('--my', (e.touches[0].clientY / window.innerHeight * 100).toFixed(1) + '%');
+      if (e.touches[0]) queueGlare(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
+
+    // ── STAT COUNTER COUNT-UP (fires once when scrolled into view) ──
+    const statsBlock = document.querySelector('.about-stats');
+    if (statsBlock) {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const COUNT_MS = 900;
+      const statObserver = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          obs.unobserve(entry.target);
+          entry.target.classList.add('visible');
+          if (reduceMotion) return;
+          entry.target.querySelectorAll('.stat-num').forEach(el => {
+            const match = el.textContent.trim().match(/^(\d+)(.*)$/);
+            if (!match) return;
+            const target = parseInt(match[1], 10);
+            const suffix = match[2];
+            const settle = () => { el.textContent = target + suffix; };
+            const start = performance.now();
+            const tick = now => {
+              const p = Math.min((now - start) / COUNT_MS, 1);
+              el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))) + suffix;
+              if (p < 1) requestAnimationFrame(tick);
+            };
+            el.textContent = '0' + suffix;
+            requestAnimationFrame(tick);
+            // Guarantees the real number shows even if rAF is throttled/paused (e.g. backgrounded tab)
+            setTimeout(settle, COUNT_MS + 250);
+          });
+        });
+      }, { threshold: 0.4 });
+      statObserver.observe(statsBlock);
+    }
   })();
 </script>
 </body>
