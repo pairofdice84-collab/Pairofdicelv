@@ -574,10 +574,10 @@
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
   .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
   .form-group label { font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--light-gray); }
-  .form-group input, .form-group select, .form-group textarea { background: #0e0e0e; border: 1px solid #1e1e1e; color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 300; padding: 0.9rem 1rem; outline: none; transition: border-color 0.3s ease; -webkit-appearance: none; appearance: none; cursor: none; }
+  .form-group input, .form-group select, .form-group textarea { background: rgba(200,169,110,0.055); border: 1px solid rgba(200,169,110,0.22); color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 300; padding: 0.9rem 1rem; outline: none; transition: border-color 0.3s ease; -webkit-appearance: none; appearance: none; cursor: none; }
   .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); }
-  .form-group input::placeholder, .form-group textarea::placeholder { color: #333; }
-  .form-group select { color: #333; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; }
+  .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(245,242,236,0.35); }
+  .form-group select { color: rgba(245,242,236,0.38); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; }
   .form-group select.selected { color: var(--white); }
   .form-group textarea { resize: vertical; min-height: 120px; }
   .form-submit { background: var(--accent); color: var(--black); padding: 1.1rem 2.5rem; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; border: none; cursor: none; transition: background 0.3s ease, transform 0.3s ease; align-self: flex-start; margin-top: 0.5rem; }
@@ -1070,7 +1070,7 @@
   .form-group input, .form-group select, .form-group textarea { transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease; }
   .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
     box-shadow: 0 0 0 1px rgba(200,169,110,0.35), 0 0 18px rgba(200,169,110,0.15);
-    background: #101010;
+    background: rgba(200,169,110,0.10);
   }
 
   /* Contact detail icons: warm up on hover */
@@ -1355,35 +1355,6 @@
   </div>
 </div>
 
-<section class="services" id="services">
-  <div class="section-header reveal">
-    <div>
-      <span class="section-label" data-i18n="services.label">What I Offer</span>
-      <h2 class="section-title" data-i18n-html="services.title">Services that<br><span class="em">Deliver</span></h2>
-    </div>
-    <p class="section-desc" data-i18n="services.desc">From intimate portraits to full podcast production, every engagement is handled with the same obsessive attention to craft.</p>
-  </div>
-  <div class="services-grid">
-    <div class="service-card reveal">
-      <div class="service-number">01</div>
-      <h3 class="service-name" data-i18n="services.s1.name">Portrait & Editorial</h3>
-      <p class="service-desc" data-i18n="services.s1.desc">Personal branding, headshots, and editorial work that communicate who you are before you say a word.</p>
-      <div class="service-tags"><span class="tag" data-i18n="services.s1.tag1">Branding</span><span class="tag" data-i18n="services.s1.tag2">Editorial</span><span class="tag" data-i18n="services.s1.tag3">Headshots</span></div>
-    </div>
-    <div class="service-card reveal reveal-delay-1">
-      <div class="service-number">02</div>
-      <h3 class="service-name" data-i18n="services.s2.name">Podcast Production</h3>
-      <p class="service-desc" data-i18n="services.s2.desc">Multiple camera set up with broadcast-grade audio. Your show, elevated. Canon R5C + R7 rig available on location. Video and Audio Production Console available for on-location auto switching and real-time delivery of your podcast. All video and audio will be available after time of recording.</p>
-      <div class="service-tags"><span class="tag" data-i18n="services.s2.tag1">Video</span><span class="tag" data-i18n="services.s2.tag2">Audio</span><span class="tag" data-i18n="services.s2.tag3">Editing</span></div>
-    </div>
-    <div class="service-card reveal reveal-delay-2">
-      <div class="service-number">03</div>
-      <h3 class="service-name" data-i18n="services.s3.name">Commercial & Events</h3>
-      <p class="service-desc" data-i18n="services.s3.desc">Product photography, brand campaigns, and events coverage that move fast without losing the detail.</p>
-      <div class="service-tags"><span class="tag" data-i18n="services.s3.tag1">Commercial</span><span class="tag" data-i18n="services.s3.tag2">Events</span><span class="tag" data-i18n="services.s3.tag3">Product</span></div>
-    </div>
-  </div>
-</section>
 
 <section class="portfolio" id="portfolio">
   <div class="portfolio-inner">
@@ -1557,6 +1528,36 @@
       <div><div class="stat-num">LV</div><div class="stat-label" data-i18n="about.stat3">Based In</div></div>
     </div>
     <a href="#contact" class="btn-primary reveal" data-i18n="about.cta">Work With Me</a>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <div class="section-header reveal">
+    <div>
+      <span class="section-label" data-i18n="services.label">What I Offer</span>
+      <h2 class="section-title" data-i18n-html="services.title">Services that<br><span class="em">Deliver</span></h2>
+    </div>
+    <p class="section-desc" data-i18n="services.desc">From intimate portraits to full podcast production, every engagement is handled with the same obsessive attention to craft.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-number">01</div>
+      <h3 class="service-name" data-i18n="services.s1.name">Portrait & Editorial</h3>
+      <p class="service-desc" data-i18n="services.s1.desc">Personal branding, headshots, and editorial work that communicate who you are before you say a word.</p>
+      <div class="service-tags"><span class="tag" data-i18n="services.s1.tag1">Branding</span><span class="tag" data-i18n="services.s1.tag2">Editorial</span><span class="tag" data-i18n="services.s1.tag3">Headshots</span></div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-number">02</div>
+      <h3 class="service-name" data-i18n="services.s2.name">Podcast Production</h3>
+      <p class="service-desc" data-i18n="services.s2.desc">Multiple camera set up with broadcast-grade audio. Your show, elevated. Canon R5C + R7 rig available on location. Video and Audio Production Console available for on-location auto switching and real-time delivery of your podcast. All video and audio will be available after time of recording.</p>
+      <div class="service-tags"><span class="tag" data-i18n="services.s2.tag1">Video</span><span class="tag" data-i18n="services.s2.tag2">Audio</span><span class="tag" data-i18n="services.s2.tag3">Editing</span></div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-number">03</div>
+      <h3 class="service-name" data-i18n="services.s3.name">Commercial & Events</h3>
+      <p class="service-desc" data-i18n="services.s3.desc">Product photography, brand campaigns, and events coverage that move fast without losing the detail.</p>
+      <div class="service-tags"><span class="tag" data-i18n="services.s3.tag1">Commercial</span><span class="tag" data-i18n="services.s3.tag2">Events</span><span class="tag" data-i18n="services.s3.tag3">Product</span></div>
+    </div>
   </div>
 </section>
 
