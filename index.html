@@ -3,7 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manny — Photography</title>
+<title>Pairofdicelv — Wedding &amp; Quinceañera Photography, Las Vegas</title>
+<meta name="description" content="Wedding and quinceañera photography in Las Vegas with an editorial eye. Bilingual — English &amp; Español. Bodas y quinceañeras en Las Vegas.">
+<link rel="canonical" href="https://pairofdice84-collab.github.io/Pairofdicelv/">
+
+<!-- Open Graph / social sharing -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pairofdicelv Photography">
+<meta property="og:title" content="Wedding &amp; Quinceañera Photography — Las Vegas">
+<meta property="og:description" content="Editorial-eye photography for weddings and quinceañeras across Las Vegas. English &amp; Español.">
+<meta property="og:url" content="https://pairofdice84-collab.github.io/Pairofdicelv/">
+<meta property="og:image" content="https://pairofdice84-collab.github.io/Pairofdicelv/images/og-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A groom lifting his bride during their Las Vegas wedding reception">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="es_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Wedding &amp; Quinceañera Photography — Las Vegas">
+<meta name="twitter:description" content="Editorial-eye photography for weddings and quinceañeras across Las Vegas. English &amp; Español.">
+<meta name="twitter:image" content="https://pairofdice84-collab.github.io/Pairofdicelv/images/og-cover.jpg">
+<meta name="theme-color" content="#080808">
+
+<!-- Local business structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": "https://pairofdice84-collab.github.io/Pairofdicelv/#business",
+  "name": "Pairofdicelv Photography",
+  "description": "Wedding and quinceañera photography in Las Vegas with an editorial eye. Bilingual service in English and Spanish.",
+  "url": "https://pairofdice84-collab.github.io/Pairofdicelv/",
+  "image": "https://pairofdice84-collab.github.io/Pairofdicelv/images/og-cover.jpg",
+  "email": "pairofdicelv@gmail.com",
+  "priceRange": "$$",
+  "areaServed": { "@type": "City", "name": "Las Vegas", "containedInPlace": { "@type": "State", "name": "Nevada" } },
+  "address": { "@type": "PostalAddress", "addressLocality": "Las Vegas", "addressRegion": "NV", "addressCountry": "US" },
+  "availableLanguage": ["English", "Spanish"],
+  "sameAs": ["https://www.instagram.com/pairofdicelv/"],
+  "makesOffer": [
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Wedding Photography" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Quinceañera Photography" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Couples & Engagement Photography" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Event & Commercial Photography" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Real Estate Photography" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Podcast Production" } }
+  ]
+}
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -535,6 +583,7 @@
   .form-submit { background: var(--accent); color: var(--black); padding: 1.1rem 2.5rem; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; border: none; cursor: none; transition: background 0.3s ease, transform 0.3s ease; align-self: flex-start; margin-top: 0.5rem; }
   .form-submit:hover { background: var(--accent2); transform: translateY(-2px); }
   .form-submit:disabled { opacity: 0.5; transform: none; }
+  .form-reassure { font-size: 0.72rem; letter-spacing: 0.06em; color: var(--dim, #8a8278); margin-top: 0.75rem; }
   .form-success { display: none; padding: 1.5rem; border: 1px solid rgba(200,169,110,0.3); background: rgba(200,169,110,0.05); text-align: center; }
   .form-success h4 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--accent); margin-bottom: 0.5rem; }
   .form-success p { font-size: 0.85rem; color: var(--light-gray); }
@@ -1034,6 +1083,17 @@
     .port-item:hover, .service-card:hover, .port-filter-btn:hover { transform: none; }
   }
 
+  /* Custom cursor is pointer-only. On touch or small screens restore the
+     real cursor so nobody is left without one. */
+  @media (hover: none), (max-width: 900px) {
+    body, a, button, .btn-primary, .port-item, .port-filter-btn,
+    .lightbox, .viewer, .lightbox-close, .viewer-close, .viewer-arrow,
+    .form-group input, .form-group select, .form-group textarea, .lang-btn { cursor: auto; }
+    a, button, .port-item, .port-filter-btn, .lang-btn, .viewer-arrow,
+    .lightbox-close, .viewer-close, .form-submit { cursor: pointer; }
+    .cursor, .cursor-ring { display: none; }
+  }
+
   /* ═══════════════════════════════
      NEON · VEGAS SIGN · GLITTER · GLOBE
   ═══════════════════════════════ */
@@ -1143,14 +1203,14 @@
   }
 </style>
 </head>
-<body>
+<body id="top">
 
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
 <nav>
   <div class="nav-left">
-    <a href="#" class="nav-logo">Manny</a>
+    <a href="#top" class="nav-logo" aria-label="Pairofdicelv — back to top">Manny</a>
     <div class="lang-toggle">
       <span class="lang-globe-wrap"><span class="lang-globe">🌐</span><i class="globe-glint"></i></span>
       <button class="lang-btn active" data-lang="en">EN</button>
@@ -1168,12 +1228,12 @@
 
 <section class="hero">
   <div class="hero-left">
-    <p class="hero-eyebrow" data-i18n="hero.eyebrow">Visual Storyteller · Las Vegas</p>
+    <p class="hero-eyebrow" data-i18n="hero.eyebrow">Weddings &amp; Quinceañeras · Las Vegas · Se habla español</p>
     <h1 class="hero-title" data-i18n-html="hero.title">Making<br>the <span class="italic">World</span><br>Stand Still</h1>
-    <p class="hero-sub" data-i18n="hero.sub">Photography that stops the scroll, holds the gaze, and lives in the memory. Every frame is a decision.</p>
+    <p class="hero-sub" data-i18n="hero.sub">Wedding and quinceañera photography with an editorial eye. Every frame is a decision — and you get all of them.</p>
     <div class="hero-cta">
-      <a href="#portfolio" class="btn-primary" data-i18n="hero.cta1">View Work</a>
-      <a href="#contact" class="btn-ghost" data-i18n="hero.cta2">Book a Session →</a>
+      <a href="#portfolio" class="btn-primary" data-i18n="hero.cta1">View Weddings</a>
+      <a href="#contact" class="btn-ghost" data-i18n="hero.cta2">Check Your Date →</a>
     </div>
     <!-- Mobile-only hero image strip -->
     <div class="hero-mobile-strip">
@@ -1491,10 +1551,11 @@
           </select>
         </div>
       </div>
-      <div class="form-group"><label for="message" data-i18n="form.message">Message</label><textarea id="message" name="message" data-i18n-placeholder="form.messagePh" placeholder="Tell me about your project..." required></textarea></div>
-      <button type="submit" class="form-submit" id="submitBtn" data-i18n="form.submit">Send Message</button>
+      <div class="form-group"><label for="message" data-i18n="form.message">Message</label><textarea id="message" name="message" data-i18n-placeholder="form.messagePh" placeholder="Your date, venue, and what matters most to you." required></textarea></div>
+      <button type="submit" class="form-submit" id="submitBtn" data-i18n="form.submit">Check My Date</button>
+      <p class="form-reassure" data-i18n="form.reassure">I reply to every inquiry within 24 hours.</p>
     </form>
-    <div class="form-success" id="formSuccess"><h4 data-i18n="form.successTitle">Message Sent</h4><p data-i18n="form.successBody">Thanks for reaching out — I'll get back to you within 24 hours.</p></div>
+    <div class="form-success" id="formSuccess"><h4 data-i18n="form.successTitle">Got It</h4><p data-i18n="form.successBody">Thanks for reaching out — I'll get back to you within 24 hours.</p></div>
   </div>
 </section>
 
@@ -1503,8 +1564,6 @@
     <p class="footer-copy" data-i18n="footer.copy">© 2026 Manny Photography. Las Vegas, NV.</p>
     <ul class="footer-links">
       <li><a href="https://www.instagram.com/pairofdicelv/" target="_blank">Instagram</a></li>
-      <li><a href="#">LinkedIn</a></li>
-      <li><a href="#">Behance</a></li>
     </ul>
   </div>
 </footer>
@@ -1767,7 +1826,7 @@
         alert('Network error. Please try again.');
       }
       submitBtn.disabled = false;
-      submitBtn.textContent = currentLang === 'es' ? 'Enviar Mensaje' : 'Send Message';
+      submitBtn.textContent = currentLang === 'es' ? 'Consultar Mi Fecha' : 'Check My Date';
     });
 
     // ── BILINGUAL TRANSLATION ENGINE ──
@@ -1777,11 +1836,11 @@
         'nav.services': 'Services',
         'nav.about': 'About',
         'nav.contact': 'Contact',
-        'hero.eyebrow': 'Visual Storyteller · Las Vegas',
+        'hero.eyebrow': 'Weddings & Quinceañeras · Las Vegas · Se habla español',
         'hero.title': 'Making<br>the <span class="italic">World</span><br>Stand Still',
-        'hero.sub': 'Photography that stops the scroll, holds the gaze, and lives in the memory. Every frame is a decision.',
-        'hero.cta1': 'View Work',
-        'hero.cta2': 'Book a Session →',
+        'hero.sub': 'Wedding and quinceañera photography with an editorial eye. Every frame is a decision — and you get all of them.',
+        'hero.cta1': 'View Weddings',
+        'hero.cta2': 'Check Your Date →',
         'hero.scroll': 'Scroll',
         'hero.label.portrait': 'Portrait',
         'hero.label.street': 'Street',
@@ -1866,10 +1925,11 @@
         'form.opt7': 'Podcast Production',
         'form.opt8': 'Other',
         'form.message': 'Message',
-        'form.messagePh': 'Tell me about your project...',
-        'form.submit': 'Send Message',
-        'form.successTitle': 'Message Sent',
+        'form.messagePh': 'Your date, venue, and what matters most to you.',
+        'form.submit': 'Check My Date',
+        'form.successTitle': 'Got It',
         'form.successBody': "Thanks for reaching out — I'll get back to you within 24 hours.",
+        'form.reassure': 'I reply to every inquiry within 24 hours.',
         'footer.copy': '© 2026 Manny Photography. Las Vegas, NV.'
       },
       es: {
@@ -1877,11 +1937,11 @@
         'nav.services': 'Servicios',
         'nav.about': 'Sobre Mí',
         'nav.contact': 'Contacto',
-        'hero.eyebrow': 'Narrador Visual · Las Vegas',
+        'hero.eyebrow': 'Bodas y Quinceañeras · Las Vegas · Se habla español',
         'hero.title': 'Deteniendo<br>el <span class="italic">Mundo</span><br>en un Instante',
-        'hero.sub': 'Fotografía que detiene el scroll, captura la mirada y vive en la memoria. Cada toma es una decisión.',
-        'hero.cta1': 'Ver Trabajo',
-        'hero.cta2': 'Reservar Sesión →',
+        'hero.sub': 'Fotografía de bodas y quinceañeras con mirada editorial. Cada toma es una decisión — y usted recibe todas.',
+        'hero.cta1': 'Ver Bodas',
+        'hero.cta2': 'Consultar Tu Fecha →',
         'hero.scroll': 'Desliza',
         'hero.label.portrait': 'Retrato',
         'hero.label.street': 'Calle',
@@ -1966,10 +2026,11 @@
         'form.opt7': 'Producción de Podcast',
         'form.opt8': 'Otro',
         'form.message': 'Mensaje',
-        'form.messagePh': 'Cuéntame sobre tu proyecto...',
-        'form.submit': 'Enviar Mensaje',
-        'form.successTitle': 'Mensaje Enviado',
+        'form.messagePh': 'Su fecha, el lugar, y lo que más le importa.',
+        'form.submit': 'Consultar Mi Fecha',
+        'form.successTitle': 'Recibido',
         'form.successBody': 'Gracias por contactarme — te responderé dentro de 24 horas.',
+        'form.reassure': 'Respondo a cada consulta dentro de 24 horas.',
         'footer.copy': '© 2026 Manny Photography. Las Vegas, NV.'
       }
     };
