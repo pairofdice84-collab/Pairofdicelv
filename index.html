@@ -583,6 +583,10 @@
   .form-submit { background: var(--accent); color: var(--black); padding: 1.1rem 2.5rem; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; border: none; cursor: none; transition: background 0.3s ease, transform 0.3s ease; align-self: flex-start; margin-top: 0.5rem; }
   .form-submit:hover { background: var(--accent2); transform: translateY(-2px); }
   .form-submit:disabled { opacity: 0.5; transform: none; }
+  .field-hint { font-size: 0.62rem; letter-spacing: 0.06em; color: var(--gray); margin-top: 0.15rem; }
+  .form-group input[type="date"] { color-scheme: dark; font-family: 'DM Sans', sans-serif; min-height: 3rem; }
+  .form-group input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(72%) sepia(28%) saturate(560%) hue-rotate(2deg); cursor: pointer; opacity: .85; }
+  .form-group input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
   .form-reassure { font-size: 0.72rem; letter-spacing: 0.06em; color: var(--dim, #8a8278); margin-top: 0.75rem; }
   .form-success { display: none; padding: 1.5rem; border: 1px solid rgba(200,169,110,0.3); background: rgba(200,169,110,0.05); text-align: center; }
   .form-success h4 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--accent); margin-bottom: 0.5rem; }
@@ -1413,7 +1417,7 @@
           <div class="port-info">
             <p class="port-category" data-i18n="port.street.cat">Street Photography</p>
             <p class="port-title" data-i18n="port.street.title">Vegas After Dark</p>
-            <p class="port-count" data-i18n="port.street.count">— 8 photos · Click to view gallery</p>
+            <p class="port-count" data-i18n="port.street.count">— 9 photos · Click to view gallery</p>
           </div>
         </div>
       </div>
@@ -1441,7 +1445,7 @@
           <div class="port-info">
             <p class="port-category" data-i18n="port.quince.cat">Quinceañeras</p>
             <p class="port-title" data-i18n="port.quince.title">Mis XV Años</p>
-            <p class="port-count" data-i18n="port.quince.count">— 19 photos · Click to view gallery</p>
+            <p class="port-count" data-i18n="port.quince.count">— 21 photos · Click to view gallery</p>
           </div>
         </div>
       </div>
@@ -1449,16 +1453,13 @@
       <!-- Couples -->
       <div class="port-item reveal" data-category="couples" data-project="couples" onclick="openLightbox('couples')">
         <div class="port-bg pg-couples">
-          <div class="port-placeholder">
-            <svg class="port-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            Cover Photo
-          </div>
+          <img src="images/couples/couples-4l7a0812-edit.jpg" loading="lazy" alt="Engagement session at the Welcome to Fabulous Las Vegas sign" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
         </div>
         <div class="port-overlay">
           <div class="port-info">
             <p class="port-category" data-i18n="port.couples.cat">Couples</p>
             <p class="port-title" data-i18n="port.couples.title">Couples & Engagements</p>
-            <p class="port-count" data-i18n="port.couples.count">— Click to view gallery</p>
+            <p class="port-count" data-i18n="port.couples.count">— 16 photos · Click to view gallery</p>
           </div>
         </div>
       </div>
@@ -1489,7 +1490,7 @@
           <div class="port-info">
             <p class="port-category" data-i18n="port.realestate.cat">Real Estate</p>
             <p class="port-title" data-i18n="port.realestate.title">Real Estate & Architecture</p>
-            <p class="port-count" data-i18n="port.realestate.count">— 16 photos · Click to view gallery</p>
+            <p class="port-count" data-i18n="port.realestate.count">— 22 photos · Click to view gallery</p>
           </div>
         </div>
       </div>
@@ -1573,8 +1574,9 @@
   <div class="contact-right reveal reveal-delay-1">
     <form class="contact-form" id="contactForm" action="https://api.web3forms.com/submit" method="POST">
       <input type="hidden" name="access_key" value="f611101c-9a41-4732-9657-9f3692fa8bab">
-      <input type="hidden" name="subject" value="New Lead from Portfolio Website">
-      <input type="hidden" name="from_name" value="Manny Photography Website">
+      <input type="hidden" name="subject" id="formSubject" value="New Inquiry — Pairofdicelv">
+      <input type="hidden" name="from_name" value="Pairofdicelv Website">
+      <input type="hidden" name="replyto" id="formReplyTo" value="">
       <input type="checkbox" name="botcheck" style="display: none;">
       <div class="form-row">
         <div class="form-group"><label for="name" data-i18n="form.name">Name</label><input type="text" id="name" name="name" data-i18n-placeholder="form.namePh" placeholder="Your full name" required></div>
@@ -1595,6 +1597,17 @@
             <option value="Podcast Production" data-i18n="form.opt7">Podcast Production</option>
             <option value="Other" data-i18n="form.opt8">Other</option>
           </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="eventdate" data-i18n="form.date">Event Date</label>
+          <input type="date" id="eventdate" name="Event Date" required>
+          <span class="field-hint" data-i18n="form.dateHint">Not sure yet? Pick your best guess.</span>
+        </div>
+        <div class="form-group">
+          <label for="venue" data-i18n="form.venue">Venue or Location</label>
+          <input type="text" id="venue" name="Venue" data-i18n-placeholder="form.venuePh" placeholder="Chapel, hotel, or area of town">
         </div>
       </div>
       <div class="form-group"><label for="message" data-i18n="form.message">Message</label><textarea id="message" name="message" data-i18n-placeholder="form.messagePh" placeholder="Your date, venue, and what matters most to you." required></textarea></div>
@@ -1668,7 +1681,8 @@
           'images/vegas/vegas-dsc09222.jpg',
           'images/vegas/vegas-dsc09457.jpg',
           'images/vegas/vegas-dsc09383.jpg',
-          'images/vegas/vegas-dtbaby.jpg'
+          'images/vegas/vegas-dtbaby.jpg',
+          'images/vegas/vegas-img9211.jpg'
         ]
       },
       'wedding': { title: 'Wedding Photography', category: 'Wedding', images: [
@@ -1678,13 +1692,36 @@
         'wedding-dq3a0296.jpg','wedding-4l7a2082.jpg','wedding-dq3a1569.jpg',
         'images/wedding/DSC_7803.JPG','images/wedding/DSC_7811.JPG','images/wedding/DSC_7847.JPG','images/wedding/DSC_7879.JPG'
       ] },
-      'couples': { title: 'Couples & Engagements', category: 'Couples', gradient: 'linear-gradient(160deg, #1a0e14 0%, #2a1520 50%, #120a10 100%)', count: 8 },
+      'couples': {
+        title: 'Couples & Engagements',
+        category: 'Couples',
+        images: [
+          'images/couples/couples-4l7a0812-edit.jpg',
+          'images/couples/couples-4l7a0791.jpg',
+          'images/couples/couples-4l7a0794.jpg',
+          'images/couples/couples-4l7a0822.jpg',
+          'images/couples/couples-4l7a0850-edit-edit.jpg',
+          'images/couples/couples-4l7a0857-edit.jpg',
+          'images/couples/couples-4l7a0882-edit.jpg',
+          'images/couples/couples-4l7a1165.jpg',
+          'images/couples/couples-4l7a1203-2.jpg',
+          'images/couples/couples-4l7a3658-2.jpg',
+          'images/couples/couples-4l7a7163-2-2.jpg',
+          'images/couples/couples-4l7a7166.jpg',
+          'images/couples/couples-4l7a7273-2-2.jpg',
+          'images/couples/couples-4l7a7290-edit.jpg',
+          'images/couples/couples-dsc-6110.jpg',
+          'images/couples/couples-fc27-cca2-f19a-8249.jpg'
+        ]
+      },
       'events': { title: 'Events & Commercial', category: 'Events', gradient: 'linear-gradient(160deg, #0e1210 0%, #152520 50%, #0a100e 100%)', count: 10 },
       'realestate': { title: 'Real Estate & Architecture', category: 'Real Estate', images: [
         'images/realestate-dji-0115.jpg','images/realestate-223a5389.jpg','images/realestate-223a5439.jpg','images/realestate-223a5485.jpg',
         'images/realestate-223a5519.jpg','images/realestate-4l7a2387.jpg','images/realestate-4l7a2410.jpg','images/realestate-4l7a2503.jpg',
         'images/realestate-4l7a2599.jpg','images/realestate-dji-0010-edit.jpg','images/realestate-dji-0022-edit.jpg','images/realestate-dji-0044-2.jpg',
-        'images/realestate-dji-0115-edit.jpg','images/realestate-dsc01562.jpg','images/realestate-dsc01567.jpg','images/realestate-dsc01574.jpg'
+        'images/realestate-dji-0115-edit.jpg','images/realestate-dsc01562.jpg','images/realestate-dsc01567.jpg','images/realestate-dsc01574.jpg',
+        'images/realestate-4l7a0218-edit.jpg','images/realestate-4l7a0220.jpg','images/realestate-4l7a0221.jpg',
+        'images/realestate-4l7a0222.jpg','images/realestate-4l7a0224.jpg','images/realestate-4l7a0227.jpg'
       ] },
       'quinceaneras': {
         title: 'Mis XV Años',
@@ -1708,7 +1745,9 @@
           'images/223A2577.JPG',
           'images/223A2607.JPG',
           'images/223A9880.jpg',
-          'images/DSC02485.jpg'
+          'images/DSC02485.jpg',
+          'images/IMG_8257.jpg',
+          'images/IMG_8349.jpg'
         ]
       },
       'editorial': {
@@ -1857,6 +1896,17 @@
     const formSuccess = document.getElementById('formSuccess');
     contactForm.addEventListener('submit', async function(e) {
       e.preventDefault();
+      // Put the useful facts in the subject line so inquiries are scannable in the inbox
+      try {
+        const svc = (document.getElementById('service') || {}).value || 'Inquiry';
+        const dt = (document.getElementById('eventdate') || {}).value || '';
+        const nm = (document.getElementById('name') || {}).value || '';
+        const subj = document.getElementById('formSubject');
+        if (subj) subj.value = svc + (dt ? ' — ' + dt : '') + (nm ? ' — ' + nm : '');
+        const rt = document.getElementById('formReplyTo');
+        const em = (document.getElementById('email') || {}).value || '';
+        if (rt && em) rt.value = em;
+      } catch (err) { /* subject is cosmetic; never block the send */ }
       submitBtn.disabled = true;
       submitBtn.textContent = 'Sending...';
       try {
@@ -1922,22 +1972,22 @@
         'portfolio.filter.editorial': 'Editorial',
         'port.street.cat': 'Street Photography',
         'port.street.title': 'Vegas After Dark',
-        'port.street.count': '— 8 photos · Click to view gallery',
+        'port.street.count': '— 9 photos · Click to view gallery',
         'port.wedding.cat': 'Wedding',
         'port.wedding.title': 'Wedding Photography',
         'port.wedding.count': '— 22 photos · Click to view gallery',
         'port.quince.cat': 'Quinceañeras',
         'port.quince.title': 'Mis XV Años',
-        'port.quince.count': '— 19 photos · Click to view gallery',
+        'port.quince.count': '— 21 photos · Click to view gallery',
         'port.couples.cat': 'Couples',
         'port.couples.title': 'Couples & Engagements',
-        'port.couples.count': '— Click to view gallery',
+        'port.couples.count': '— 16 photos · Click to view gallery',
         'port.events.cat': 'Events',
         'port.events.title': 'Events & Commercial',
         'port.events.count': '— Click to view gallery',
         'port.realestate.cat': 'Real Estate',
         'port.realestate.title': 'Real Estate & Architecture',
-        'port.realestate.count': '— 16 photos · Click to view gallery',
+        'port.realestate.count': '— 22 photos · Click to view gallery',
         'port.editorial.cat': 'Editorial',
         'port.editorial.title': 'Editorial & Fashion',
         'port.editorial.count': '— 17 photos · Click to view gallery',
@@ -1970,6 +2020,10 @@
         'form.opt6': 'Street / Editorial',
         'form.opt7': 'Podcast Production',
         'form.opt8': 'Other',
+        'form.date': 'Event Date',
+        'form.dateHint': 'Not sure yet? Pick your best guess.',
+        'form.venue': 'Venue or Location',
+        'form.venuePh': 'Chapel, hotel, or area of town',
         'form.message': 'Message',
         'form.messagePh': 'Your date, venue, and what matters most to you.',
         'form.submit': 'Check My Date',
@@ -2023,22 +2077,22 @@
         'portfolio.filter.editorial': 'Editorial',
         'port.street.cat': 'Fotografía Urbana',
         'port.street.title': 'Vegas de Noche',
-        'port.street.count': '— 8 fotos · Haz clic para ver la galería',
+        'port.street.count': '— 9 fotos · Haz clic para ver la galería',
         'port.wedding.cat': 'Bodas',
         'port.wedding.title': 'Fotografía de Bodas',
         'port.wedding.count': '— 22 fotos · Haz clic para ver la galería',
         'port.quince.cat': 'Quinceañeras',
         'port.quince.title': 'Mis XV Años',
-        'port.quince.count': '— 19 fotos · Haz clic para ver la galería',
+        'port.quince.count': '— 21 fotos · Haz clic para ver la galería',
         'port.couples.cat': 'Parejas',
         'port.couples.title': 'Parejas & Compromisos',
-        'port.couples.count': '— Haz clic para ver la galería',
+        'port.couples.count': '— 16 fotos · Haz clic para ver la galería',
         'port.events.cat': 'Eventos',
         'port.events.title': 'Eventos & Comercial',
         'port.events.count': '— Haz clic para ver la galería',
         'port.realestate.cat': 'Bienes Raíces',
         'port.realestate.title': 'Bienes Raíces & Arquitectura',
-        'port.realestate.count': '— 16 fotos · Haz clic para ver la galería',
+        'port.realestate.count': '— 22 fotos · Haz clic para ver la galería',
         'port.editorial.cat': 'Editorial',
         'port.editorial.title': 'Editorial & Moda',
         'port.editorial.count': '— 17 fotos · Haz clic para ver la galería',
@@ -2071,6 +2125,10 @@
         'form.opt6': 'Calle / Editorial',
         'form.opt7': 'Producción de Podcast',
         'form.opt8': 'Otro',
+        'form.date': 'Fecha del Evento',
+        'form.dateHint': '¿Aún no está seguro? Elija una fecha aproximada.',
+        'form.venue': 'Lugar o Ubicación',
+        'form.venuePh': 'Capilla, hotel, o zona de la ciudad',
         'form.message': 'Mensaje',
         'form.messagePh': 'Su fecha, el lugar, y lo que más le importa.',
         'form.submit': 'Consultar Mi Fecha',
