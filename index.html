@@ -52,6 +52,20 @@
 }
 </script>
 
+<script>
+  // Browsers restore the previous scroll offset by default, which meant a
+  // returning visitor could land halfway down the page. Take it over.
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  // A real in-page link (#portfolio) is still honoured; a bare URL is not.
+  if (!window.location.hash) {
+    window.addEventListener('load', function () {
+      var b = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = 'auto';  // don't animate the reset
+      window.scrollTo(0, 0);
+      document.documentElement.style.scrollBehavior = b;
+    });
+  }
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1288,15 +1302,15 @@
     <!-- Mobile-only hero image strip -->
     <div class="hero-mobile-strip">
       <div class="hero-mobile-img">
-        <img src="images/1S0A1004-Edit.jpg" alt="Portrait Photography" loading="eager">
+        <img src="images/1S0A1004-Edit.jpg" alt="Portrait Photography" loading="eager" width="1066" height="1600">
         <span class="hero-mobile-label" data-i18n="hero.label.portrait">Portrait</span>
       </div>
       <div class="hero-mobile-img">
-        <img src="images/F7DEE688-1DF6-4A44-B5DB-2EFA2F02FC7D-2.jpg" alt="Street Photography" loading="eager">
+        <img src="images/F7DEE688-1DF6-4A44-B5DB-2EFA2F02FC7D-2.jpg" alt="Street Photography" loading="eager" width="1200" height="799">
         <span class="hero-mobile-label" data-i18n="hero.label.street">Street</span>
       </div>
       <div class="hero-mobile-img">
-        <img src="images/IMG_8841.JPG" alt="Studio Photography" loading="eager">
+        <img src="images/IMG_8841.JPG" alt="Studio Photography" loading="eager" width="1200" height="900">
         <span class="hero-mobile-label" data-i18n="hero.label.studio">Studio</span>
       </div>
     </div>
@@ -1306,19 +1320,19 @@
       <div class="hero-img-grid">
         <div class="hero-img-block">
           <div class="img-placeholder img-ph-1">
-            <img src="images/1S0A1004-Edit.jpg" alt="Portrait Photography" loading="eager">
+            <img src="images/1S0A1004-Edit.jpg" alt="Portrait Photography" loading="eager" width="1066" height="1600">
             <span class="img-label" data-i18n="hero.label.portrait">Portrait</span>
           </div>
         </div>
         <div class="hero-img-block">
           <div class="img-placeholder img-ph-2">
-            <img src="images/F7DEE688-1DF6-4A44-B5DB-2EFA2F02FC7D-2.jpg" alt="Street Photography" loading="eager">
+            <img src="images/F7DEE688-1DF6-4A44-B5DB-2EFA2F02FC7D-2.jpg" alt="Street Photography" loading="eager" width="1200" height="799">
             <span class="img-label" data-i18n="hero.label.street">Street</span>
           </div>
         </div>
         <div class="hero-img-block">
           <div class="img-placeholder img-ph-3">
-            <img src="images/IMG_8841.JPG" alt="Studio Photography" loading="eager">
+            <img src="images/IMG_8841.JPG" alt="Studio Photography" loading="eager" width="1200" height="900">
             <span class="img-label" data-i18n="hero.label.studio">Studio</span>
           </div>
         </div>
@@ -1382,7 +1396,7 @@
       <!-- Street -->
       <div class="port-item reveal" data-category="street" data-project="vegas-after-dark" onclick="openLightbox('vegas-after-dark')">
         <div class="port-bg pg-street">
-          <img src="images/vegas/vegas-allegiant-hero.jpg" loading="lazy" alt="Vegas After Dark" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          <img src="images/vegas/vegas-allegiant-hero.jpg" loading="lazy" alt="Vegas After Dark" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" width="2400" height="1599">
         </div>
         <div class="port-overlay">
           <div class="port-info">
@@ -1396,7 +1410,7 @@
       <!-- Wedding -->
       <div class="port-item reveal reveal-delay-1" data-category="wedding" data-project="wedding" onclick="openLightbox('wedding')">
         <div class="port-bg pg-wedding">
-          <img src="wedding-dq3a1613.jpg" loading="lazy" alt="Wedding Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          <img src="wedding-dq3a1613.jpg" loading="lazy" alt="Wedding Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" width="800" height="1200">
         </div>
         <div class="port-overlay">
           <div class="port-info">
@@ -1410,7 +1424,7 @@
       <!-- Quinceañeras -->
       <div class="port-item reveal reveal-delay-2" data-category="quinceaneras" data-project="quinceaneras" onclick="openLightbox('quinceaneras')">
         <div class="port-bg pg-quinceaneras">
-          <img src="images/1S0A1115.JPG" loading="lazy" alt="Quinceañera Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          <img src="images/1S0A1115.JPG" loading="lazy" alt="Quinceañera Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" width="2400" height="1600">
         </div>
         <div class="port-overlay">
           <div class="port-info">
@@ -1424,7 +1438,7 @@
       <!-- Couples -->
       <div class="port-item reveal" data-category="couples" data-project="couples" onclick="openLightbox('couples')">
         <div class="port-bg pg-couples">
-          <img src="images/couples/couples-4l7a0812-edit.jpg" loading="lazy" alt="Engagement session at the Welcome to Fabulous Las Vegas sign" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          <img src="images/couples/couples-4l7a0812-edit.jpg" loading="lazy" alt="Engagement session at the Welcome to Fabulous Las Vegas sign" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" width="1600" height="2400">
         </div>
         <div class="port-overlay">
           <div class="port-info">
@@ -1455,7 +1469,7 @@
       <!-- Real Estate -->
       <div class="port-item reveal reveal-delay-2" data-category="realestate" data-project="realestate" onclick="openLightbox('realestate')">
         <div class="port-bg pg-realestate">
-          <img src="images/realestate-dji-0115.jpg" loading="lazy" alt="Real Estate Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          <img src="images/realestate-dji-0115.jpg" loading="lazy" alt="Real Estate Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" width="2000" height="1123">
         </div>
         <div class="port-overlay">
           <div class="port-info">
@@ -1469,7 +1483,7 @@
       <!-- Editorial Gallery -->
       <div class="port-item reveal" data-category="editorial" data-project="editorial" onclick="openLightbox('editorial')">
         <div class="port-bg" style="background: linear-gradient(160deg, #121212 0%, #1e1a2a 50%, #0c0a14 100%);">
-          <img src="images/editorials/editorial-1s0a0735-edit.jpg" loading="lazy" alt="Editorial Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
+          <img src="images/editorials/editorial-1s0a0735-edit.jpg" loading="lazy" alt="Editorial Photography" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" width="800" height="1200">
         </div>
         <div class="port-overlay">
           <div class="port-info">
@@ -1514,8 +1528,8 @@
 <section class="about" id="about">
   <div class="about-visual reveal">
     <div class="about-badge"><span class="badge-number">∞</span><span class="badge-text" data-i18n-html="about.badge">Frames<br>Captured</span></div>
-    <div class="about-img-main"><img src="images/about-main_2.jpg" alt="Manny - Photographer" style="width:100%;height:100%;object-fit:cover;"></div>
-    <div class="about-img-accent"><img src="images/about-behind-lens.jpg" alt="Behind the Lens" style="width:100%;height:100%;object-fit:cover;"></div>
+    <div class="about-img-main"><img src="images/about-main_2.jpg" alt="Manny - Photographer" style="width:100%;height:100%;object-fit:cover;" width="1500" height="2000"></div>
+    <div class="about-img-accent"><img src="images/about-behind-lens.jpg" alt="Behind the Lens" style="width:100%;height:100%;object-fit:cover;" width="1800" height="2400"></div>
   </div>
   <div class="about-text">
     <span class="section-label reveal" data-i18n="about.label">The Photographer</span>
