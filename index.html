@@ -746,9 +746,6 @@
   .reveal-delay-3 { transition-delay: 0.3s; }
 
   /* ── MOBILE HERO IMAGE STRIP ── */
-  .hero-mobile-strip {
-    display: none;
-  }
 
   @media (max-width: 900px) {
     nav { padding: 1.5rem 1rem; }
@@ -1265,6 +1262,73 @@
   @media (prefers-reduced-motion: reduce) {
     .lang-offer { transition: opacity .3s ease; transform: translate(-50%, 0); }
   }
+
+  /* ═══════════════════════════════
+     SCROLL-DRIVEN HERO SLIDES
+     Desktop: fills the right half, keeping the split layout.
+     Mobile:  goes full-bleed behind the copy, because the old grid
+              was hidden on phones and the hero had no imagery at all.
+  ═══════════════════════════════ */
+  .hero-slides {
+    position: absolute; inset: 0;
+    overflow: hidden; z-index: 0; pointer-events: none;
+  }
+  .hero-slide {
+    position: absolute; inset: 0;
+    opacity: 0;
+    transition: opacity .45s linear;
+    will-change: opacity;
+  }
+  .hero-slide.is-active { opacity: 1; }
+  .hero-slide img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: var(--slide-pos, 50% 50%);
+    display: block;
+  }
+  /* Keeps the gold copy legible over whatever frame is showing */
+  .hero-slides-scrim {
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      linear-gradient(95deg, var(--black) 0%, var(--black) 26%, rgba(8,8,8,.82) 38%, rgba(8,8,8,.30) 56%, rgba(8,8,8,.05) 74%, transparent 88%),
+      linear-gradient(to top, rgba(8,8,8,.55) 0%, transparent 28%);
+  }
+  /* Which frame you are on */
+  .hero-progress {
+    position: absolute; bottom: 2.2rem; left: 4rem; z-index: 3;
+    display: flex; gap: .45rem;
+  }
+  .hero-dot {
+    width: 1.6rem; height: 2px;
+    background: rgba(245,242,236,.22);
+    transition: background .4s ease, box-shadow .4s ease;
+  }
+  .hero-dot.is-on {
+    background: var(--accent);
+    box-shadow: 0 0 10px rgba(200,169,110,.8);
+  }
+
+  @media (max-width: 900px) {
+    .hero { position: relative; min-height: 100svh; }
+    .hero-slides-scrim {
+      background:
+        linear-gradient(to bottom, rgba(8,8,8,.78) 0%, rgba(8,8,8,.35) 32%, rgba(8,8,8,.55) 62%, var(--black) 97%);
+    }
+    .hero-left { position: relative; z-index: 2; justify-content: flex-end; padding: 7rem 1.5rem 4.5rem; }
+    .hero-progress { left: 1.5rem; bottom: 1.5rem; }
+    .hero-title { font-size: clamp(3.2rem, 15vw, 5rem); }
+    .hero-sub { max-width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-slide { transition: none; }
+  }
+
+  @media (max-width: 900px) {
+    /* Both of these were positioned for the old split hero and now collide
+       with the headline and the call to action over the full-bleed image. */
+    .vegas-dice-container { display: none; }
+    .hero-scroll-indicator { display: none; }
+  }
 </style>
 </head>
 <body id="top">
@@ -1291,6 +1355,19 @@
 </nav>
 
 <section class="hero">
+  <div class="hero-slides" aria-hidden="true">
+    <div class="hero-slide is-active" style="--slide-pos:50% 42%;">
+      <img src="images/hero/hero-1-stadium.jpg" alt="" loading="eager" fetchpriority="high" width="1300" height="866">
+    </div>
+    <div class="hero-slide" style="--slide-pos:50% 50%;">
+      <img src="images/hero/hero-2-frame.jpg" alt="" loading="lazy" width="805" height="1200">
+    </div>
+    <div class="hero-slide" style="--slide-pos:55% 40%;">
+      <img src="images/hero/hero-3-eiffel.jpg" alt="" loading="lazy" width="867" height="1300">
+    </div>
+    <div class="hero-slides-scrim"></div>
+  </div>
+  <div class="hero-progress" aria-hidden="true"><span class="hero-dot is-on"></span><span class="hero-dot"></span><span class="hero-dot"></span></div>
   <div class="hero-left">
     <p class="hero-eyebrow" data-i18n="hero.eyebrow">Weddings &amp; Quinceañeras · Las Vegas · Se habla español</p>
     <h1 class="hero-title" data-i18n-html="hero.title">Making<br>the <span class="italic">World</span><br>Stand Still</h1>
@@ -1298,45 +1375,6 @@
     <div class="hero-cta">
       <a href="#portfolio" class="btn-primary" data-i18n="hero.cta1">View Weddings</a>
       <a href="#contact" class="btn-ghost" data-i18n="hero.cta2">Check Your Date →</a>
-    </div>
-    <!-- Mobile-only hero image strip -->
-    <div class="hero-mobile-strip">
-      <div class="hero-mobile-img">
-        <img src="images/1S0A1004-Edit.jpg" alt="Portrait Photography" loading="eager" width="1066" height="1600">
-        <span class="hero-mobile-label" data-i18n="hero.label.portrait">Portrait</span>
-      </div>
-      <div class="hero-mobile-img">
-        <img src="images/F7DEE688-1DF6-4A44-B5DB-2EFA2F02FC7D-2.jpg" alt="Street Photography" loading="eager" width="1200" height="799">
-        <span class="hero-mobile-label" data-i18n="hero.label.street">Street</span>
-      </div>
-      <div class="hero-mobile-img">
-        <img src="images/IMG_8841.JPG" alt="Studio Photography" loading="eager" width="1200" height="900">
-        <span class="hero-mobile-label" data-i18n="hero.label.studio">Studio</span>
-      </div>
-    </div>
-  </div>
-  <div class="hero-right">
-    <div class="hero-img-container">
-      <div class="hero-img-grid">
-        <div class="hero-img-block">
-          <div class="img-placeholder img-ph-1">
-            <img src="images/1S0A1004-Edit.jpg" alt="Portrait Photography" loading="eager" width="1066" height="1600">
-            <span class="img-label" data-i18n="hero.label.portrait">Portrait</span>
-          </div>
-        </div>
-        <div class="hero-img-block">
-          <div class="img-placeholder img-ph-2">
-            <img src="images/F7DEE688-1DF6-4A44-B5DB-2EFA2F02FC7D-2.jpg" alt="Street Photography" loading="eager" width="1200" height="799">
-            <span class="img-label" data-i18n="hero.label.street">Street</span>
-          </div>
-        </div>
-        <div class="hero-img-block">
-          <div class="img-placeholder img-ph-3">
-            <img src="images/IMG_8841.JPG" alt="Studio Photography" loading="eager" width="1200" height="900">
-            <span class="img-label" data-i18n="hero.label.studio">Studio</span>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
   <div class="hero-scroll-indicator">
@@ -2234,6 +2272,54 @@
       // Let the hero paint first, then slide in. Auto-retire if ignored.
       setTimeout(() => bar.classList.add('show'), 1400);
       setTimeout(() => { if (document.body.contains(bar)) close(); }, 14000);
+    })();
+
+
+    // ── SCROLL-DRIVEN HERO SLIDES ──
+    // Each frame owns a band of the hero's scroll range and crossfades into
+    // the next, so the first thing a visitor does - scroll - is what reveals
+    // the work. rAF-throttled; opacity only, so it composites on the GPU.
+    (function heroSlides() {
+      const hero = document.querySelector('.hero');
+      const slides = [].slice.call(document.querySelectorAll('.hero-slide'));
+      const dots = [].slice.call(document.querySelectorAll('.hero-dot'));
+      if (!hero || slides.length < 2) return;
+
+      const n = slides.length;
+      let queued = false;
+
+      function paint() {
+        queued = false;
+        const h = hero.offsetHeight || window.innerHeight;
+        // 0 at the top of the hero, 1 once it has scrolled fully past
+        const p = Math.min(Math.max(window.scrollY / h, 0), 1);
+        const band = 1 / (n - 1);
+        let lead = 0, leadOp = -1;
+        for (let i = 0; i < n; i++) {
+          const centre = i * band;
+          const op = Math.max(0, 1 - Math.abs(p - centre) / band);
+          slides[i].style.opacity = op.toFixed(3);
+          slides[i].classList.toggle('is-active', op > 0.5);
+          if (op > leadOp) { leadOp = op; lead = i; }
+        }
+        dots.forEach((d, i) => d.classList.toggle('is-on', i === lead));
+      }
+
+      function onScroll() {
+        if (!queued) { queued = true; requestAnimationFrame(paint); }
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+      paint();
+
+      // Pull the next frames in once the first has painted, so they are ready
+      // before the visitor scrolls without competing with first paint.
+      window.addEventListener('load', function () {
+        slides.slice(1).forEach(sl => {
+          const img = sl.querySelector('img');
+          if (img && img.loading === 'lazy') img.loading = 'eager';
+        });
+      });
     })();
 
     // ── VEGAS AMBIENCE: cursor glare + marquee sweep + neon pool ──
