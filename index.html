@@ -1346,14 +1346,16 @@
 
   @media (max-width: 900px) {
     /* The show: the visitor's thumb drives it. A tall track with the stage
-       pinned; each frame fades and flows into the next under the thumb, and
+       pinned to the screen; each frame fades and flows into the next under the thumb, and
        settling on the last one pops the champagne. The rest of the page waits
        offstage, so a flick can't fly past the show. */
     .intro:not(.intro-done) .hero { display: block; height: 284svh; min-height: 0; overflow: visible; }   /* 100svh stage + 184svh of thumb travel */
     .intro:not(.intro-done) .hero ~ :is(.marquee-section, section, footer) { display: none; }
+    /* Fixed, not sticky: iPhone Safari drops sticky under the body's
+       overflow-x rule, which let the frames scroll away mid-show */
     .intro:not(.intro-done) .hero-stage {
-      display: block; position: sticky; top: 0;
-      height: 100svh; overflow: hidden;
+      display: block; position: fixed; inset: 0;
+      overflow: hidden;
       transition: opacity 1.1s ease .1s;
     }
     .welcome-on .hero-stage { opacity: 0; }     /* first frame waits behind the welcome */
