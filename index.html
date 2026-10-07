@@ -59,7 +59,7 @@
   // plain hero. Decided here, before first paint, so nothing flashes.
   document.documentElement.classList.add('js');
   if (window.matchMedia('(max-width: 900px) and (prefers-reduced-motion: no-preference)').matches && !window.location.hash) {
-    document.documentElement.classList.add('intro');
+    document.documentElement.classList.add('intro', 'welcome-on');
   }
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   // A real in-page link (#portfolio) is still honoured; a bare URL is not.
@@ -73,6 +73,7 @@
   }
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&text=Welcome&display=block" rel="stylesheet">
 <style>
   :root {
     --black: #080808;
@@ -1289,6 +1290,10 @@
     will-change: opacity;
   }
   .hero-slide.is-active { opacity: 1; }
+  .hero-slide picture { display: contents; }
+  @media (max-width: 900px) {
+    .hero-slides .hero-slide img { object-position: var(--slide-pos-m, var(--slide-pos, 50% 50%)); }
+  }
   .hero-slide img {
     width: 100%; height: 100%;
     object-fit: cover;
@@ -1346,8 +1351,12 @@
     .intro:not(.intro-done) .hero-stage {
       display: block; position: sticky; top: 0;
       height: 100svh; overflow: hidden;
-      transition: opacity .42s ease;
+      transition: opacity 1.1s ease .1s;
     }
+    /* Behind the welcome the first frame waits, dark and pushed in */
+    .welcome-on .hero-stage { opacity: 0; }
+    .intro .hero-slides { transition: transform 2.4s cubic-bezier(.16,.84,.3,1); }
+    .welcome-on .hero-slides { transform: scale(1.1); }
     .intro:not(.intro-done) .hero-slides { display: block; }
     .intro:not(.intro-done) .hero-progress { display: flex; }
     .intro .hero-slide { transition: none; }   /* scroll scrubs it directly */
@@ -1371,7 +1380,7 @@
     .intro .hero.scrolled-in .hero-scroll-indicator { opacity: 0; }
 
     /* The pop: the last frame dissolves into the gold dust... */
-    .intro-popping .hero-stage { opacity: 0; }
+    .intro-popping .hero-stage { opacity: 0; transition: opacity .42s ease; }
 
     /* ...and the classic hero falls into place */
     .intro-done .hero-eyebrow      { animation: dropIn .9s cubic-bezier(.34,1.56,.64,1) .00s both; }
@@ -1400,9 +1409,256 @@
     16%  { opacity: 1; transform: scale(1); }
     100% { opacity: 0; transform: scale(1.3); }
   }
+
+  /* ═══════════════════════════════
+     WELCOME (phones) — the door to the show.
+     Marquee bulbs chase the edge, searchlights sweep, the suits are dealt,
+     "Welcome" writes itself in gold, and two aces pick the language.
+  ═══════════════════════════════ */
+  .welcome { display: none; }
+  @media (max-width: 900px) {
+    html.welcome-on { overflow: hidden; }
+    .intro .welcome {
+      display: flex; position: fixed; inset: 0; z-index: 8500;
+      flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 2.4rem 1.5rem;
+      overflow: hidden; touch-action: none;
+      background:
+        radial-gradient(ellipse 75% 40% at 50% 41%, rgba(200,169,110,.16), transparent 70%),
+        radial-gradient(ellipse at center, transparent 48%, rgba(0,0,0,.6) 100%);
+      transition: opacity .95s ease, transform 1.2s cubic-bezier(.4,0,.2,1), filter .95s ease;
+    }
+    .welcome.leaving { opacity: 0; transform: scale(1.08); filter: blur(6px); pointer-events: none; }
+
+    /* Marquee bulbs around the screen edge */
+    .wl-bulbs { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;
+      opacity: 0; animation: wlFade 1s ease .15s forwards; }
+    .wl-b { fill: none; stroke-linecap: round; stroke-width: 5; }
+    .wl-b-dim { stroke: rgba(200,169,110,.2); stroke-dasharray: 0 16; }
+    .wl-b-lit {
+      stroke: #fff0c9; stroke-dasharray: 0 48;
+      filter: drop-shadow(0 0 3px #f3dca6) drop-shadow(0 0 9px rgba(232,200,138,.85));
+      animation: wlChase .75s steps(3) infinite;
+    }
+    @keyframes wlChase { to { stroke-dashoffset: -48; } }
+    .welcome.chosen .wl-b-lit { stroke-dasharray: 0 16; animation: wlJackpot .16s steps(1) 6; }
+    @keyframes wlJackpot { 50% { opacity: .1; } }
+
+    /* Strip searchlights sweeping behind everything */
+    .wl-beams span {
+      position: absolute; bottom: -6svh; width: 52vw; height: 112svh;
+      transform-origin: 50% 100%;
+      background: linear-gradient(to top, rgba(255,236,190,.2), rgba(255,236,190,.05) 55%, transparent 85%);
+      clip-path: polygon(47% 100%, 53% 100%, 100% 0, 0 0);
+      filter: blur(5px); opacity: 0; pointer-events: none;
+      animation: wlFade 1.4s ease .35s forwards, wlBeam 7.5s ease-in-out infinite alternate;
+    }
+    .wl-beams span:first-child { left: -14vw; --a: -26deg; --b: 10deg; }
+    .wl-beams span:last-child  { left: 62vw;  --a: 26deg;  --b: -10deg; animation-delay: .35s, -3.7s; }
+    @keyframes wlBeam { from { transform: rotate(var(--a)); } to { transform: rotate(var(--b)); } }
+
+    .wl-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
+
+    /* The four suits, dealt in, then bobbing like they're on the felt */
+    .wl-suits { display: flex; gap: 1.15rem; margin-bottom: 1.1rem; }
+    .wl-suit {
+      width: 26px; height: 26px; overflow: visible;
+      filter: drop-shadow(0 0 6px rgba(232,200,138,.45));
+      animation: wlDeal .95s cubic-bezier(.2,.85,.25,1.25) var(--d) both, wlBob 4.2s ease-in-out calc(var(--d) + 1s) infinite;
+    }
+    .wl-suit.red { filter: drop-shadow(0 0 7px rgba(255,70,100,.55)); }
+    @keyframes wlDeal { from { opacity: 0; transform: translateY(46px) rotate(-200deg) scale(.3); } to { opacity: 1; transform: none; } }
+    @keyframes wlBob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -5px; } }
+
+    .wl-eyebrow {
+      font-size: .58rem; letter-spacing: .48em; text-transform: uppercase;
+      color: var(--accent); padding-left: .48em;
+      animation: wlRise .9s ease .65s both;
+    }
+
+    /* "Welcome" in moving gold foil */
+    .wl-title {
+      position: relative; margin: .05em 0 0; line-height: 1;
+      font-family: 'Great Vibes', 'DM Serif Display', serif; font-weight: 400;
+      font-size: clamp(4.7rem, 25vw, 8rem);
+    }
+    .wl-word {
+      display: inline-block; padding: .08em .18em .14em;
+      background: linear-gradient(105deg, #7a5a24 0%, #c8a96e 16%, #fff3d1 26%, #e8c88a 34%, #9c7a3c 48%,
+                  #e8c88a 60%, #fffaf0 68%, #c8a96e 78%, #7a5a24 100%);
+      background-size: 230% 100%;
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+      filter: drop-shadow(0 2px 0 rgba(60,40,10,.7)) drop-shadow(0 0 24px rgba(232,200,138,.38));
+      animation: wlWrite 1.7s cubic-bezier(.65,0,.35,1) .85s both, wlShine 4.8s linear 2.4s infinite;
+    }
+    @keyframes wlWrite { from { clip-path: inset(-30% 100% -30% -10%); } to { clip-path: inset(-30% -10% -30% -10%); } }
+    @keyframes wlShine { from { background-position: 100% 0; } to { background-position: -130% 0; } }
+
+    /* Four-point glints that flash across the foil */
+    .wl-glint {
+      position: absolute; left: var(--x); top: var(--y); width: 20px; height: 20px; margin: -10px;
+      background: radial-gradient(circle, #fff 0 18%, #fff3d1 30%, rgba(232,200,138,0) 70%);
+      clip-path: polygon(50% 0, 57% 43%, 100% 50%, 57% 57%, 50% 100%, 43% 57%, 0 50%, 43% 43%);
+      transform: scale(0); pointer-events: none;
+      animation: wlGlint 3.2s ease-in-out var(--t) infinite;
+    }
+    @keyframes wlGlint { 0%, 70%, 100% { transform: scale(0) rotate(0); } 82% { transform: scale(1.15) rotate(45deg); } }
+
+    .wl-sub {
+      display: flex; align-items: center; gap: .8rem;
+      font-family: 'DM Serif Display', serif; font-style: italic;
+      font-size: 1.35rem; color: var(--white); letter-spacing: .03em;
+      margin-top: .1rem; animation: wlRise .9s ease 2s both;
+    }
+    .wl-sub::before, .wl-sub::after { content: ''; width: 34px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent)); }
+    .wl-sub::after { transform: scaleX(-1); }
+
+    .wl-prompt {
+      margin-top: 2.2rem; font-size: .56rem; letter-spacing: .3em; text-transform: uppercase;
+      color: rgba(245,242,236,.62); animation: wlRise .9s ease 2.3s both;
+    }
+    .wl-prompt span { color: var(--accent); margin: 0 .4em; }
+
+    @keyframes wlFade { to { opacity: 1; } }
+    @keyframes wlRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+    /* Two aces: pick one, pick your language */
+    .wl-cards { display: flex; gap: 1.5rem; margin-top: 1.1rem; }
+    .wl-slot { perspective: 800px; transform: rotate(var(--r)); animation: wlDealCard 1.05s cubic-bezier(.2,.9,.25,1.12) var(--dd) both; }
+    @keyframes wlDealCard {
+      from { opacity: 0; transform: translateY(55svh) rotate(calc(var(--r) * -7)); }
+      to   { opacity: 1; transform: rotate(var(--r)); }
+    }
+    .wl-card {
+      position: relative; display: block; width: 122px; height: 170px; padding: 0; border: 0;
+      background: none; border-radius: 12px; cursor: pointer;
+      transform-style: preserve-3d; -webkit-tap-highlight-color: transparent;
+      transition: transform .75s cubic-bezier(.3,1.25,.5,1), opacity .5s ease;
+    }
+    .wl-card:active { transform: scale(.96); }
+    .wl-face, .wl-back {
+      position: absolute; inset: 0; border-radius: 12px;
+      -webkit-backface-visibility: hidden; backface-visibility: hidden; overflow: hidden;
+    }
+    .wl-face {
+      background: linear-gradient(150deg, #fffdf7 0%, #f5f0e4 45%, #e4d9c6 100%);
+      box-shadow: inset 0 0 0 1px rgba(176,141,79,.9), inset 0 0 0 5px #fffdf7, inset 0 0 0 6px rgba(200,169,110,.6),
+                  0 18px 38px rgba(0,0,0,.65), 0 0 26px rgba(232,200,138,.22);
+      color: #151515;
+    }
+    .wl-card.is-current .wl-face { animation: wlPulse 2.6s ease-in-out 3.4s infinite; }
+    @keyframes wlPulse {
+      50% { box-shadow: inset 0 0 0 1px rgba(176,141,79,.9), inset 0 0 0 5px #fffdf7, inset 0 0 0 6px rgba(200,169,110,.6),
+                        0 18px 38px rgba(0,0,0,.65), 0 0 0 2px #e8c88a, 0 0 38px rgba(232,200,138,.6); }
+    }
+    /* a sheen that slides across the card faces */
+    .wl-face::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(115deg, transparent 38%, rgba(232,200,138,.38) 48%, rgba(255,255,255,.55) 50%, transparent 60%);
+      background-size: 260% 100%; background-position: 130% 0;
+      animation: wlSheen 4.5s ease-in-out 3.2s infinite;
+    }
+    @keyframes wlSheen { 0% { background-position: 130% 0; } 35%, 100% { background-position: -40% 0; } }
+    .wl-idx {
+      position: absolute; top: 9px; left: 10px; display: flex; flex-direction: column; align-items: center;
+      font-family: 'DM Serif Display', serif; font-size: 1.05rem; line-height: 1;
+    }
+    .wl-idx svg { width: 12px; height: 12px; margin-top: 2px; }
+    .wl-idx-b { top: auto; left: auto; bottom: 9px; right: 10px; transform: rotate(180deg); }
+    .wl-pip { position: absolute; left: 50%; top: 40%; width: 50px; height: 50px; transform: translate(-50%, -50%);
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,.2)); }
+    .wl-name {
+      position: absolute; left: 0; right: 0; bottom: 30px;
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.32rem; letter-spacing: .14em; padding-left: .14em;
+    }
+    .wl-red { color: #b8132f; }
+    /* The back you see when it flips: gold lattice, black centre */
+    .wl-back {
+      transform: rotateY(180deg);
+      background:
+        radial-gradient(circle at 50% 50%, #0b0b0b 0 15px, #f3dca6 16px 17px, transparent 18px),
+        repeating-linear-gradient(45deg, rgba(8,8,8,.5) 0 1.5px, transparent 1.5px 11px),
+        repeating-linear-gradient(-45deg, rgba(8,8,8,.5) 0 1.5px, transparent 1.5px 11px),
+        linear-gradient(135deg, #fff3d1, #c8a96e 45%, #8a6a2f 75%, #e8c88a);
+      box-shadow: inset 0 0 0 5px #f3dca6, inset 0 0 0 6px #6b5226, 0 0 40px rgba(232,200,138,.6);
+    }
+    .welcome.chosen .wl-card.picked { transform: translateY(-18px) scale(1.12) rotateY(180deg); }
+    .welcome.chosen .wl-card:not(.picked) { transform: translateY(70px) scale(.9); opacity: 0; }
+
+    /* Small phones: tighten so the cards still clear the bottom bulbs */
+    @media (max-height: 700px) {
+      .wl-title { font-size: clamp(4rem, 21vw, 6rem); }
+      .wl-prompt { margin-top: 1.4rem; }
+      .wl-card { width: 108px; height: 150px; }
+      .wl-name { bottom: 24px; font-size: 1.15rem; }
+    }
+  }
 </style>
 </head>
 <body id="top">
+
+<!-- Welcome (phones only, shown by the intro): pick a card, pick a language -->
+<div class="welcome" id="welcome" role="dialog" aria-modal="true" aria-label="Welcome — choose your language / Bienvenidos — elige tu idioma">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="wlGold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#fff3d1"/><stop offset=".45" stop-color="#e8c88a"/><stop offset=".72" stop-color="#a8853f"/><stop offset="1" stop-color="#f3dca6"/>
+      </linearGradient>
+      <linearGradient id="wlRuby" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ff9aa6"/><stop offset=".5" stop-color="#d8203f"/><stop offset="1" stop-color="#7d0a1e"/>
+      </linearGradient>
+      <symbol id="s-spade" viewBox="0 0 100 100"><path d="M50 5C58 20 92 38 92 60c0 14-10 22-21 22-8 0-14-4-17-10 1 10 5 18 13 23H33c8-5 12-13 13-23-3 6-9 10-17 10C18 82 8 74 8 60 8 38 42 20 50 5z"/></symbol>
+      <symbol id="s-heart" viewBox="0 0 100 100"><path d="M50 90C22 68 6 52 6 32 6 17 17 7 30 7c9 0 16 5 20 13 4-8 11-13 20-13 13 0 24 10 24 25 0 20-16 36-44 58z"/></symbol>
+      <symbol id="s-diamond" viewBox="0 0 100 100"><path d="M50 3c10 17 22 33 36 47-14 14-26 30-36 47-10-17-22-33-36-47C28 36 40 20 50 3z"/></symbol>
+      <symbol id="s-club" viewBox="0 0 100 100"><circle cx="50" cy="28" r="19"/><circle cx="27" cy="58" r="19"/><circle cx="73" cy="58" r="19"/><circle cx="50" cy="52" r="11"/><path d="M46 52h8c0 24 4 36 13 43H33c9-7 13-19 13-43z"/></symbol>
+    </defs>
+  </svg>
+  <svg class="wl-bulbs" aria-hidden="true" focusable="false"><rect class="wl-b wl-b-dim"/><rect class="wl-b wl-b-lit"/></svg>
+  <div class="wl-beams" aria-hidden="true"><span></span><span></span></div>
+
+  <div class="wl-inner">
+    <div class="wl-suits" aria-hidden="true">
+      <svg class="wl-suit" style="--d:.35s"><use href="#s-spade" fill="url(#wlGold)"/></svg>
+      <svg class="wl-suit red" style="--d:.47s"><use href="#s-heart" fill="url(#wlRuby)"/></svg>
+      <svg class="wl-suit" style="--d:.59s"><use href="#s-club" fill="url(#wlGold)"/></svg>
+      <svg class="wl-suit red" style="--d:.71s"><use href="#s-diamond" fill="url(#wlRuby)"/></svg>
+    </div>
+    <p class="wl-eyebrow">Pairofdicelv · Las Vegas</p>
+    <h2 class="wl-title">
+      <span class="wl-word">Welcome</span>
+      <span class="wl-glint" style="--x:12%;--y:30%;--t:2.6s" aria-hidden="true"></span>
+      <span class="wl-glint" style="--x:58%;--y:18%;--t:3.4s" aria-hidden="true"></span>
+      <span class="wl-glint" style="--x:88%;--y:62%;--t:4.1s" aria-hidden="true"></span>
+    </h2>
+    <p class="wl-sub">Bienvenidos</p>
+    <p class="wl-prompt">Choose your language<span>·</span>Elige tu idioma</p>
+    <div class="wl-cards">
+      <div class="wl-slot" style="--r:-7deg;--dd:2.45s">
+        <button type="button" class="wl-card" data-lang="en" aria-label="Enter in English">
+          <span class="wl-face">
+            <span class="wl-idx">A<svg><use href="#s-spade" fill="currentColor"/></svg></span>
+            <svg class="wl-pip"><use href="#s-spade" fill="#151515"/></svg>
+            <span class="wl-name">English</span>
+            <span class="wl-idx wl-idx-b">A<svg><use href="#s-spade" fill="currentColor"/></svg></span>
+          </span>
+          <span class="wl-back" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="wl-slot" style="--r:7deg;--dd:2.6s">
+        <button type="button" class="wl-card" data-lang="es" aria-label="Entrar en español">
+          <span class="wl-face wl-red">
+            <span class="wl-idx">A<svg><use href="#s-heart" fill="currentColor"/></svg></span>
+            <svg class="wl-pip"><use href="#s-heart" fill="#b8132f"/></svg>
+            <span class="wl-name">Español</span>
+            <span class="wl-idx wl-idx-b">A<svg><use href="#s-heart" fill="currentColor"/></svg></span>
+          </span>
+          <span class="wl-back" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
@@ -1428,14 +1684,14 @@
 <section class="hero">
   <div class="hero-stage">
   <div class="hero-slides" aria-hidden="true">
-    <div class="hero-slide is-active" style="--slide-pos:50% 42%;">
-      <img src="images/hero/hero-1-stadium.jpg" alt="" loading="eager" fetchpriority="high" width="1300" height="866">
+    <div class="hero-slide is-active" style="--slide-pos:50% 42%; --slide-pos-m:25% 42%;">
+      <picture><source media="(max-width: 900px)" srcset="images/hero/hero-1-stadium-m.jpg" width="1165" height="2158"><img src="images/hero/hero-1-stadium.jpg" alt="" loading="eager" fetchpriority="high" width="1300" height="866"></picture>
     </div>
     <div class="hero-slide" style="--slide-pos:50% 50%;">
-      <img src="images/hero/hero-2-frame.jpg" alt="" loading="lazy" width="805" height="1200">
+      <picture><source media="(max-width: 900px)" srcset="images/hero/hero-2-frame-m.jpg" width="1400" height="2088"><img src="images/hero/hero-2-frame.jpg" alt="" loading="lazy" width="805" height="1200"></picture>
     </div>
     <div class="hero-slide" style="--slide-pos:55% 40%;">
-      <img src="images/hero/hero-3-eiffel.jpg" alt="" loading="lazy" width="867" height="1300">
+      <picture><source media="(max-width: 900px)" srcset="images/hero/hero-3-eiffel-m.jpg" width="1400" height="2097"><img src="images/hero/hero-3-eiffel.jpg" alt="" loading="lazy" width="867" height="1300"></picture>
     </div>
     <div class="hero-slides-scrim"></div>
   </div>
@@ -2372,6 +2628,7 @@
 
       // Let the hero paint first, then slide in. Auto-retire if ignored.
       const showOffer = () => {
+        if (localStorage.getItem('pairofdice-lang')) { bar.remove(); return; }   // chosen on the welcome
         bar.classList.add('show');
         setTimeout(() => { if (document.body.contains(bar)) close(); }, 12000);
       };
@@ -2383,11 +2640,75 @@
     })();
 
 
+    // ── WELCOME (phones): pick a card, pick a language, then the show ──
+    (function welcome() {
+      const root = document.documentElement;
+      const el = document.getElementById('welcome');
+      if (!el) return;
+      if (!root.classList.contains('welcome-on')) { el.remove(); return; }
+
+      // Size the bulb frame and snap its length to whole bulbs so the chase has no seam
+      const rects = el.querySelectorAll('.wl-b');
+      function sizeBulbs() {
+        const w = el.clientWidth, h = el.clientHeight, m = 11, r = 24;
+        const per = 2 * ((w - 2 * m) + (h - 2 * m)) - (8 - 2 * Math.PI) * r;
+        const len = Math.max(48, Math.round(per / 48) * 48);
+        rects.forEach(rc => {
+          rc.setAttribute('x', m); rc.setAttribute('y', m); rc.setAttribute('rx', r);
+          rc.setAttribute('width', Math.max(w - 2 * m, 0)); rc.setAttribute('height', Math.max(h - 2 * m, 0));
+          rc.setAttribute('pathLength', len);
+        });
+      }
+      sizeBulbs();
+      window.addEventListener('resize', sizeBulbs);
+
+      const cards = [].slice.call(el.querySelectorAll('.wl-card'));
+      const cardFor = lang => cards.filter(c => c.dataset.lang === lang)[0];
+      cards.forEach(c => c.classList.toggle('is-current', c.dataset.lang === currentLang));
+
+      let done = false;
+      function choose(lang) {
+        if (done) return;
+        done = true;
+        currentLang = lang;
+        try {
+          localStorage.setItem('pairofdice-lang', lang);
+          localStorage.setItem('pairofdice-lang-offered', '1');
+        } catch (e) {}
+        applyTranslations(lang);
+        el.classList.add('chosen');
+        const card = cardFor(lang);
+        if (card) card.classList.add('picked');
+        try { navigator.vibrate && navigator.vibrate([12, 50, 12]); } catch (e) {}
+        // Lights flash, the ace flips, then the welcome lifts off the first frame
+        setTimeout(() => {
+          const sb = root.style.scrollBehavior;
+          root.style.scrollBehavior = 'auto';
+          window.scrollTo(0, 0);                   // the show always starts on frame one
+          root.style.scrollBehavior = sb;
+          el.classList.add('leaving');
+          root.classList.remove('welcome-on');
+        }, 950);
+        setTimeout(() => { window.removeEventListener('resize', sizeBulbs); el.remove(); }, 2200);
+      }
+      cards.forEach(c => c.addEventListener('click', () => choose(c.dataset.lang)));
+
+      // A swipe up (or a wheel) is a vote for the language already showing
+      let y0 = null;
+      el.addEventListener('touchstart', e => { y0 = e.touches[0].clientY; }, { passive: true });
+      el.addEventListener('touchmove', e => { e.preventDefault(); }, { passive: false });
+      el.addEventListener('touchend', e => {
+        if (y0 !== null && y0 - e.changedTouches[0].clientY > 60) choose(currentLang);
+        y0 = null;
+      });
+      el.addEventListener('wheel', e => { if (e.deltaY > 25) choose(currentLang); }, { passive: true });
+    })();
+
     // ── SCROLL-DRIVEN HERO SLIDES + MOBILE INTRO ──
     // Laptop: frames crossfade across the hero's own height.
     // Phone (html.intro): the hero is a tall track with a pinned stage. The
     // visitor scrolls through all three frames full-screen, then a champagne
-    // pop bursts gold dust and the copy and nav drop into place.
+    // pop bursts gold dust and the classic hero drops into place.
     (function heroSlides() {
       const root = document.documentElement;
       const hero = document.querySelector('.hero');
