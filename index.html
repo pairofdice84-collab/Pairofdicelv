@@ -62,15 +62,14 @@
     document.documentElement.classList.add('intro', 'welcome-on');
   }
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  // Jump to the top without the page-wide smooth scroll animating it.
+  // ('instant' is newer; older browsers reject it, so fall back.)
+  window.podTop = function () {
+    try { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); }
+    catch (e) { window.scrollTo(0, 0); }
+  };
   // A real in-page link (#portfolio) is still honoured; a bare URL is not.
-  if (!window.location.hash) {
-    window.addEventListener('load', function () {
-      var b = document.documentElement.style.scrollBehavior;
-      document.documentElement.style.scrollBehavior = 'auto';  // don't animate the reset
-      window.scrollTo(0, 0);
-      document.documentElement.style.scrollBehavior = b;
-    });
-  }
+  if (!window.location.hash) window.addEventListener('load', window.podTop);
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&text=Welcome&display=block" rel="stylesheet">
@@ -1346,25 +1345,47 @@
   .hero-stage { display: contents; }          /* invisible on laptops */
 
   @media (max-width: 900px) {
-    /* The show: a tall track the visitor scrolls through, stage pinned */
-    .intro:not(.intro-done) .hero { display: block; height: 340svh; min-height: 0; overflow: visible; }
+    /* The show plays on its own clock: one full screen, page held still */
+    html.intro:not(.intro-done) { overflow: hidden; }
+    .intro:not(.intro-done) .hero { display: block; height: 100svh; min-height: 0; overflow: hidden; touch-action: none; }
     .intro:not(.intro-done) .hero-stage {
       display: block; position: sticky; top: 0;
       height: 100svh; overflow: hidden;
       transition: opacity 1.1s ease .1s;
     }
-    /* Behind the welcome the first frame waits, dark and pushed in */
-    .welcome-on .hero-stage { opacity: 0; }
-    .intro .hero-slides { transition: transform 2.4s cubic-bezier(.16,.84,.3,1); }
-    .welcome-on .hero-slides { transform: scale(1.1); }
+    .welcome-on .hero-stage { opacity: 0; }     /* first frame waits behind the welcome */
     .intro:not(.intro-done) .hero-slides { display: block; }
-    .intro:not(.intro-done) .hero-progress { display: flex; }
-    .intro .hero-slide { transition: none; }   /* scroll scrubs it directly */
-    .intro .hero-slide img {
-      transform: scale(var(--zoom, 1)); transform-origin: 50% 45%;
-      will-change: transform;
-    }
+    /* Slow, soft crossfades, and each frame drifts closer while it's on */
+    .intro .hero-slide { transition: opacity 1.4s cubic-bezier(.45,0,.55,1); }
+    .intro .hero-slide img { transform-origin: 50% 45%; will-change: transform; }
+    .intro .hero-slide.kb img { animation: podKenBurns var(--kb, 6s) cubic-bezier(.3,.1,.3,1) forwards; }
+    @keyframes podKenBurns { from { transform: scale(1); } to { transform: scale(1.09); } }
     .intro .hero-slides-scrim { opacity: .3; }   /* frames get the whole screen */
+
+    /* Story-style bars across the top, filling with each frame */
+    .intro:not(.intro-done) .hero-progress {
+      display: flex; gap: 5px; z-index: 3;
+      top: calc(env(safe-area-inset-top, 0px) + 14px); bottom: auto; left: 14px; right: 14px;
+      opacity: 0; animation: fadeIn .8s ease .9s forwards;
+    }
+    .welcome-on .hero-progress { animation: none; }
+    /* a soft shade so the bars read over any frame */
+    .intro:not(.intro-done) .hero-stage::before {
+      content: ''; position: absolute; inset: 0 0 auto 0; height: 96px; z-index: 2; pointer-events: none;
+      background: linear-gradient(to bottom, rgba(0,0,0,.6), transparent);
+    }
+    .intro .hero-dot {
+      flex: 1; width: auto; height: 3px; border-radius: 3px; position: relative; overflow: hidden;
+      background: rgba(245,242,236,.3); box-shadow: none;
+    }
+    .intro .hero-dot::after {
+      content: ''; position: absolute; inset: 0; background: var(--accent);
+      box-shadow: 0 0 8px rgba(200,169,110,.9);
+      transform: scaleX(0); transform-origin: left center;
+    }
+    .intro .hero-dot.done::after { transform: scaleX(1); }
+    .intro .hero-dot.run::after { animation: podFill var(--dur, 3s) linear forwards; }
+    @keyframes podFill { to { transform: scaleX(1); } }
 
     /* Copy, dice and nav wait backstage until the pop */
     .intro:not(.intro-done) .hero-left,
@@ -1372,15 +1393,8 @@
     .intro nav { transition: opacity .6s ease .35s, transform .9s cubic-bezier(.34,1.56,.64,1) .3s; }
     .intro:not(.intro-done) nav { opacity: 0; transform: translateY(-28px); pointer-events: none; }
 
-    /* Scroll cue during the show only */
-    .intro:not(.intro-done) .hero-scroll-indicator {
-      display: flex; bottom: 2.2rem; z-index: 3;
-      transition: opacity .5s ease;
-    }
-    .intro .hero.scrolled-in .hero-scroll-indicator { opacity: 0; }
-
     /* The pop: the last frame dissolves into the gold dust... */
-    .intro-popping .hero-stage { opacity: 0; transition: opacity .42s ease; }
+    .intro-popping .hero-stage { opacity: 0; transition: opacity .75s ease; }
 
     /* ...and the classic hero falls into place */
     .intro-done .hero-eyebrow      { animation: dropIn .9s cubic-bezier(.34,1.56,.64,1) .00s both; }
@@ -2682,12 +2696,10 @@
         try { navigator.vibrate && navigator.vibrate([12, 50, 12]); } catch (e) {}
         // Lights flash, the ace flips, then the welcome lifts off the first frame
         setTimeout(() => {
-          const sb = root.style.scrollBehavior;
-          root.style.scrollBehavior = 'auto';
-          window.scrollTo(0, 0);                   // the show always starts on frame one
-          root.style.scrollBehavior = sb;
+          window.podTop();                         // the show always starts on frame one
           el.classList.add('leaving');
           root.classList.remove('welcome-on');
+          window.dispatchEvent(new Event('pod:welcomed'));
         }, 950);
         setTimeout(() => { window.removeEventListener('resize', sizeBulbs); el.remove(); }, 2200);
       }
@@ -2706,9 +2718,9 @@
 
     // ── SCROLL-DRIVEN HERO SLIDES + MOBILE INTRO ──
     // Laptop: frames crossfade across the hero's own height.
-    // Phone (html.intro): the hero is a tall track with a pinned stage. The
-    // visitor scrolls through all three frames full-screen, then a champagne
-    // pop bursts gold dust and the classic hero drops into place.
+    // Phone (html.intro): after the welcome, the three frames play full-screen
+    // on a clock with story bars, then a champagne pop bursts gold dust and
+    // the classic hero drops into place.
     (function heroSlides() {
       const root = document.documentElement;
       const hero = document.querySelector('.hero');
@@ -2717,8 +2729,11 @@
       if (!hero || slides.length < 2) return;
 
       const n = slides.length;
-      const FRAMES_END = 0.72;   // share of the track the frames use
-      const POP_AT = 0.80;       // where the pop fires
+      // Phone show timing: how long each frame owns the screen, and the fade
+      // between them. Unhurried, but it feels quicker to the visitor than it
+      // does to us; the whole show runs about ten seconds.
+      const HOLD = [2100, 2000, 2200];
+      const XFADE = 1400;
       let queued = false, landed = false;
 
       const isIntro = () => root.classList.contains('intro') && !root.classList.contains('intro-done') &&
@@ -2741,42 +2756,74 @@
           if (dissolving) return;
           dissolving = true;
           root.classList.add('intro-popping');
-          root.style.overflow = 'hidden';            // stop a fling mid-swap
           setTimeout(() => {
-            const sb = root.style.scrollBehavior;
-            root.style.scrollBehavior = 'auto';
             root.classList.add('intro-done');
             root.classList.remove('intro-popping');
-            window.scrollTo(0, 0);
-            root.style.scrollBehavior = sb;
+            window.podTop();
             finish();
-            setTimeout(() => { root.style.overflow = ''; }, 250);
-          }, 420);
+          }, 750);
         };
-        champagnePop(dissolve);
-        setTimeout(dissolve, 700);   // in case animation frames are paused
+        // Let the gold dust bloom over the last frame for a beat, then dissolve
+        champagnePop(() => setTimeout(dissolve, 550));
+        setTimeout(dissolve, 1400);   // in case animation frames are paused
       }
 
+      // ── The phone show: three frames on a clock, then the pop ──
+      let cur = -1, timer = null, changedAt = 0;
+      function kenBurns(slide, ms) {
+        slide.style.setProperty('--kb', ms + 'ms');
+        slide.classList.remove('kb');
+        void slide.offsetWidth;                      // restart the drift
+        slide.classList.add('kb');
+      }
+      function showFrame(i) {
+        cur = i; changedAt = performance.now();
+        slides.forEach((sl, k) => sl.classList.toggle('is-active', k === i));
+        kenBurns(slides[i], HOLD[i] + XFADE * 2);
+        dots.forEach((d, k) => { d.classList.toggle('done', k < i); d.classList.remove('run'); });
+        if (dots[i]) {
+          dots[i].style.setProperty('--dur', (HOLD[i] + XFADE) + 'ms');
+          void dots[i].offsetWidth;
+          dots[i].classList.add('run');
+        }
+        clearTimeout(timer);
+        timer = setTimeout(advance, HOLD[i] + XFADE);
+      }
+      function advance() {
+        if (landed) return;
+        if (cur < n - 1) showFrame(cur + 1);
+        else { clearTimeout(timer); dots.forEach(d => d.classList.add('done')); land(true); }
+      }
+      // A tap or swipe moves things along, but never faster than the eye
+      function nudge() { if (cur >= 0 && performance.now() - changedAt > 900) advance(); }
+      let showStarted = false;
+      function startShow() {
+        if (showStarted || !isIntro()) return;
+        showStarted = true;
+        slides.forEach(sl => { sl.style.opacity = ''; });
+        showFrame(0);
+        let y0 = null;
+        hero.addEventListener('click', nudge);
+        hero.addEventListener('touchstart', e => { y0 = e.touches[0].clientY; }, { passive: true });
+        hero.addEventListener('touchmove', e => { if (isIntro()) e.preventDefault(); }, { passive: false });
+        hero.addEventListener('touchend', e => {
+          if (y0 !== null && Math.abs(y0 - e.changedTouches[0].clientY) > 40) nudge();
+          y0 = null;
+        });
+        window.addEventListener('wheel', e => { if (isIntro() && e.deltaY > 25) nudge(); }, { passive: true });
+      }
+
+      // Laptop: frames crossfade with the scroll across the hero's height
       function paint() {
         queued = false;
-        let p, scaled;
-        if (isIntro()) {
-          const track = Math.max(hero.offsetHeight - window.innerHeight, 1);
-          p = Math.min(Math.max(-hero.getBoundingClientRect().top / track, 0), 1);
-          scaled = Math.min(p / FRAMES_END, 1) * (n - 1);
-          hero.classList.toggle('scrolled-in', p > 0.03);
-          if (!landed && p >= POP_AT) land(true);
-        } else {
-          const h = hero.offsetHeight || window.innerHeight;
-          p = Math.min(Math.max(window.scrollY / h, 0), 1);
-          scaled = p * (n - 1);
-        }
+        if (root.classList.contains('intro') && !root.classList.contains('intro-done')) return;   // the show keeps its own clock
+        const h = hero.offsetHeight || window.innerHeight;
+        const p = Math.min(Math.max(window.scrollY / h, 0), 1);
+        const scaled = p * (n - 1);
         let lead = 0, leadOp = -1;
         for (let i = 0; i < n; i++) {
           const op = Math.max(0, 1 - Math.abs(scaled - i));
           slides[i].style.opacity = op.toFixed(3);
-          // settle in as a frame arrives, push in slightly as it leaves
-          slides[i].style.setProperty('--zoom', (1 + 0.07 * (1 - op)).toFixed(4));
           slides[i].classList.toggle('is-active', op > 0.5);
           if (op > leadOp) { leadOp = op; lead = i; }
         }
@@ -2881,6 +2928,11 @@
       // A visitor arriving on a deep link skips the show
       if (!root.classList.contains('intro')) land(false);
       paint();
+      // The show starts as the welcome lifts (or straight away without one)
+      if (root.classList.contains('intro')) {
+        if (root.classList.contains('welcome-on')) window.addEventListener('pod:welcomed', startShow, { once: true });
+        else startShow();
+      }
 
       window.addEventListener('load', function () {
         slides.slice(1).forEach(sl => {
