@@ -1343,19 +1343,14 @@
      MOBILE INTRO — pinned frames, champagne pop, site drops in
   ═══════════════════════════════ */
   .hero-stage { display: contents; }          /* invisible on laptops */
-  .hero-snap { display: none; }               /* phone show only */
 
   @media (max-width: 900px) {
     /* The show: the visitor's thumb drives it. A tall track with the stage
-       pinned; each swipe snaps to the next frame, so a hard flick can't fly
-       past one, and the last pull pops the champagne. */
-    html.intro:not(.intro-done):not(.welcome-on) { scroll-snap-type: y mandatory; }
-    .intro:not(.intro-done) .hero { display: block; height: 400svh; min-height: 0; overflow: visible; }
-    .intro:not(.intro-done) .hero-snap {
-      display: block; position: absolute; left: 0; width: 1px; height: 1px; pointer-events: none;
-      top: calc(var(--i) * 100svh);
-      scroll-snap-align: start; scroll-snap-stop: always;
-    }
+       pinned; the frames melt into each other as they scroll, and reaching
+       the bottom pops the champagne. The rest of the page waits offstage, so
+       the track's end is the end of the page and a flick can't fly past it. */
+    .intro:not(.intro-done) .hero { display: block; height: 430svh; min-height: 0; overflow: visible; }
+    .intro:not(.intro-done) .hero ~ :is(.marquee-section, section, footer) { display: none; }
     .intro:not(.intro-done) .hero-stage {
       display: block; position: sticky; top: 0;
       height: 100svh; overflow: hidden;
@@ -1370,36 +1365,13 @@
     }
     .intro .hero-slides-scrim { opacity: .3; }   /* frames get the whole screen */
 
-    /* Pulling past the last frame builds a gold glow where the cork will fly */
+    /* The last stretch builds a gold glow where the cork will fly */
     .intro:not(.intro-done) .hero-stage::after {
       content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
       background: radial-gradient(circle at 50% 36%, rgba(255,244,216,.95) 0, rgba(232,200,138,.5) 12%,
                   rgba(200,169,110,.14) 30%, transparent 55%);
       opacity: calc(var(--charge, 0) * .8);
       transform: scale(calc(.55 + var(--charge, 0) * .55));
-    }
-
-    /* Story-style bars across the top: they fill as the thumb travels,
-       and the last one fills on the pull that pops the champagne */
-    .intro:not(.intro-done) .hero-progress {
-      display: flex; gap: 5px; z-index: 3;
-      top: calc(env(safe-area-inset-top, 0px) + 14px); bottom: auto; left: 14px; right: 14px;
-      opacity: 0; animation: fadeIn .8s ease .9s forwards;
-    }
-    .welcome-on .hero-progress { animation: none; }
-    /* a soft shade so the bars read over any frame */
-    .intro:not(.intro-done) .hero-stage::before {
-      content: ''; position: absolute; inset: 0 0 auto 0; height: 96px; z-index: 2; pointer-events: none;
-      background: linear-gradient(to bottom, rgba(0,0,0,.6), transparent);
-    }
-    .intro .hero-dot {
-      flex: 1; width: auto; height: 3px; border-radius: 3px; position: relative; overflow: hidden;
-      background: rgba(245,242,236,.3); box-shadow: none;
-    }
-    .intro .hero-dot::after {
-      content: ''; position: absolute; inset: 0; background: var(--accent);
-      box-shadow: 0 0 8px rgba(200,169,110,.9);
-      transform: scaleX(var(--fill, 0)); transform-origin: left center;
     }
 
     /* Scroll cue on the first frame, until the thumb takes over */
@@ -1762,7 +1734,6 @@
     <div class="scroll-line"></div>
   </div>
   </div><!-- /.hero-stage -->
-  <span class="hero-snap" style="--i:0"></span><span class="hero-snap" style="--i:1"></span><span class="hero-snap" style="--i:2"></span><span class="hero-snap" style="--i:3"></span>
   <!-- Floating Dice -->
   <div class="vegas-dice-container">
     <div class="die die-4"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
@@ -2742,9 +2713,9 @@
 
     // ── SCROLL-DRIVEN HERO SLIDES + MOBILE INTRO ──
     // Laptop: frames crossfade across the hero's own height.
-    // Phone (html.intro): after the welcome, the visitor's thumb scrubs the
-    // three frames full-screen, one snap per swipe, and the last pull pops the
-    // champagne; gold dust bursts and the classic hero drops into place.
+    // Phone (html.intro): after the welcome, the visitor's thumb scrolls the
+    // three frames full-screen, and reaching the bottom pops the champagne;
+    // gold dust bursts and the classic hero drops into place.
     (function heroSlides() {
       const root = document.documentElement;
       const hero = document.querySelector('.hero');
@@ -2753,9 +2724,11 @@
       if (!hero || slides.length < 2) return;
 
       const n = slides.length;
-      const snaps = [].slice.call(hero.querySelectorAll('.hero-snap'));
-      const POP_AT = 0.9;   // how far into the last pull the cork flies
+      // The picture chases the thumb with a little glide, but can only move
+      // so fast: a hard flick still plays every frame on its way to the pop.
+      const MAX_RATE = 1.0;    // frames per second, at most
       let queued = false, landed = false, lastTick = 0;
+      let shown = 0, looping = false, lastT = 0;
 
       const isIntro = () => root.classList.contains('intro') && !root.classList.contains('intro-done') &&
         window.matchMedia('(max-width: 900px)').matches;
@@ -2792,41 +2765,66 @@
         setTimeout(dissolve, 1400);   // in case animation frames are paused
       }
 
-      // One swipe = one step: the distance between snap points
-      const stepPx = () => (snaps.length > 1 ? snaps[1].offsetTop - snaps[0].offsetTop : 0) || window.innerHeight;
+      // Where the thumb has taken us: 0, 1, 2 = the three frames; 3 = the pop
+      function thumbTarget() {
+        const track = Math.max(hero.offsetHeight - window.innerHeight, 1);
+        return Math.min(Math.max(-hero.getBoundingClientRect().top / track, 0), 1) * n;
+      }
+      // Each frame holds for a moment, then melts into the next
+      const melt = f => f <= .18 ? 0 : f >= .82 ? 1 : (x => x * x * (3 - 2 * x))((f - .18) / .64);
+
+      function renderShow(t) {
+        const scaled = Math.min(t, n - 1);
+        const base = Math.min(Math.floor(scaled), n - 1);
+        const pos = base + melt(scaled - base);
+        const charge = Math.max(0, t - (n - 1));
+        hero.classList.toggle('scrolled-in', t > 0.04);
+        hero.style.setProperty('--charge', charge.toFixed(3));
+        for (let i = 0; i < n; i++) {
+          const op = Math.max(0, 1 - Math.abs(pos - i));
+          slides[i].style.opacity = op.toFixed(3);
+          // settle in as a frame arrives, push in as it leaves, and push
+          // harder on the last one as the thumb heads for the pop
+          const zoom = 1 + 0.07 * (1 - op) + (i === n - 1 ? 0.09 * charge : 0);
+          slides[i].style.setProperty('--zoom', zoom.toFixed(4));
+          slides[i].classList.toggle('is-active', op > 0.5);
+        }
+        // a light tick as each frame settles (phones that support it)
+        if (Number.isInteger(pos) && pos !== lastTick && pos < n) {
+          lastTick = pos;
+          try { navigator.vibrate && navigator.vibrate(8); } catch (e) {}
+        }
+      }
+
+      function loop(now) {
+        const dt = lastT ? Math.min((now - lastT) / 1000, 0.05) : 1 / 60;
+        lastT = now;
+        const target = thumbTarget();
+        let step = (target - shown) * Math.min(1, dt * 9);      // glide after the thumb...
+        step = Math.max(Math.min(step, MAX_RATE * dt), -3 * MAX_RATE * dt);   // ...never faster than the eye
+        shown += step;
+        if (Math.abs(target - shown) < 0.0005) shown = target;
+        renderShow(shown);
+        if (!landed && shown >= n - 0.04) { looping = false; land(true); return; }
+        if (shown !== target) requestAnimationFrame(loop);
+        else { looping = false; lastT = 0; }
+      }
 
       function paint() {
         queued = false;
-        let scaled, charge = 0;
         if (isIntro()) {
-          if (root.classList.contains('welcome-on')) return;
-          // 0, 1, 2 = the three frames; 3 = the pop
-          const st = Math.min(Math.max(-hero.getBoundingClientRect().top / stepPx(), 0), n);
-          scaled = Math.min(st, n - 1);
-          charge = Math.max(0, st - (n - 1));
-          hero.classList.toggle('scrolled-in', st > 0.04);
-          hero.style.setProperty('--charge', charge.toFixed(3));
-          dots.forEach((d, i) => d.style.setProperty('--fill', Math.min(Math.max(st - i, 0), 1).toFixed(3)));
-          // a light tick as each frame settles (phones that support it)
-          const near = Math.round(st);
-          if (Math.abs(st - near) < 0.02 && near !== lastTick && near < n) {
-            lastTick = near;
-            try { navigator.vibrate && navigator.vibrate(8); } catch (e) {}
-          }
-          if (!landed && charge >= POP_AT) land(true);
-        } else {
-          // Laptop: frames crossfade with the scroll across the hero's height
-          const h = hero.offsetHeight || window.innerHeight;
-          scaled = Math.min(Math.max(window.scrollY / h, 0), 1) * (n - 1);
+          if (root.classList.contains('welcome-on') || landed || looping) return;
+          looping = true; lastT = 0;
+          requestAnimationFrame(loop);
+          return;
         }
+        // Laptop: frames crossfade with the scroll across the hero's height
+        const h = hero.offsetHeight || window.innerHeight;
+        const scaled = Math.min(Math.max(window.scrollY / h, 0), 1) * (n - 1);
         let lead = 0, leadOp = -1;
         for (let i = 0; i < n; i++) {
           const op = Math.max(0, 1 - Math.abs(scaled - i));
           slides[i].style.opacity = op.toFixed(3);
-          // settle in as a frame arrives, push in as it leaves, and push
-          // harder on the last one as the thumb pulls toward the pop
-          const zoom = 1 + 0.07 * (1 - op) + (i === n - 1 ? 0.09 * charge : 0);
-          slides[i].style.setProperty('--zoom', zoom.toFixed(4));
           slides[i].classList.toggle('is-active', op > 0.5);
           if (op > leadOp) { leadOp = op; lead = i; }
         }
