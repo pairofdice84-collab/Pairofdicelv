@@ -752,6 +752,9 @@
   .reveal-delay-3 { transition-delay: 0.3s; }
 
   /* ── MOBILE HERO IMAGE STRIP ── */
+  .hero-mobile-strip {
+    display: none;
+  }
 
   @media (max-width: 900px) {
     nav { padding: 1.5rem 1rem; }
@@ -1315,24 +1318,20 @@
   }
 
   @media (max-width: 900px) {
-    .hero { position: relative; min-height: 100svh; }
+    /* Phones keep the classic hero; the frames only play during the intro */
+    .hero-slides, .hero-progress { display: none; }
     .hero-slides-scrim {
       background:
         linear-gradient(to bottom, rgba(8,8,8,.78) 0%, rgba(8,8,8,.35) 32%, rgba(8,8,8,.55) 62%, var(--black) 97%);
     }
-    .hero-left { position: relative; z-index: 2; justify-content: flex-end; padding: 7rem 1.5rem 4.5rem; }
     .hero-progress { left: 1.5rem; bottom: 1.5rem; }
-    .hero-title { font-size: clamp(3.2rem, 15vw, 5rem); }
-    .hero-sub { max-width: 100%; }
   }
   @media (prefers-reduced-motion: reduce) {
     .hero-slide { transition: none; }
   }
 
   @media (max-width: 900px) {
-    /* Both of these were positioned for the old split hero and now collide
-       with the headline and the call to action over the full-bleed image. */
-    .vegas-dice-container { display: none; }
+    /* The vertical cue lands on top of the photo strip */
     .hero-scroll-indicator { display: none; }
   }
 
@@ -1342,48 +1341,45 @@
   .hero-stage { display: contents; }          /* invisible on laptops */
 
   @media (max-width: 900px) {
-    /* A tall track the visitor scrolls through while the stage stays pinned */
-    .intro .hero { display: block; height: 340svh; min-height: 0; overflow: visible; }
-    .intro .hero-stage {
+    /* The show: a tall track the visitor scrolls through, stage pinned */
+    .intro:not(.intro-done) .hero { display: block; height: 340svh; min-height: 0; overflow: visible; }
+    .intro:not(.intro-done) .hero-stage {
       display: block; position: sticky; top: 0;
       height: 100svh; overflow: hidden;
+      transition: opacity .42s ease;
     }
+    .intro:not(.intro-done) .hero-slides { display: block; }
+    .intro:not(.intro-done) .hero-progress { display: flex; }
     .intro .hero-slide { transition: none; }   /* scroll scrubs it directly */
     .intro .hero-slide img {
       transform: scale(var(--zoom, 1)); transform-origin: 50% 45%;
       will-change: transform;
     }
-    .intro .hero-left {
-      position: absolute; inset: 0; z-index: 2;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 7rem 1.5rem 4.5rem;
-    }
+    .intro .hero-slides-scrim { opacity: .3; }   /* frames get the whole screen */
 
-    /* Frames get the whole screen; the scrim deepens only once copy lands */
-    .intro .hero-slides-scrim { opacity: .3; transition: opacity .9s ease; }
-    .intro .hero.landed .hero-slides-scrim { opacity: 1; }
-
-    /* Copy waits backstage until the pop */
-    .intro .hero:not(.landed) .hero-eyebrow,
-    .intro .hero:not(.landed) .hero-title,
-    .intro .hero:not(.landed) .hero-sub,
-    .intro .hero:not(.landed) .hero-cta { opacity: 0; visibility: hidden; animation: none; }
-    .intro .hero.landed .hero-eyebrow { animation: dropIn .9s cubic-bezier(.34,1.56,.64,1) .00s both; }
-    .intro .hero.landed .hero-title   { animation: dropIn 1s  cubic-bezier(.34,1.56,.64,1) .10s both; }
-    .intro .hero.landed .hero-sub     { animation: dropIn .9s cubic-bezier(.34,1.56,.64,1) .24s both; }
-    .intro .hero.landed .hero-cta     { animation: dropIn .9s cubic-bezier(.34,1.56,.64,1) .36s both; }
-
-    /* Nav sits out the intro, then falls in with everything else */
+    /* Copy, dice and nav wait backstage until the pop */
+    .intro:not(.intro-done) .hero-left,
+    .intro:not(.intro-done) .vegas-dice-container { display: none; }
     .intro nav { transition: opacity .6s ease .35s, transform .9s cubic-bezier(.34,1.56,.64,1) .3s; }
-    .intro:not(.intro-landed) nav { opacity: 0; transform: translateY(-28px); pointer-events: none; }
+    .intro:not(.intro-done) nav { opacity: 0; transform: translateY(-28px); pointer-events: none; }
 
-    /* Scroll cue during the intro only */
-    .intro .hero-scroll-indicator {
+    /* Scroll cue during the show only */
+    .intro:not(.intro-done) .hero-scroll-indicator {
       display: flex; bottom: 2.2rem; z-index: 3;
       transition: opacity .5s ease;
     }
     .intro .hero.scrolled-in .hero-scroll-indicator { opacity: 0; }
-    .intro .hero.landed .hero-scroll-indicator { display: none; }
+
+    /* The pop: the last frame dissolves into the gold dust... */
+    .intro-popping .hero-stage { opacity: 0; }
+
+    /* ...and the classic hero falls into place */
+    .intro-done .hero-eyebrow      { animation: dropIn .9s cubic-bezier(.34,1.56,.64,1) .00s both; }
+    .intro-done .hero-title        { animation: dropIn 1s  cubic-bezier(.34,1.56,.64,1) .10s both; }
+    .intro-done .hero-sub          { animation: dropIn .9s cubic-bezier(.34,1.56,.64,1) .24s both; }
+    .intro-done .hero-cta          { animation: dropIn .9s cubic-bezier(.34,1.56,.64,1) .36s both; }
+    .intro-done .hero-mobile-strip { animation: dropIn 1s  cubic-bezier(.34,1.56,.64,1) .50s both; }
+    .intro-done .vegas-dice-container { animation: fadeIn .8s ease .9s both; }
   }
 
   @keyframes dropIn {
@@ -1451,6 +1447,21 @@
     <div class="hero-cta">
       <a href="#portfolio" class="btn-primary" data-i18n="hero.cta1">View Weddings</a>
       <a href="#contact" class="btn-ghost" data-i18n="hero.cta2">Check Your Date →</a>
+    </div>
+    <!-- Mobile-only hero image strip -->
+    <div class="hero-mobile-strip">
+      <div class="hero-mobile-img">
+        <img src="images/1S0A1004-Edit.jpg" alt="Portrait Photography" loading="eager" width="1066" height="1600">
+        <span class="hero-mobile-label" data-i18n="hero.label.portrait">Portrait</span>
+      </div>
+      <div class="hero-mobile-img">
+        <img src="images/F7DEE688-1DF6-4A44-B5DB-2EFA2F02FC7D-2.jpg" alt="Street Photography" loading="eager" width="1200" height="799">
+        <span class="hero-mobile-label" data-i18n="hero.label.street">Street</span>
+      </div>
+      <div class="hero-mobile-img">
+        <img src="images/IMG_8841.JPG" alt="Studio Photography" loading="eager" width="1200" height="900">
+        <span class="hero-mobile-label" data-i18n="hero.label.studio">Studio</span>
+      </div>
     </div>
   </div>
   <div class="hero-scroll-indicator">
@@ -1944,6 +1955,19 @@
       document.body.style.overflow = '';
     };
 
+    // A shared link like …/#events opens that gallery straight away
+    (function openFromLink() {
+      const aliases = { weddings: 'wedding', quince: 'quinceaneras', quinces: 'quinceaneras', editorials: 'editorial', 'real-estate': 'realestate', vegas: 'vegas-after-dark' };
+      let key = decodeURIComponent(window.location.hash.slice(1)).toLowerCase();
+      key = aliases[key] || key;
+      if (!projectData[key]) return;
+      window.addEventListener('load', () => {
+        const port = document.getElementById('portfolio');
+        if (port) port.scrollIntoView({ behavior: 'auto' });
+        openLightbox(key);
+      });
+    })();
+
     document.getElementById('lightbox').addEventListener('click', e => { if (e.target === document.getElementById('lightbox')) closeLightbox(); });
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
@@ -2376,17 +2400,40 @@
       const POP_AT = 0.80;       // where the pop fires
       let queued = false, landed = false;
 
-      const isIntro = () => root.classList.contains('intro') && window.matchMedia('(max-width: 900px)').matches;
+      const isIntro = () => root.classList.contains('intro') && !root.classList.contains('intro-done') &&
+        window.matchMedia('(max-width: 900px)').matches;
 
+      function finish() {
+        hero.classList.add('landed');
+        root.classList.add('intro-landed');
+        window.dispatchEvent(new Event('pod:landed'));
+      }
+
+      // The last frame dissolves into the gold dust, the page goes back to
+      // the top, and the classic hero falls into place under the glitter.
       function land(withPop) {
         if (landed) return;
         landed = true;
-        const go = () => {
-          hero.classList.add('landed');
-          root.classList.add('intro-landed');
-          window.dispatchEvent(new Event('pod:landed'));
+        if (!withPop) { finish(); return; }
+        let dissolving = false;
+        const dissolve = () => {
+          if (dissolving) return;
+          dissolving = true;
+          root.classList.add('intro-popping');
+          root.style.overflow = 'hidden';            // stop a fling mid-swap
+          setTimeout(() => {
+            const sb = root.style.scrollBehavior;
+            root.style.scrollBehavior = 'auto';
+            root.classList.add('intro-done');
+            root.classList.remove('intro-popping');
+            window.scrollTo(0, 0);
+            root.style.scrollBehavior = sb;
+            finish();
+            setTimeout(() => { root.style.overflow = ''; }, 250);
+          }, 420);
         };
-        if (withPop) { champagnePop(); setTimeout(go, 330); } else go();
+        champagnePop(dissolve);
+        setTimeout(dissolve, 700);   // in case animation frames are paused
       }
 
       function paint() {
@@ -2416,7 +2463,7 @@
       }
 
       // Champagne cork: a streak rises, bursts into gold dust, glitter settles
-      function champagnePop() {
+      function champagnePop(onBurst) {
         const W = window.innerWidth, H = window.innerHeight;
         const ox = W / 2, oy = H * 0.36;
         const flash = document.createElement('div');
@@ -2452,6 +2499,7 @@
               c: golds[i % golds.length], tw: Math.random() * 6.28, drift: true });
           }
           try { navigator.vibrate && navigator.vibrate(18); } catch (e) {}
+          if (onBurst) onBurst();
         }
 
         function frame(now) {
