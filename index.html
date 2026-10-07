@@ -1343,11 +1343,19 @@
      MOBILE INTRO — pinned frames, champagne pop, site drops in
   ═══════════════════════════════ */
   .hero-stage { display: contents; }          /* invisible on laptops */
+  .hero-snap { display: none; }               /* phone show only */
 
   @media (max-width: 900px) {
-    /* The show plays on its own clock: one full screen, page held still */
-    html.intro:not(.intro-done) { overflow: hidden; }
-    .intro:not(.intro-done) .hero { display: block; height: 100svh; min-height: 0; overflow: hidden; touch-action: none; }
+    /* The show: the visitor's thumb drives it. A tall track with the stage
+       pinned; each swipe snaps to the next frame, so a hard flick can't fly
+       past one, and the last pull pops the champagne. */
+    html.intro:not(.intro-done):not(.welcome-on) { scroll-snap-type: y mandatory; }
+    .intro:not(.intro-done) .hero { display: block; height: 400svh; min-height: 0; overflow: visible; }
+    .intro:not(.intro-done) .hero-snap {
+      display: block; position: absolute; left: 0; width: 1px; height: 1px; pointer-events: none;
+      top: calc(var(--i) * 100svh);
+      scroll-snap-align: start; scroll-snap-stop: always;
+    }
     .intro:not(.intro-done) .hero-stage {
       display: block; position: sticky; top: 0;
       height: 100svh; overflow: hidden;
@@ -1355,14 +1363,24 @@
     }
     .welcome-on .hero-stage { opacity: 0; }     /* first frame waits behind the welcome */
     .intro:not(.intro-done) .hero-slides { display: block; }
-    /* Slow, soft crossfades, and each frame drifts closer while it's on */
-    .intro .hero-slide { transition: opacity 1.4s cubic-bezier(.45,0,.55,1); }
-    .intro .hero-slide img { transform-origin: 50% 45%; will-change: transform; }
-    .intro .hero-slide.kb img { animation: podKenBurns var(--kb, 6s) cubic-bezier(.3,.1,.3,1) forwards; }
-    @keyframes podKenBurns { from { transform: scale(1); } to { transform: scale(1.09); } }
+    .intro .hero-slide { transition: none; }    /* the thumb scrubs it directly */
+    .intro .hero-slide img {
+      transform: scale(var(--zoom, 1)); transform-origin: 50% 45%;
+      will-change: transform;
+    }
     .intro .hero-slides-scrim { opacity: .3; }   /* frames get the whole screen */
 
-    /* Story-style bars across the top, filling with each frame */
+    /* Pulling past the last frame builds a gold glow where the cork will fly */
+    .intro:not(.intro-done) .hero-stage::after {
+      content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+      background: radial-gradient(circle at 50% 36%, rgba(255,244,216,.95) 0, rgba(232,200,138,.5) 12%,
+                  rgba(200,169,110,.14) 30%, transparent 55%);
+      opacity: calc(var(--charge, 0) * .8);
+      transform: scale(calc(.55 + var(--charge, 0) * .55));
+    }
+
+    /* Story-style bars across the top: they fill as the thumb travels,
+       and the last one fills on the pull that pops the champagne */
     .intro:not(.intro-done) .hero-progress {
       display: flex; gap: 5px; z-index: 3;
       top: calc(env(safe-area-inset-top, 0px) + 14px); bottom: auto; left: 14px; right: 14px;
@@ -1381,11 +1399,16 @@
     .intro .hero-dot::after {
       content: ''; position: absolute; inset: 0; background: var(--accent);
       box-shadow: 0 0 8px rgba(200,169,110,.9);
-      transform: scaleX(0); transform-origin: left center;
+      transform: scaleX(var(--fill, 0)); transform-origin: left center;
     }
-    .intro .hero-dot.done::after { transform: scaleX(1); }
-    .intro .hero-dot.run::after { animation: podFill var(--dur, 3s) linear forwards; }
-    @keyframes podFill { to { transform: scaleX(1); } }
+
+    /* Scroll cue on the first frame, until the thumb takes over */
+    .intro:not(.intro-done) .hero-scroll-indicator {
+      display: flex; bottom: 2.2rem; z-index: 3;
+      transition: filter .5s ease;
+    }
+    /* (filter, not opacity: the cue's own fade-in animation owns its opacity) */
+    .intro .hero.scrolled-in .hero-scroll-indicator { filter: opacity(0); }
 
     /* Copy, dice and nav wait backstage until the pop */
     .intro:not(.intro-done) .hero-left,
@@ -1739,6 +1762,7 @@
     <div class="scroll-line"></div>
   </div>
   </div><!-- /.hero-stage -->
+  <span class="hero-snap" style="--i:0"></span><span class="hero-snap" style="--i:1"></span><span class="hero-snap" style="--i:2"></span><span class="hero-snap" style="--i:3"></span>
   <!-- Floating Dice -->
   <div class="vegas-dice-container">
     <div class="die die-4"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
@@ -2718,9 +2742,9 @@
 
     // ── SCROLL-DRIVEN HERO SLIDES + MOBILE INTRO ──
     // Laptop: frames crossfade across the hero's own height.
-    // Phone (html.intro): after the welcome, the three frames play full-screen
-    // on a clock with story bars, then a champagne pop bursts gold dust and
-    // the classic hero drops into place.
+    // Phone (html.intro): after the welcome, the visitor's thumb scrubs the
+    // three frames full-screen, one snap per swipe, and the last pull pops the
+    // champagne; gold dust bursts and the classic hero drops into place.
     (function heroSlides() {
       const root = document.documentElement;
       const hero = document.querySelector('.hero');
@@ -2729,12 +2753,9 @@
       if (!hero || slides.length < 2) return;
 
       const n = slides.length;
-      // Phone show timing: how long each frame owns the screen, and the fade
-      // between them. Unhurried, but it feels quicker to the visitor than it
-      // does to us; the whole show runs about ten seconds.
-      const HOLD = [2100, 2000, 2200];
-      const XFADE = 1400;
-      let queued = false, landed = false;
+      const snaps = [].slice.call(hero.querySelectorAll('.hero-snap'));
+      const POP_AT = 0.9;   // how far into the last pull the cork flies
+      let queued = false, landed = false, lastTick = 0;
 
       const isIntro = () => root.classList.contains('intro') && !root.classList.contains('intro-done') &&
         window.matchMedia('(max-width: 900px)').matches;
@@ -2761,69 +2782,51 @@
             root.classList.remove('intro-popping');
             window.podTop();
             finish();
+            setTimeout(() => { root.style.overflow = ''; }, 250);
           }, 750);
         };
+        // Hold the page still through the pop, even mid-swipe
+        root.style.overflow = 'hidden';
         // Let the gold dust bloom over the last frame for a beat, then dissolve
         champagnePop(() => setTimeout(dissolve, 550));
         setTimeout(dissolve, 1400);   // in case animation frames are paused
       }
 
-      // ── The phone show: three frames on a clock, then the pop ──
-      let cur = -1, timer = null, changedAt = 0;
-      function kenBurns(slide, ms) {
-        slide.style.setProperty('--kb', ms + 'ms');
-        slide.classList.remove('kb');
-        void slide.offsetWidth;                      // restart the drift
-        slide.classList.add('kb');
-      }
-      function showFrame(i) {
-        cur = i; changedAt = performance.now();
-        slides.forEach((sl, k) => sl.classList.toggle('is-active', k === i));
-        kenBurns(slides[i], HOLD[i] + XFADE * 2);
-        dots.forEach((d, k) => { d.classList.toggle('done', k < i); d.classList.remove('run'); });
-        if (dots[i]) {
-          dots[i].style.setProperty('--dur', (HOLD[i] + XFADE) + 'ms');
-          void dots[i].offsetWidth;
-          dots[i].classList.add('run');
-        }
-        clearTimeout(timer);
-        timer = setTimeout(advance, HOLD[i] + XFADE);
-      }
-      function advance() {
-        if (landed) return;
-        if (cur < n - 1) showFrame(cur + 1);
-        else { clearTimeout(timer); dots.forEach(d => d.classList.add('done')); land(true); }
-      }
-      // A tap or swipe moves things along, but never faster than the eye
-      function nudge() { if (cur >= 0 && performance.now() - changedAt > 900) advance(); }
-      let showStarted = false;
-      function startShow() {
-        if (showStarted || !isIntro()) return;
-        showStarted = true;
-        slides.forEach(sl => { sl.style.opacity = ''; });
-        showFrame(0);
-        let y0 = null;
-        hero.addEventListener('click', nudge);
-        hero.addEventListener('touchstart', e => { y0 = e.touches[0].clientY; }, { passive: true });
-        hero.addEventListener('touchmove', e => { if (isIntro()) e.preventDefault(); }, { passive: false });
-        hero.addEventListener('touchend', e => {
-          if (y0 !== null && Math.abs(y0 - e.changedTouches[0].clientY) > 40) nudge();
-          y0 = null;
-        });
-        window.addEventListener('wheel', e => { if (isIntro() && e.deltaY > 25) nudge(); }, { passive: true });
-      }
+      // One swipe = one step: the distance between snap points
+      const stepPx = () => (snaps.length > 1 ? snaps[1].offsetTop - snaps[0].offsetTop : 0) || window.innerHeight;
 
-      // Laptop: frames crossfade with the scroll across the hero's height
       function paint() {
         queued = false;
-        if (root.classList.contains('intro') && !root.classList.contains('intro-done')) return;   // the show keeps its own clock
-        const h = hero.offsetHeight || window.innerHeight;
-        const p = Math.min(Math.max(window.scrollY / h, 0), 1);
-        const scaled = p * (n - 1);
+        let scaled, charge = 0;
+        if (isIntro()) {
+          if (root.classList.contains('welcome-on')) return;
+          // 0, 1, 2 = the three frames; 3 = the pop
+          const st = Math.min(Math.max(-hero.getBoundingClientRect().top / stepPx(), 0), n);
+          scaled = Math.min(st, n - 1);
+          charge = Math.max(0, st - (n - 1));
+          hero.classList.toggle('scrolled-in', st > 0.04);
+          hero.style.setProperty('--charge', charge.toFixed(3));
+          dots.forEach((d, i) => d.style.setProperty('--fill', Math.min(Math.max(st - i, 0), 1).toFixed(3)));
+          // a light tick as each frame settles (phones that support it)
+          const near = Math.round(st);
+          if (Math.abs(st - near) < 0.02 && near !== lastTick && near < n) {
+            lastTick = near;
+            try { navigator.vibrate && navigator.vibrate(8); } catch (e) {}
+          }
+          if (!landed && charge >= POP_AT) land(true);
+        } else {
+          // Laptop: frames crossfade with the scroll across the hero's height
+          const h = hero.offsetHeight || window.innerHeight;
+          scaled = Math.min(Math.max(window.scrollY / h, 0), 1) * (n - 1);
+        }
         let lead = 0, leadOp = -1;
         for (let i = 0; i < n; i++) {
           const op = Math.max(0, 1 - Math.abs(scaled - i));
           slides[i].style.opacity = op.toFixed(3);
+          // settle in as a frame arrives, push in as it leaves, and push
+          // harder on the last one as the thumb pulls toward the pop
+          const zoom = 1 + 0.07 * (1 - op) + (i === n - 1 ? 0.09 * charge : 0);
+          slides[i].style.setProperty('--zoom', zoom.toFixed(4));
           slides[i].classList.toggle('is-active', op > 0.5);
           if (op > leadOp) { leadOp = op; lead = i; }
         }
@@ -2928,11 +2931,8 @@
       // A visitor arriving on a deep link skips the show
       if (!root.classList.contains('intro')) land(false);
       paint();
-      // The show starts as the welcome lifts (or straight away without one)
-      if (root.classList.contains('intro')) {
-        if (root.classList.contains('welcome-on')) window.addEventListener('pod:welcomed', startShow, { once: true });
-        else startShow();
-      }
+      // Once the welcome lifts, the first frame is drawn and the thumb takes over
+      window.addEventListener('pod:welcomed', onScroll, { once: true });
 
       window.addEventListener('load', function () {
         slides.slice(1).forEach(sl => {
