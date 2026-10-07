@@ -1346,10 +1346,10 @@
 
   @media (max-width: 900px) {
     /* The show: the visitor's thumb drives it. A tall track with the stage
-       pinned; the frames melt into each other as they scroll, and reaching
-       the bottom pops the champagne. The rest of the page waits offstage, so
-       the track's end is the end of the page and a flick can't fly past it. */
-    .intro:not(.intro-done) .hero { display: block; height: 430svh; min-height: 0; overflow: visible; }
+       pinned; each frame fades and flows into the next under the thumb, and
+       settling on the last one pops the champagne. The rest of the page waits
+       offstage, so a flick can't fly past the show. */
+    .intro:not(.intro-done) .hero { display: block; height: 284svh; min-height: 0; overflow: visible; }   /* 100svh stage + 184svh of thumb travel */
     .intro:not(.intro-done) .hero ~ :is(.marquee-section, section, footer) { display: none; }
     .intro:not(.intro-done) .hero-stage {
       display: block; position: sticky; top: 0;
@@ -1389,7 +1389,7 @@
     .intro:not(.intro-done) nav { opacity: 0; transform: translateY(-28px); pointer-events: none; }
 
     /* The pop: the last frame dissolves into the gold dust... */
-    .intro-popping .hero-stage { opacity: 0; transition: opacity .75s ease; }
+    .intro-popping .hero-stage { opacity: 0; transition: opacity .33s ease; }
 
     /* ...and the classic hero falls into place */
     .intro-done .hero-eyebrow      { animation: dropIn .9s cubic-bezier(.34,1.56,.64,1) .00s both; }
@@ -2724,9 +2724,13 @@
       if (!hero || slides.length < 2) return;
 
       const n = slides.length;
-      // The picture chases the thumb with a little glide, but can only move
-      // so fast: a hard flick still plays every frame on its way to the pop.
-      const MAX_RATE = 1.0;    // frames per second, at most
+      // Thumb travel, in frames: 0 → 1 → 2 are the three frames (75svh of
+      // scroll apiece), a short beat on the last one, then the pop; the track
+      // runs a touch past it so the pop is always in reach.
+      const POP_T = 2.25, END_T = 2.45;
+      // The picture follows the thumb tightly, with only a top speed so a
+      // hard flick still flows through every frame on the way.
+      const MAX_RATE = 2.2;    // frames per second, at most
       let queued = false, landed = false, lastTick = 0;
       let shown = 0, looping = false, lastT = 0;
 
@@ -2745,53 +2749,49 @@
         if (landed) return;
         landed = true;
         if (!withPop) { finish(); return; }
-        let dissolving = false;
-        const dissolve = () => {
-          if (dissolving) return;
-          dissolving = true;
-          root.classList.add('intro-popping');
-          setTimeout(() => {
-            root.classList.add('intro-done');
-            root.classList.remove('intro-popping');
-            window.podTop();
-            finish();
-            setTimeout(() => { root.style.overflow = ''; }, 250);
-          }, 750);
-        };
         // Hold the page still through the pop, even mid-swipe
         root.style.overflow = 'hidden';
-        // Let the gold dust bloom over the last frame for a beat, then dissolve
-        champagnePop(() => setTimeout(dissolve, 550));
-        setTimeout(dissolve, 1400);   // in case animation frames are paused
+        // The cork flies as the last frame dissolves, and the site lands
+        // 330ms in, right as the gold bursts over it
+        champagnePop();
+        root.classList.add('intro-popping');
+        setTimeout(() => {
+          root.classList.add('intro-done');
+          root.classList.remove('intro-popping');
+          window.podTop();
+          finish();
+          setTimeout(() => { root.style.overflow = ''; }, 250);
+        }, 330);
       }
 
-      // Where the thumb has taken us: 0, 1, 2 = the three frames; 3 = the pop
+      // Where the thumb has taken us, in frames
       function thumbTarget() {
         const track = Math.max(hero.offsetHeight - window.innerHeight, 1);
-        return Math.min(Math.max(-hero.getBoundingClientRect().top / track, 0), 1) * n;
+        return Math.min(Math.max(-hero.getBoundingClientRect().top / track, 0), 1) * END_T;
       }
-      // Each frame holds for a moment, then melts into the next
-      const melt = f => f <= .18 ? 0 : f >= .82 ? 1 : (x => x * x * (3 - 2 * x))((f - .18) / .64);
 
       function renderShow(t) {
-        const scaled = Math.min(t, n - 1);
-        const base = Math.min(Math.floor(scaled), n - 1);
-        const pos = base + melt(scaled - base);
-        const charge = Math.max(0, t - (n - 1));
+        const pos = Math.min(t, n - 1);
+        const base = Math.min(Math.floor(pos), n - 1), f = pos - base;
+        const charge = Math.min(Math.max((t - (n - 1)) / (POP_T - (n - 1)), 0), 1);
         hero.classList.toggle('scrolled-in', t > 0.04);
         hero.style.setProperty('--charge', charge.toFixed(3));
         for (let i = 0; i < n; i++) {
-          const op = Math.max(0, 1 - Math.abs(pos - i));
+          // The frame you're on stays solid while the next one fades in over
+          // it, so the picture flows from one to the next with no dark dip
+          const op = i === base ? 1 : i === base + 1 ? f : 0;
           slides[i].style.opacity = op.toFixed(3);
-          // settle in as a frame arrives, push in as it leaves, and push
-          // harder on the last one as the thumb heads for the pop
-          const zoom = 1 + 0.07 * (1 - op) + (i === n - 1 ? 0.09 * charge : 0);
+          // the leaving frame pushes in, the arriving one settles; the last
+          // one pushes harder as the pop builds
+          let zoom = i === base ? 1 + 0.07 * f : i === base + 1 ? 1 + 0.07 * (1 - f) : 1;
+          if (i === n - 1) zoom += 0.09 * charge;
           slides[i].style.setProperty('--zoom', zoom.toFixed(4));
-          slides[i].classList.toggle('is-active', op > 0.5);
+          slides[i].classList.toggle('is-active', op > 0.5 && !(i === base && f > 0.5));
         }
         // a light tick as each frame settles (phones that support it)
-        if (Number.isInteger(pos) && pos !== lastTick && pos < n) {
-          lastTick = pos;
+        const near = Math.round(pos);
+        if (Math.abs(pos - near) < 0.01 && near !== lastTick) {
+          lastTick = near;
           try { navigator.vibrate && navigator.vibrate(8); } catch (e) {}
         }
       }
@@ -2800,12 +2800,12 @@
         const dt = lastT ? Math.min((now - lastT) / 1000, 0.05) : 1 / 60;
         lastT = now;
         const target = thumbTarget();
-        let step = (target - shown) * Math.min(1, dt * 9);      // glide after the thumb...
-        step = Math.max(Math.min(step, MAX_RATE * dt), -3 * MAX_RATE * dt);   // ...never faster than the eye
+        let step = (target - shown) * Math.min(1, dt * 16);     // follow the thumb closely...
+        step = Math.max(Math.min(step, MAX_RATE * dt), -2 * MAX_RATE * dt);   // ...but never skip a frame
         shown += step;
         if (Math.abs(target - shown) < 0.0005) shown = target;
         renderShow(shown);
-        if (!landed && shown >= n - 0.04) { looping = false; land(true); return; }
+        if (!landed && shown >= POP_T) { looping = false; land(true); return; }
         if (shown !== target) requestAnimationFrame(loop);
         else { looping = false; lastT = 0; }
       }
