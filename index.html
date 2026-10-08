@@ -1343,6 +1343,7 @@
      MOBILE INTRO — pinned frames, champagne pop, site drops in
   ═══════════════════════════════ */
   .hero-stage { display: contents; }          /* invisible on laptops */
+  .intro-cue { display: none; }               /* phone show only */
 
   @media (max-width: 900px) {
     /* The show: the visitor's thumb drives it. A tall track with the stage
@@ -1376,13 +1377,32 @@
       transform: scale(calc(.55 + var(--charge, 0) * .55));
     }
 
-    /* Scroll cue on the first frame, until the thumb takes over */
-    .intro:not(.intro-done) .hero-scroll-indicator {
-      display: flex; bottom: 2.2rem; z-index: 3;
-      transition: filter .5s ease;
+    /* "Swipe up" cue: a bouncing gold arrow and a plain-words label, so
+       nobody is left wondering what to do. Shows once the language is
+       picked, fades as the thumb moves, and comes back if they stall. */
+    .intro:not(.intro-done) .intro-cue {
+      display: flex; flex-direction: column; align-items: center;
+      position: absolute; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 92px);
+      transform: translateX(-50%); z-index: 3; pointer-events: none;
+      transition: opacity .6s ease .9s;
     }
-    /* (filter, not opacity: the cue's own fade-in animation owns its opacity) */
-    .intro .hero.scrolled-in .hero-scroll-indicator { filter: opacity(0); }
+    .welcome-on .intro-cue { opacity: 0; }
+    .intro .hero.scrolled-in:not(.cue-idle) .intro-cue { opacity: 0; transition: opacity .3s ease 0s; }
+    .intro-cue-arrow {
+      width: 38px; height: 38px; fill: none;
+      stroke: #f3dca6; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round;
+      filter: drop-shadow(0 0 6px rgba(232,200,138,.9));
+      animation: cueBounce 1.3s cubic-bezier(.5,0,.5,1) infinite;
+    }
+    .intro-cue-arrow + .intro-cue-arrow { margin-top: -23px; opacity: .45; animation-delay: .14s; }
+    @keyframes cueBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-11px); } }
+    .intro-cue-label {
+      margin-top: .5rem; padding: .55rem 1.1rem .55rem 1.38rem; border-radius: 999px;
+      font-size: .78rem; letter-spacing: .26em; text-transform: uppercase; white-space: nowrap;
+      color: var(--white); background: rgba(8,8,8,.45);
+      border: 1px solid rgba(200,169,110,.5); box-shadow: 0 0 18px rgba(200,169,110,.25);
+      -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    }
 
     /* Copy, dice and nav wait backstage until the pop */
     .intro:not(.intro-done) .hero-left,
@@ -1730,6 +1750,11 @@
         <span class="hero-mobile-label" data-i18n="hero.label.studio">Studio</span>
       </div>
     </div>
+  </div>
+  <div class="intro-cue" aria-hidden="true">
+    <svg class="intro-cue-arrow" viewBox="0 0 24 24"><path d="M5 15l7-7 7 7"/></svg>
+    <svg class="intro-cue-arrow" viewBox="0 0 24 24"><path d="M5 15l7-7 7 7"/></svg>
+    <span class="intro-cue-label" data-i18n="intro.swipe">Swipe up</span>
   </div>
   <div class="hero-scroll-indicator">
     <span class="scroll-text" data-i18n="hero.scroll">Scroll</span>
@@ -2359,6 +2384,7 @@
         'hero.cta1': 'View Weddings',
         'hero.cta2': 'Check Your Date →',
         'hero.scroll': 'Scroll',
+        'intro.swipe': 'Swipe up',
         'hero.label.portrait': 'Portrait',
         'hero.label.street': 'Street',
         'hero.label.studio': 'Studio',
@@ -2464,6 +2490,7 @@
         'hero.cta1': 'Ver Bodas',
         'hero.cta2': 'Consultar Tu Fecha →',
         'hero.scroll': 'Desliza',
+        'intro.swipe': 'Desliza hacia arriba',
         'hero.label.portrait': 'Retrato',
         'hero.label.street': 'Calle',
         'hero.label.studio': 'Estudio',
@@ -2925,7 +2952,17 @@
         requestAnimationFrame(frame);
       }
 
-      function onScroll() { if (!queued) { queued = true; requestAnimationFrame(paint); } }
+      // If the thumb stalls mid-show, bring the swipe-up cue back
+      let idleTimer = null;
+      function cueIdleSoon() {
+        hero.classList.remove('cue-idle');
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => { if (isIntro() && !landed) hero.classList.add('cue-idle'); }, 2600);
+      }
+      function onScroll() {
+        if (isIntro() && !root.classList.contains('welcome-on')) cueIdleSoon();
+        if (!queued) { queued = true; requestAnimationFrame(paint); }
+      }
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onScroll, { passive: true });
       // A visitor arriving on a deep link skips the show
