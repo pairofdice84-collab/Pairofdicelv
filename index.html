@@ -1625,6 +1625,128 @@
       .wl-name { bottom: 24px; font-size: 1.15rem; }
     }
   }
+
+  /* ═══════════════════════════════
+     GALLERY CARDS · GALLERY GRID · PHOTO VIEWER — modern pass
+     Glass controls, plain-words cues in both languages, gentle motion.
+  ═══════════════════════════════ */
+  .glass-btn {
+    width: 46px; height: 46px; padding: 0; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(18,18,18,.5); border: 1px solid rgba(200,169,110,.45);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    box-shadow: 0 6px 20px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.08);
+    color: var(--white); opacity: 1; font-size: 0; letter-spacing: 0;
+    -webkit-tap-highlight-color: transparent;
+    transition: background .3s ease, border-color .3s ease, box-shadow .3s ease, transform .2s ease;
+  }
+  .glass-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .glass-btn:hover { background: rgba(200,169,110,.2); border-color: rgba(232,200,138,.85); box-shadow: 0 6px 24px rgba(0,0,0,.45), 0 0 18px rgba(200,169,110,.35); }
+  .glass-btn:active { transform: scale(.94); }
+
+  /* Cards: photo count badge, and a tap cue where there's no hover */
+  .port-badge {
+    position: absolute; top: .75rem; right: .75rem; z-index: 5; pointer-events: none;
+    display: flex; align-items: center; gap: .35rem; padding: .3rem .62rem .3rem .5rem; border-radius: 999px;
+    background: rgba(12,12,12,.5); border: 1px solid rgba(200,169,110,.45);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    color: var(--white); font-size: .66rem; letter-spacing: .06em;
+  }
+  .port-badge svg { width: 13px; height: 13px; fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linejoin: round; }
+  .port-badge b { font-weight: 500; }
+  .port-tap { display: none; }
+  @media (hover: none), (max-width: 900px) {
+    .portfolio-grid { gap: 8px; }
+    .port-item { border-radius: 12px; -webkit-tap-highlight-color: transparent; }
+    .port-item:active { transform: scale(.97); }
+    .port-overlay {
+      opacity: 1; padding: .85rem .8rem;
+      background: linear-gradient(to top, rgba(0,0,0,.88) 0%, rgba(0,0,0,.45) 42%, transparent 70%);
+    }
+    .port-info { transform: none; }
+    .port-category { font-size: .5rem; letter-spacing: .26em; margin-bottom: .2rem; }
+    .port-title { font-size: 1rem; line-height: 1.15; margin-bottom: 0; }
+    .port-count { display: none; }
+    .port-tap {
+      display: inline-flex; align-items: center; gap: .3rem; margin-top: .5rem;
+      font-size: .56rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent);
+    }
+    .port-tap svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; animation: tapNudge 1.6s ease-in-out infinite; }
+    .port-badge { top: .55rem; right: .55rem; font-size: .6rem; }
+  }
+  @keyframes tapNudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
+
+  /* Gallery grid: header with count and a hint, round close, tiles fade in */
+  .lightbox { justify-content: flex-start; }
+  .lightbox-head { width: 90%; max-width: 1200px; flex: 0 0 auto; padding: 2rem 4.5rem 1.2rem 0; }
+  .lightbox .lightbox-title { position: static; }
+  .lightbox-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .9rem; margin-top: .55rem; font-size: .78rem; letter-spacing: .02em; color: rgba(245,242,236,.66); }
+  .lightbox-title .lightbox-meta span { font-size: inherit; letter-spacing: inherit; text-transform: none; color: inherit; }
+  .lightbox-count b { color: var(--accent); font-weight: 500; }
+  .lightbox-hint { display: inline-flex; align-items: center; gap: .4rem; }
+  .lightbox-hint::before { content: ''; width: 6px; height: 6px; background: var(--accent); transform: rotate(45deg); opacity: .7; }
+  .hint-touch { display: none; }
+  @media (hover: none) { .hint-touch { display: inline-flex; } .hint-mouse { display: none; } }
+  .lightbox-close.glass-btn { top: 1.7rem; right: 2rem; }
+  .lightbox .lightbox-gallery { flex: 1 1 auto; min-height: 0; max-height: none; gap: 6px; padding: .2rem 0 2.5rem; }
+  .lightbox-img { border-radius: 8px; }
+  .lightbox.open .lightbox-img { animation: lbTileIn .55s cubic-bezier(.2,.8,.2,1) calc(min(var(--i, 0), 12) * 45ms) backwards; }
+  @keyframes lbTileIn { from { opacity: 0; transform: translateY(16px) scale(.97); } to { opacity: 1; transform: none; } }
+  @media (max-width: 900px) {
+    .lightbox-head { width: 95%; padding: calc(env(safe-area-inset-top, 0px) + 1.25rem) 3.9rem 1rem 0; }
+    .lightbox-close.glass-btn { top: calc(env(safe-area-inset-top, 0px) + 1rem); right: 1rem; }
+    .lightbox .lightbox-gallery { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 5.5rem); }
+  }
+
+  /* Viewer: glass controls, counter pill, swipe hint on touch screens */
+  .viewer-close.glass-btn { top: 1.7rem; right: 2rem; }
+  .viewer-arrow.glass-btn { width: 54px; height: 54px; border-radius: 50%; transform: translateY(-50%); }
+  .viewer-arrow.glass-btn svg { width: 22px; height: 22px; }
+  .viewer-arrow.glass-btn:active { transform: translateY(-50%) scale(.94); }
+  .viewer-counter {
+    padding: .42rem .95rem; border-radius: 999px;
+    background: rgba(12,12,12,.45); border: 1px solid rgba(200,169,110,.3);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  }
+  .viewer-thumb { border-radius: 6px; }
+  .viewer-hint {
+    position: absolute; left: 50%; bottom: 8.4rem; transform: translateX(-50%); z-index: 311;
+    display: none; align-items: center; gap: .75rem; padding: .62rem 1.15rem .62rem .85rem; border-radius: 999px;
+    background: rgba(12,12,12,.6); border: 1px solid rgba(200,169,110,.5);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    box-shadow: 0 0 18px rgba(200,169,110,.22);
+    color: var(--white); font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; white-space: nowrap;
+    pointer-events: none; opacity: 0; transition: opacity .5s ease;
+  }
+  .viewer-hint.show { opacity: 1; }
+  .viewer-hint-track { position: relative; width: 44px; height: 18px; }
+  .viewer-hint-track::before {
+    content: ''; position: absolute; left: 2px; right: 2px; top: 50%; height: 2px; margin-top: -1px; border-radius: 2px;
+    background: linear-gradient(90deg, rgba(232,200,138,.9), rgba(232,200,138,0)); opacity: .5;
+  }
+  .viewer-hint-dot {
+    position: absolute; top: 50%; width: 14px; height: 14px; margin-top: -7px; border-radius: 50%;
+    background: #fff3d1; box-shadow: 0 0 10px rgba(232,200,138,.9);
+    animation: hintSwipe 1.6s cubic-bezier(.5,0,.3,1) infinite;
+  }
+  @keyframes hintSwipe {
+    0%   { left: 30px; opacity: 0; transform: scale(.6); }
+    15%  { opacity: 1; transform: scale(1); }
+    70%  { left: 0; opacity: 1; }
+    100% { left: 0; opacity: 0; }
+  }
+  @media (hover: none) {
+    .viewer-arrow { display: none; }     /* phones swipe; the hint says so */
+    .viewer-hint { display: flex; }
+  }
+  @media (max-width: 900px) {
+    .viewer-close.glass-btn { top: calc(env(safe-area-inset-top, 0px) + 1rem); right: 1rem; }
+    /* keep tall photos clear of the thumbnail strip and counter */
+    .viewer-img { max-height: calc(100% - 15rem); margin-bottom: 6rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lightbox.open .lightbox-img, .port-tap svg, .viewer-hint-dot { animation: none; }
+  }
 </style>
 </head>
 <body id="top">
@@ -1795,7 +1917,7 @@
         <span class="section-label" data-i18n="portfolio.label">Selected Work</span>
         <h2 class="section-title" data-i18n-html="portfolio.title">The <span class="em">Portfolio</span></h2>
       </div>
-      <p class="section-desc" data-i18n="portfolio.desc">Projects organized by shoot. Click any project to explore the gallery.</p>
+      <p class="section-desc" data-i18n="portfolio.desc">Projects organized by shoot. Tap or click any project to explore the gallery.</p>
     </div>
 
     <div class="port-filters reveal">
@@ -1915,12 +2037,19 @@
   </div>
 </section>
 
-<div class="lightbox" id="lightbox">
-  <div class="lightbox-title">
-    <span id="lightboxCategory">Category</span>
-    <h3 id="lightboxTitle">Project Title</h3>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
+  <div class="lightbox-head">
+    <div class="lightbox-title">
+      <span id="lightboxCategory">Category</span>
+      <h3 id="lightboxTitle">Project Title</h3>
+      <p class="lightbox-meta">
+        <span class="lightbox-count" id="lightboxCount"><b id="lightboxCountNum"></b> <span data-i18n="lb.photos">photos</span></span>
+        <span class="lightbox-hint hint-touch" data-i18n="lb.hintTouch">Tap a photo to see it full screen</span>
+        <span class="lightbox-hint hint-mouse" data-i18n="lb.hintMouse">Click a photo to see it full screen</span>
+      </p>
+    </div>
   </div>
-  <button class="lightbox-close" onclick="closeLightbox()">✕ Close</button>
+  <button class="lightbox-close glass-btn" onclick="closeLightbox()" aria-label="Close / Cerrar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   <div class="lightbox-gallery" id="lightboxGallery"></div>
 </div>
 
@@ -1935,10 +2064,11 @@
     <span class="viewer-sparkle" style="top:45%;left:4%;animation-delay:2.7s;"></span>
     <span class="viewer-sparkle" style="top:40%;left:95%;animation-delay:0.9s;"></span>
   </div>
-  <button class="viewer-close" onclick="closeViewer()">✕ Close</button>
-  <button class="viewer-arrow prev" onclick="viewerNav(-1)">‹</button>
+  <button class="viewer-close glass-btn" onclick="closeViewer()" aria-label="Close / Cerrar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <button class="viewer-arrow prev glass-btn" onclick="viewerNav(-1)" aria-label="Previous / Anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
   <img class="viewer-img" id="viewerImg" alt="Photo">
-  <button class="viewer-arrow next" onclick="viewerNav(1)">›</button>
+  <button class="viewer-arrow next glass-btn" onclick="viewerNav(1)" aria-label="Next / Siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+  <div class="viewer-hint" id="viewerHint" aria-hidden="true"><span class="viewer-hint-track"><i class="viewer-hint-dot"></i></span><span data-i18n="vw.swipe">Swipe for more</span></div>
   <div class="viewer-filmstrip" id="viewerFilmstrip"></div>
   <div class="viewer-counter"><span class="viewer-counter-diamond"></span><span id="viewerCounterText">1 / 18</span><span class="viewer-counter-diamond"></span></div>
 </div>
@@ -2208,11 +2338,36 @@
       }
     };
 
+    // Gallery cards: a photo-count badge and a plain "Tap to view" cue, so a
+    // phone (which can't hover) still shows what each card is and that it opens
+    document.querySelectorAll('.port-item[data-project]').forEach(card => {
+      const data = projectData[card.dataset.project];
+      const n = data && data.images ? data.images.length : 0;
+      if (n) {
+        const badge = document.createElement('span');
+        badge.className = 'port-badge';
+        badge.setAttribute('aria-hidden', 'true');
+        badge.innerHTML = '<svg viewBox="0 0 24 24"><rect x="3" y="7" width="13" height="13" rx="2"/><path d="M8 4h11a2 2 0 0 1 2 2v11"/></svg><b>' + n + '</b>';
+        card.appendChild(badge);
+      }
+      const info = card.querySelector('.port-info');
+      if (info) {
+        const tap = document.createElement('p');
+        tap.className = 'port-tap';
+        tap.innerHTML = n
+          ? '<span data-i18n="port.tap">Tap to view</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>'
+          : '<span data-i18n="port.soon">Coming soon</span>';
+        info.appendChild(tap);
+      }
+    });
+
     window.openLightbox = function(projectKey) {
       const data = projectData[projectKey];
       if (!data) return;
       document.getElementById('lightboxTitle').textContent = data.title;
       document.getElementById('lightboxCategory').textContent = data.category;
+      document.getElementById('lightboxCountNum').textContent = data.images ? data.images.length : '';
+      document.getElementById('lightboxCount').style.display = data.images ? '' : 'none';
       const gallery = document.getElementById('lightboxGallery');
       gallery.innerHTML = '';
       if (data.images) {
@@ -2220,6 +2375,7 @@
           const div = document.createElement('div');
           div.className = 'lightbox-img';
           div.style.cursor = 'pointer';
+          div.style.setProperty('--i', index);   // tiles fade in one after another
           div.onclick = () => openViewer(data.images, index);
           const img = document.createElement('img');
           img.src = src;
@@ -2269,20 +2425,30 @@
     });
 
     let viewerImages = [], viewerIndex = 0, touchStartX = 0;
+    // "Swipe for more": shown on touch screens until the visitor has swiped once
+    let viewerSwiped = false, hintTimer = null;
+    const viewerHint = document.getElementById('viewerHint');
+    function hideViewerHint() { clearTimeout(hintTimer); viewerHint.classList.remove('show'); }
     window.openViewer = function(images, index) {
       viewerImages = images;
       viewerIndex = index;
       buildFilmstrip();
-      showViewerImage();
+      showViewerImage(0);
       document.getElementById('viewer').classList.add('open');
+      if (!viewerSwiped && images.length > 1 && window.matchMedia('(hover: none)').matches) {
+        viewerHint.classList.add('show');
+        clearTimeout(hintTimer);
+        hintTimer = setTimeout(hideViewerHint, 6000);
+      }
     };
     window.closeViewer = function() {
       document.getElementById('viewer').classList.remove('open');
       viewerImages = [];
+      hideViewerHint();
     };
     window.viewerNav = function(dir) {
       viewerIndex = (viewerIndex + dir + viewerImages.length) % viewerImages.length;
-      showViewerImage();
+      showViewerImage(dir);
     };
     function buildFilmstrip() {
       const strip = document.getElementById('viewerFilmstrip');
@@ -2293,16 +2459,34 @@
         thumb.src = src;
         thumb.loading = 'lazy';
         thumb.alt = '';
-        thumb.onclick = () => { viewerIndex = i; showViewerImage(); };
+        thumb.onclick = () => { const dir = Math.sign(i - viewerIndex); viewerIndex = i; showViewerImage(dir); };
         strip.appendChild(thumb);
       });
     }
-    function showViewerImage() {
+    // The outgoing photo slides away and the next one glides in from the side
+    // the visitor swiped toward
+    function showViewerImage(dir) {
       const img = document.getElementById('viewerImg');
-      img.classList.remove('loaded');
-      img.style.transform = '';
-      img.onload = () => img.classList.add('loaded');
-      img.src = viewerImages[viewerIndex];
+      const src = viewerImages[viewerIndex];
+      const bringIn = () => {
+        img.style.transform = '';
+        img.onload = () => {
+          img.classList.add('loaded');
+          if (dir && img.animate) img.animate(
+            [{ transform: 'translateX(' + (dir * 60) + 'px)', opacity: 0 }, { transform: 'none', opacity: 1 }],
+            { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)' });
+        };
+        img.src = src;
+      };
+      if (dir && img.animate && img.classList.contains('loaded')) {
+        const out = img.animate(
+          [{ transform: 'none', opacity: 1 }, { transform: 'translateX(' + (-dir * 60) + 'px)', opacity: 0 }],
+          { duration: 160, easing: 'ease-in', fill: 'forwards' });
+        out.onfinish = () => { img.classList.remove('loaded'); out.cancel(); bringIn(); };
+      } else {
+        img.classList.remove('loaded');
+        bringIn();
+      }
       document.getElementById('viewerCounterText').textContent = (viewerIndex + 1) + ' / ' + viewerImages.length;
       const thumbs = document.getElementById('viewerFilmstrip').querySelectorAll('.viewer-thumb');
       thumbs.forEach((t, i) => t.classList.toggle('active', i === viewerIndex));
@@ -2317,7 +2501,7 @@
     document.getElementById('viewer').addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
     document.getElementById('viewer').addEventListener('touchend', e => {
       const diff = touchStartX - e.changedTouches[0].screenX;
-      if (Math.abs(diff) > 50) { if (diff > 0) viewerNav(1); else viewerNav(-1); }
+      if (Math.abs(diff) > 50) { viewerSwiped = true; hideViewerHint(); viewerNav(diff > 0 ? 1 : -1); }
     }, { passive: true });
     document.getElementById('viewer').addEventListener('mousemove', e => {
       const img = document.getElementById('viewerImg');
@@ -2408,7 +2592,7 @@
         'services.s3.tag3': 'Product',
         'portfolio.label': 'Selected Work',
         'portfolio.title': 'The <span class="em">Portfolio</span>',
-        'portfolio.desc': 'Projects organized by shoot. Click any project to explore the gallery.',
+        'portfolio.desc': 'Projects organized by shoot. Tap or click any project to explore the gallery.',
         'portfolio.filter.all': 'All Projects',
         'portfolio.filter.street': 'Street',
         'portfolio.filter.wedding': 'Wedding',
@@ -2432,6 +2616,12 @@
         'port.events.cat': 'Events',
         'port.events.title': 'Events & Commercial',
         'port.events.count': '— Click to view gallery',
+        'port.tap': 'Tap to view',
+        'port.soon': 'Coming soon',
+        'lb.photos': 'photos',
+        'lb.hintTouch': 'Tap a photo to see it full screen',
+        'lb.hintMouse': 'Click a photo to see it full screen',
+        'vw.swipe': 'Swipe for more',
         'port.realestate.cat': 'Real Estate',
         'port.realestate.title': 'Real Estate & Architecture',
         'port.realestate.count': '— 22 photos · Click to view gallery',
@@ -2514,7 +2704,7 @@
         'services.s3.tag3': 'Producto',
         'portfolio.label': 'Trabajo Seleccionado',
         'portfolio.title': 'El <span class="em">Portafolio</span>',
-        'portfolio.desc': 'Proyectos organizados por sesión. Haz clic en cualquier proyecto para explorar la galería.',
+        'portfolio.desc': 'Proyectos organizados por sesión. Toca o haz clic en cualquier proyecto para explorar la galería.',
         'portfolio.filter.all': 'Todos los Proyectos',
         'portfolio.filter.street': 'Calle',
         'portfolio.filter.wedding': 'Bodas',
@@ -2538,6 +2728,12 @@
         'port.events.cat': 'Eventos',
         'port.events.title': 'Eventos & Comercial',
         'port.events.count': '— Haz clic para ver la galería',
+        'port.tap': 'Toca para ver',
+        'port.soon': 'Próximamente',
+        'lb.photos': 'fotos',
+        'lb.hintTouch': 'Toca una foto para verla en grande',
+        'lb.hintMouse': 'Haz clic en una foto para verla en grande',
+        'vw.swipe': 'Desliza para ver más',
         'port.realestate.cat': 'Bienes Raíces',
         'port.realestate.title': 'Bienes Raíces & Arquitectura',
         'port.realestate.count': '— 22 fotos · Haz clic para ver la galería',
