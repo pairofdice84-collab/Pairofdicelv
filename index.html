@@ -71,8 +71,12 @@
   // A real in-page link (#portfolio) is still honoured; a bare URL is not.
   if (!window.location.hash) window.addEventListener('load', window.podTop);
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&text=Welcome&display=block" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Fonts load without blocking the first paint; the welcome shows at once -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&text=Welcome&display=block" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap"></noscript>
 <style>
   :root {
     --black: #080808;
@@ -1860,15 +1864,15 @@
     <!-- Mobile-only hero image strip -->
     <div class="hero-mobile-strip">
       <div class="hero-mobile-img">
-        <img src="images/1S0A1004-Edit.jpg" alt="Portrait Photography" loading="eager" width="1066" height="1600">
+        <img src="images/1S0A1004-Edit.jpg" alt="Portrait Photography" loading="lazy" width="1066" height="1600">
         <span class="hero-mobile-label" data-i18n="hero.label.portrait">Portrait</span>
       </div>
       <div class="hero-mobile-img">
-        <img src="images/F7DEE688-1DF6-4A44-B5DB-2EFA2F02FC7D-2.jpg" alt="Street Photography" loading="eager" width="1200" height="799">
+        <img src="images/F7DEE688-1DF6-4A44-B5DB-2EFA2F02FC7D-2.jpg" alt="Street Photography" loading="lazy" width="1200" height="799">
         <span class="hero-mobile-label" data-i18n="hero.label.street">Street</span>
       </div>
       <div class="hero-mobile-img">
-        <img src="images/IMG_8841.JPG" alt="Studio Photography" loading="eager" width="1200" height="900">
+        <img src="images/IMG_8841.JPG" alt="Studio Photography" loading="lazy" width="1200" height="900">
         <span class="hero-mobile-label" data-i18n="hero.label.studio">Studio</span>
       </div>
     </div>
