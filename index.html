@@ -1764,21 +1764,24 @@
   .wl-gl-bg { z-index: 0; animation: wlFade .6s ease both; opacity: 0; }
   .wl-gl-fx { z-index: 3; }
   @media (max-width: 900px) {
-    .welcome.wl-live { background: #060504; }
+    .welcome.wl-live { background: #000; }
+    .welcome { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
     .wl-live .wl-bulbs, .wl-live .wl-beams, .wl-live .wl-glint { display: none; }
     .wl-live .wl-word {
       background: none; filter: none; animation: none; clip-path: none;
       color: transparent; -webkit-text-fill-color: transparent;
     }
-    .wl-live .wl-prompt { color: rgba(245,242,236,.9); font-size: .62rem; text-shadow: 0 1px 8px #000; }
-    .wl-live .wl-eyebrow { color: #e8cdb0; text-shadow: 0 1px 8px #000; }
+    .wl-live .wl-prompt { color: #fff; font-size: .66rem; letter-spacing: .2em; text-shadow: 0 1px 6px #000; }
+    .wl-live .wl-eyebrow { color: #f0dcb4; text-shadow: 0 1px 6px #000; }
+    .wl-live .wl-sub { color: #fff; text-shadow: 0 1px 6px #000; }
     /* suits and aces are drawn by the scene; the buttons stay for tapping */
     .wl-live .wl-suit { visibility: hidden; animation: none; width: 32px; height: 32px; }
     .wl-live .wl-suits { gap: .85rem; }
     .wl-live .wl-slot { animation: none; }
     .wl-live .wl-face, .wl-live .wl-back { visibility: hidden; }
     .wl-live .wl-card { transition: none; }
-    @media (min-height: 701px) { .wl-live .wl-card { width: 136px; height: 190px; } .wl-live .wl-cards { gap: 1.2rem; } }
+    @media (min-height: 701px) { .wl-live .wl-card { width: min(40vw, 186px); height: calc(min(40vw, 186px) * 1.4); } .wl-live .wl-cards { gap: .8rem; } }
+    @media (max-height: 700px) { .wl-live .wl-card { width: 124px; height: 174px; } }
     .wl-live .wl-card:active { transform: none; }
     .wl-live.welcome.leaving { filter: none; transform: scale(1.2); }
   }
@@ -1910,6 +1913,8 @@
     footer { padding-bottom: 6rem; }
   }
 </style>
+<link rel="preload" as="image" href="images/welcome/card-en.jpg" media="(max-width: 900px)">
+<link rel="preload" as="image" href="images/welcome/card-es.jpg" media="(max-width: 900px)">
 </head>
 <body id="top">
 
@@ -1949,7 +1954,7 @@
     <p class="wl-sub">Bienvenidos</p>
     <p class="wl-prompt">Choose your language<span>·</span>Elige tu idioma</p>
     <div class="wl-cards">
-      <div class="wl-slot" style="--r:-7deg;--dd:1.25s">
+      <div class="wl-slot" style="--r:-5deg;--dd:1.25s">
         <button type="button" class="wl-card" data-lang="en" aria-label="Enter in English">
           <span class="wl-face">
             <span class="wl-idx">A<svg><use href="#s-spade" fill="currentColor"/></svg></span>
@@ -1960,7 +1965,7 @@
           <span class="wl-back" aria-hidden="true"></span>
         </button>
       </div>
-      <div class="wl-slot" style="--r:7deg;--dd:1.37s">
+      <div class="wl-slot" style="--r:5deg;--dd:1.37s">
         <button type="button" class="wl-card" data-lang="es" aria-label="Entrar en español">
           <span class="wl-face wl-red">
             <span class="wl-idx">A<svg><use href="#s-heart" fill="currentColor"/></svg></span>
@@ -3200,9 +3205,11 @@
     // three frames full-screen, and reaching the bottom pops the champagne;
     // gold dust bursts and the classic hero drops into place.
     // ── WELCOME SCENE: rendered live on the graphics chip ──
-    // Back layer: moving satin, searchlights and out-of-focus casino lights, at
-    // reduced resolution. Front layer: full-resolution metal lettering, bulbs
-    // and gold dust. Falls back to the CSS welcome if WebGL isn't available.
+    // True-black studio set: a dark marble table and soft lights behind, then
+    // glossy black dice with gold pips, and embossed black-and-gold aces. The
+    // dice are real 3D, and the aces use baked relief maps lit per pixel, so the
+    // highlights move with the thumb. Falls back to the CSS welcome if WebGL or
+    // the card maps aren't available.
     (function liveWelcome() {
       const el = document.getElementById('welcome');
       if (!el || !document.documentElement.classList.contains('welcome-on')) return;
@@ -3212,70 +3219,143 @@
         float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
           return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
         float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*noise(p);p=mat2(1.6,1.2,-1.2,1.6)*p;a*=.5;}return v;}`;
+      // The photo studio every shiny surface reflects: a key softbox that follows
+      // the thumb, a strip light on the right, and a soft fill. y runs downward.
+      const ENV = `
+        uniform vec2 uKey;
+        float bx(vec2 p,vec2 c,vec2 s,float e){vec2 d=abs(p-c)-s;return smoothstep(e,-e,max(d.x,d.y));}
+        vec3 env(vec3 R){
+          vec3 c=mix(vec3(.016,.014,.012),vec3(.27,.235,.2),smoothstep(-.7,1.,-R.y));
+          if(R.z>.02){vec2 p=R.xy/R.z;
+            c+=vec3(1.,.95,.86)*6.5*bx(p,uKey,vec2(.6,.4),.16);
+            c+=vec3(1.,.9,.74)*2.6*bx(p,vec2(1.55,-.2),vec2(.1,1.5),.1);
+            c+=vec3(.97,.87,.7)*.82*exp(-dot(p,p)*.8);
+          }else{c+=vec3(.7,.55,.36)*smoothstep(0.,-.6,R.z)*.35;}
+          return c;}`;
       const BG_VS = `attribute vec2 aP;void main(){gl_Position=vec4(aP,0.,1.);}`;
       const BG_FS = `precision highp float;
         uniform vec2 uRes,uTouch;uniform float uT,uFlash,uRush,uTA;` + NOISE + `
-        float silk(vec2 p){vec2 q=vec2(fbm(p+vec2(0.,uT*.07)),fbm(p+vec2(5.2,1.3)-uT*.05));return fbm(p+1.05*q);}
-        float beam(vec2 c,vec2 o,float ang,float smoke){vec2 d=c-o;float a=atan(d.x,d.y);float g=(a-ang)/.1;
-          return exp(-g*g)*smoothstep(1.7,.1,length(d))*smoke;}
         vec3 bokeh(vec2 uv,float asp){vec3 c=vec3(0.);
-          for(int i=0;i<12;i++){float f=float(i);float s=hash(vec2(f,3.1));
-            vec2 o=vec2(fract(s*7.3+uT*.006*(1.+s))*asp,fract(hash(vec2(f,7.7))+uT*.012*(.5+s)));
-            float r=.03+.065*hash(vec2(f,9.2));float d=length(uv-o);
-            float disc=smoothstep(r,r-.022,d);float ring=smoothstep(r-.03,r-.012,d)*disc;
-            float tw=.45+.55*sin(uT*.6+f*2.1);
-            vec3 col=vec3(1.,.72,.36);
-            if(mod(f,6.)<.5)col=vec3(1.,.2,.26);
-            c+=col*(disc*.045+ring*.04)*tw;}
+          for(int i=0;i<9;i++){float f=float(i);float s=hash(vec2(f,3.1));
+            vec2 o=vec2(fract(s*7.3)*asp,.42+.58*hash(vec2(f,7.7)));
+            float r=.028+.05*hash(vec2(f,9.2));float d=length(uv-o);
+            float disc=smoothstep(r,r-.012,d);
+            float tw=.6+.4*sin(uT*.5+f*2.1);
+            c+=vec3(1.,.74,.42)*disc*.02*tw;}
           return c;}
         void main(){
           float asp=uRes.x/uRes.y;vec2 uv=gl_FragCoord.xy/uRes.y;vec2 c=uv-vec2(asp*.5,.5);
-          vec2 p=c*(1.-.6*uRush)*vec2(1.,.5)*2.1;float e=.03;
-          float h=silk(p),hx=silk(p+vec2(e,0.)),hy=silk(p+vec2(0.,e));
-          vec3 n=normalize(vec3((h-hx)/e*1.5,(h-hy)/e*1.5,1.));
-          vec2 lp=vec2(sin(uT*.23)*.34,.14+cos(uT*.31)*.26);lp=mix(lp,uTouch,uTA);
-          vec3 L=normalize(vec3(lp-c,.55));float diff=max(dot(n,L),0.);
-          float spec=pow(max(dot(n,normalize(L+vec3(0.,0.,1.))),0.),22.);
-          float fall=exp(-dot(lp-c,lp-c)*3.2);
-          vec3 col=mix(vec3(.014,.011,.008),vec3(.19,.12,.05),h*diff*(.35+fall));
-          col+=vec3(1.,.76,.42)*spec*.2*fall;
-          float smoke=.5+.65*fbm(c*3.+uT*.09);
-          col+=vec3(1.,.86,.62)*.15*beam(c,vec2(-asp*.56,-.62),.34+sin(uT*.41)*.36,smoke);
-          col+=vec3(1.,.86,.62)*.15*beam(c,vec2(asp*.56,-.62),-.34+sin(uT*.33+2.)*.36,smoke);
+          c*=1.-.5*uRush;
+          vec3 col=vec3(.05,.04,.033)*exp(-dot(c*vec2(1.5,1.),c*vec2(1.5,1.))*5.);
           col+=bokeh(uv,asp);
-          col*=1.-.6*dot(c,c);col*=1.-.38*exp(-c.y*c.y*7.);
+          // the marble table, out of focus in the foreground
+          float hz=-.3,tb=smoothstep(hz+.012,hz-.012,c.y);
+          if(tb>0.){
+            float dp=max(hz-c.y,.002);vec2 q=vec2(c.x/(dp+.16),.42/(dp+.16));
+            vec2 w=vec2(fbm(q*1.4),fbm(q*1.4+vec2(5.2,1.3)));
+            float vein=abs(fbm(q*.9+w*1.7)-.5)*2.;
+            float m=.012+.13*pow(smoothstep(.2,0.,vein),1.4)+.03*fbm(q*2.3+w);
+            vec3 mc=vec3(m)*vec3(1.,.97,.94)*smoothstep(0.,.1,dp)*(.5+1.25*dp*2.);
+            mc+=vec3(.12,.09,.06)*exp(-dp*dp*50.)*exp(-c.x*c.x*7.);
+            col=mix(col,mc,tb);}
+          col*=1.-.75*dot(c,c);
           float fl=dot(c-uTouch,c-uTouch);
           col+=vec3(1.,.84,.58)*(uFlash*exp(-fl*5.)*1.1+uRush*uRush*.3);
-          col+=(hash(gl_FragCoord.xy+uT)-.5)/70.;
+          col+=(hash(gl_FragCoord.xy+uT)-.5)/190.;
           gl_FragColor=vec4(col,1.);}`;
       const SP_VS = `attribute vec2 aP;attribute float aS;attribute vec4 aC;uniform vec2 uR;uniform float uD;varying vec4 vC;
         void main(){vC=aC;gl_Position=vec4(aP.x/uR.x*2.-1.,1.-aP.y/uR.y*2.,0.,1.);gl_PointSize=aS*uD;}`;
       const SP_FS = `precision mediump float;varying vec4 vC;
         void main(){float d=length(gl_PointCoord-.5)*2.;if(d>1.)discard;
-          float core=smoothstep(.3,.1,d);float halo=pow(1.-d,2.6)*.5;
-          gl_FragColor=vec4(mix(vC.rgb,vec3(1.,.97,.88),core*.75)*(core+halo)*vC.a,0.);}`;
+          float core=smoothstep(.42,.2,d);float halo=pow(1.-d,3.)*.14;
+          gl_FragColor=vec4(mix(vC.rgb,vec3(1.,.97,.88),core*.7)*(core+halo)*vC.a,0.);}`;
       const WD_VS = `attribute vec2 aP;attribute vec2 aU;uniform vec2 uR;varying vec2 vU;
         void main(){vU=aU;gl_Position=vec4(aP.x/uR.x*2.-1.,1.-aP.y/uR.y*2.,0.,1.);}`;
       const WD_FS = `precision highp float;varying vec2 vU;uniform sampler2D uTex;uniform vec2 uPx,uLight;uniform float uT,uRev;
         float s(vec2 o){return texture2D(uTex,vU+o*uPx).a;}
-        void main(){float a=s(vec2(0.));float r=2.;
+        void main(){float a=s(vec2(0.));float r=1.5;
           float gx=s(vec2(r,0.))-s(vec2(-r,0.))+.5*(s(vec2(r*2.,0.))-s(vec2(-r*2.,0.)));
           float gy=s(vec2(0.,r))-s(vec2(0.,-r))+.5*(s(vec2(0.,r*2.))-s(vec2(0.,-r*2.)));
-          float b=0.;for(int i=0;i<8;i++){float t=float(i)*.785;b+=s(vec2(cos(t),sin(t))*22.);}b/=8.;
           vec3 N=normalize(vec3(-gx*.8,-gy*.8,.9));
-          float e=.5+.5*sin((vU.x*5.+N.x*2.4+N.y*1.2)*1.6+uT*.9);
-          vec3 base=mix(vec3(.74,.52,.22),vec3(.98,.78,.44),smoothstep(.08,.68,e));
-          base=mix(base,vec3(1.,.96,.84),smoothstep(.74,1.,e));
+          float e=.5+.5*sin((vU.x*5.+N.x*2.4+N.y*1.2)*1.6+uT*.7);
+          vec3 base=mix(vec3(.86,.68,.38),vec3(1.,.86,.58),smoothstep(.08,.7,e));
+          base=mix(base,vec3(1.,.96,.84),smoothstep(.8,1.,e));
           vec3 L=normalize(vec3(uLight-vU,.5));
           float spec=pow(max(dot(N,normalize(L+vec3(0.,0.,1.))),0.),24.);
-          float bp=(vU.x-(fract(uT*.16)*1.7-.35))/.08;float band=exp(-bp*bp);
-          vec3 rgb=base*(.72+.42*max(dot(N,L),0.))+vec3(1.,.95,.8)*(spec*.55+band*.6);
+          float bp=(vU.x-(fract(uT*.14)*1.7-.35))/.05;float band=exp(-bp*bp);
+          vec3 rgb=base*(.8+.3*max(dot(N,L),0.))+vec3(1.,.96,.84)*(spec*.45+band*.5);
           float rev=smoothstep(uRev,uRev-.05,vU.x);
-          float hp=(vU.x-uRev)/.025;rgb+=vec3(1.,.92,.7)*exp(-hp*hp)*1.4;
-          gl_FragColor=vec4(rgb*a*rev+vec3(.82,.56,.26)*b*.24*rev,a*rev);}`;
+          float hp=(vU.x-uRev)/.025;rgb+=vec3(1.,.92,.7)*exp(-hp*hp)*1.2;
+          gl_FragColor=vec4(rgb*a*rev,a*rev);}`;
 
-      // Suits and cards: a height map gives chiseled facets, and materials are
-      // lit per pixel (gold foil, ruby, black card stock with a holographic sheen)
+      // Glossy black dice: an exact rounded-box hit per pixel, concave gold pips
+      const DI_VS = `attribute vec2 aU;uniform vec2 uC,uR;uniform float uQ;varying vec2 vP;
+        void main(){vec2 p=uC+(aU-.5)*2.*uQ;vP=p;gl_Position=vec4(p.x/uR.x*2.-1.,1.-p.y/uR.y*2.,0.,1.);}`;
+      const DI_FS = `precision highp float;varying vec2 vP;
+        uniform vec2 uC,uR;uniform mat3 uM;uniform float uS,uD,uA;` + ENV + `
+        const float B=.76,RD=.24;
+        float hitBox(vec3 ro,vec3 rd){
+          vec3 m=1./rd,n=m*ro,k=abs(m)*(B+RD),a=-n-k,b=-n+k;
+          float tN=max(max(a.x,a.y),a.z),tF=min(min(b.x,b.y),b.z);
+          if(tN>tF||tF<0.)return -1.;
+          float t=tN;vec3 pos=ro+t*rd,s=sign(pos);ro*=s;rd*=s;pos=pos*s-B;
+          pos=max(pos,pos.yzx);
+          if(min(min(pos.x,pos.y),pos.z)<0.)return t;
+          vec3 oc=ro-B,dd=rd*rd,oo=oc*oc,od=oc*rd;float r2=RD*RD;t=1e20;
+          float q=od.x+od.y+od.z,c=oo.x+oo.y+oo.z-r2,h=q*q-c;
+          if(h>0.)t=-q-sqrt(h);
+          float e;
+          e=dd.y+dd.z;q=od.y+od.z;c=oo.y+oo.z-r2;h=q*q-e*c;
+          if(h>0.){h=(-q-sqrt(h))/e;if(h>0.&&h<t&&abs(ro.x+rd.x*h)<B)t=h;}
+          e=dd.z+dd.x;q=od.z+od.x;c=oo.z+oo.x-r2;h=q*q-e*c;
+          if(h>0.){h=(-q-sqrt(h))/e;if(h>0.&&h<t&&abs(ro.y+rd.y*h)<B)t=h;}
+          e=dd.x+dd.y;q=od.x+od.y;c=oo.x+oo.y-r2;h=q*q-e*c;
+          if(h>0.){h=(-q-sqrt(h))/e;if(h>0.&&h<t&&abs(ro.z+rd.z*h)<B)t=h;}
+          return t>1e19?-1.:t;}
+        vec3 best;
+        void tryPip(vec2 o){float d=length(o);if(d<best.z)best=vec3(o,d);}
+        void pips(vec2 uv,float v){const float a=.52;best=vec3(0.,0.,9.);
+          if(mod(v,2.)>.5)tryPip(uv);
+          if(v>1.5){tryPip(uv-vec2(a,a));tryPip(uv+vec2(a,a));}
+          if(v>3.5){tryPip(uv-vec2(a,-a));tryPip(uv+vec2(a,-a));}
+          if(v>5.5){tryPip(uv-vec2(a,0.));tryPip(uv+vec2(a,0.));}}
+        vec4 shade(vec2 P){
+          vec3 rd=normalize(vec3(P-uR*.5,-900.));
+          vec3 ro=(vec3(uR*.5,900.)-vec3(uC,0.))/uS;
+          vec3 rl=ro*uM,dl=rd*uM;
+          float t=hitBox(rl,dl);
+          if(t<0.)return vec4(0.);
+          vec3 p=rl+dl*t;vec3 n=sign(p)*normalize(max(abs(p)-B,1e-4));
+          vec3 N=uM*n;vec3 R=reflect(rd,N);
+          float nv=max(dot(N,-rd),0.),F=.032+.968*pow(1.-nv,5.);
+          vec3 K=normalize(vec3(uKey,.8));
+          vec3 col=vec3(.012,.011,.012)+env(R)*F+vec3(1.,.93,.82)*.05*pow(max(dot(N,normalize(K+vec3(0.,0.,1.))),0.),10.);
+          col+=vec3(.95,.78,.52)*.2*pow(1.-nv,3.);
+          // the pips, on whichever face this is
+          vec3 q=abs(p),fn,tu,tv;vec2 uv;float v;
+          if(q.x>q.y&&q.x>q.z){fn=vec3(sign(p.x),0.,0.);tu=vec3(0.,1.,0.);tv=vec3(0.,0.,1.);uv=p.yz;v=p.x>0.?3.:4.;}
+          else if(q.y>q.z){fn=vec3(0.,sign(p.y),0.);tu=vec3(1.,0.,0.);tv=vec3(0.,0.,1.);uv=p.xz;v=p.y>0.?2.:5.;}
+          else{fn=vec3(0.,0.,sign(p.z));tu=vec3(1.,0.,0.);tv=vec3(0.,1.,0.);uv=p.xy;v=p.z>0.?1.:6.;}
+          pips(uv,v);
+          const float r=.19;float aa=1.1/(uS*uD);
+          if(best.z<r+aa){
+            vec3 ow=uM*(tu*best.x+tv*best.y)/r;
+            vec2 lt=normalize(uKey+vec2(.001,0.));
+            float sh=dot(ow.xy,lt),e=best.z/r;
+            float lit=smoothstep(-.08,.98,.5-.72*sh);
+            vec3 gold=mix(vec3(.2,.12,.045),vec3(.93,.72,.39),lit);
+            gold+=vec3(1.,.93,.74)*.5*smoothstep(-.55,-.9,sh)*smoothstep(.62,.9,e);
+            gold*=mix(.55,1.,smoothstep(1.,.8,e));
+            col=mix(col,gold,smoothstep(r+aa,r-aa,best.z));}
+          return vec4(min(col,vec3(1.)),1.);}
+        void main(){
+          float px=1./uD;
+          vec4 c=shade(vP+vec2(.25,.25)*px)+shade(vP-vec2(.25,.25)*px);
+          c*=.5;
+          gl_FragColor=vec4(c.rgb*c.a,c.a)*uA;}`;
+
+      // Suits and cards. Suits: lit from a bevelled height map. Aces: lit from a
+      // baked relief map (R,G = normal, B = gold), on charcoal card stock.
       const CD_VS = `attribute vec2 aU;uniform vec2 uC,uR,uSize;uniform mat3 uRot;uniform float uScale,uZ,uQuad;
         varying vec2 vU;varying vec3 vW;
         void main(){vU=aU;vec3 p=uRot*vec3((aU-.5)*uSize*uQuad*uScale,uZ);float w=(900.-p.z)/900.;
@@ -3283,120 +3363,92 @@
           gl_Position=vec4((uC.x*w+p.x)/uR.x*2.-w,w-(uC.y*w+p.y)/uR.y*2.,0.,w);}`;
       const CD_FS = `precision highp float;varying vec2 vU;varying vec3 vW;
         uniform sampler2D uTex;uniform vec2 uPx,uSize,uLt;uniform mat3 uRot;
-        uniform float uT,uMode,uAlpha,uCap,uRad,uGlow,uQuad;
+        uniform float uT,uMode,uAlpha,uCap,uRad,uGlow,uQuad;` + ENV + `
         float hh(vec2 o){return texture2D(uTex,vU+o*uPx).b;}
         float h2(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-        vec3 holo(vec3 R){return .5+.5*cos(6.283*(R.x*1.3+R.y*.9+vU.x*.7+vU.y*.5+uT*.03)+vec3(0.,2.1,4.2));}
         void main(){
           vec2 P=(vU-.5)*uSize*uQuad;vec2 q=abs(P)-uSize*.5+uRad;
           float d=length(max(q,0.))+min(max(q.x,q.y),0.)-uRad;
-          if(uMode>2.5){float s=smoothstep(24.,-8.,d);float g=smoothstep(30.,0.,d)*uGlow;
-            gl_FragColor=vec4(vec3(1.,.74,.38)*g*.32,s*.74)*uAlpha;return;}
-          if(uMode>1.5){float c=smoothstep(.7,-.7,d);gl_FragColor=vec4(vec3(.55,.39,.17)*c,c)*uAlpha;return;}
+          if(uMode>2.5){float s=smoothstep(26.,-6.,d);float g=smoothstep(14.,0.,d)*uGlow;
+            gl_FragColor=vec4(vec3(1.,.8,.48)*g*.22,max(s*.9,g*.22))*uAlpha;return;}
+          if(uMode>1.5){float c=smoothstep(.7,-.7,d);gl_FragColor=vec4(vec3(.62,.49,.27)*c,c)*uAlpha;return;}
           vec4 t=texture2D(uTex,vU);
-          float hx=hh(vec2(2.5,0.))-hh(vec2(-2.5,0.)),hy=hh(vec2(0.,2.5))-hh(vec2(0.,-2.5));
-          float sl=uCap/5.*.95;
-          vec3 N=normalize(uRot*normalize(vec3(-hx*sl,-hy*sl,1.)));
-          vec3 L=normalize(vec3((uLt-vW.xy)/260.,1.));vec3 H=normalize(L+vec3(0.,0.,1.));
-          float diff=max(dot(N,L),0.);float spec=pow(max(dot(N,H),0.),70.);
-          vec3 R=reflect(vec3(0.,0.,-1.),N);
-          float e=pow(.5+.5*sin(R.x*7.+R.y*4.+uT*.35),3.);
-          vec3 hl=holo(R);
-          vec3 gold=mix(vec3(.66,.45,.18),vec3(1.,.82,.48),diff)+vec3(1.,.93,.75)*(e*.62+spec*1.1);
-          gold=mix(gold,gold*hl*1.9,.16);
-          vec3 ruby=mix(vec3(.5,.02,.07),vec3(1.,.09,.17),diff*diff)+vec3(1.,.62,.66)*(e*.32)+vec3(1.)*spec*1.25;
           if(uMode<.5){
-            float a=max(t.r,t.g);vec3 col=t.r>t.g?gold:ruby;vec3 gc=t.r>t.g?vec3(.9,.62,.28):vec3(1.,.1,.2);
-            float g=0.;for(int i=0;i<8;i++){float k=float(i)*.785;g+=max(texture2D(uTex,vU+vec2(cos(k),sin(k))*uPx*9.).r,texture2D(uTex,vU+vec2(cos(k),sin(k))*uPx*9.).g);}g/=8.;
-            gl_FragColor=vec4(col*a+gc*g*.3,a)*uAlpha;return;}
-          // card stock: fine grain, a broad satin sheen, a holographic sweep and a scan of light
-          float gr=h2(floor(vU/uPx/1.5))-.5;
-          vec3 Ns=normalize(N+vec3(gr*.05,-gr*.05,0.));
-          float broad=pow(max(dot(Ns,H),0.),9.);
-          vec3 stock=vec3(.024,.022,.026)+vec3(1.,.93,.82)*broad*.13+hl*broad*.1;
-          float by=(vU.y-(fract(uT*.11)*1.5-.25))/.03;stock+=vec3(.7,.82,1.)*exp(-by*by)*.035;
-          vec3 col=mix(stock,gold,t.r);col=mix(col,ruby,t.g);
-          float rim=smoothstep(1.6,.2,-d);col=mix(col,vec3(.95,.74,.42)*(.55+.8*diff)+spec,rim*.9);
+            float hx=hh(vec2(1.6,0.))-hh(vec2(-1.6,0.)),hy=hh(vec2(0.,1.6))-hh(vec2(0.,-1.6));
+            vec3 N=normalize(uRot*normalize(vec3(-hx*1.5,-hy*1.5,1.)));
+            vec3 gold=mix(vec3(.95,.8,.55),vec3(1.,.86,.6)*(env(reflect(vec3(0.,0.,-1.),N))+.1),.55);
+            gl_FragColor=vec4(min(gold,vec3(1.))*t.r,t.r)*uAlpha;return;}
+          vec2 nn=(t.rg-.502)*2.;
+          vec3 Nl=normalize(vec3(nn*1.7,sqrt(max(1.-dot(nn,nn),.05))));
+          vec3 N=normalize(uRot*Nl);
+          vec3 gold=vec3(1.,.87,.62)*(env(reflect(vec3(0.,0.,-1.),N))+.14);
+          // matte charcoal stock with a fine tooth, a broad pool of light across it
+          float gr=h2(floor(vU*vec2(620.,868.)))-.5;
+          vec3 Fn=uRot*vec3(0.,0.,1.);
+          vec3 L=normalize(vec3((uLt-vW.xy)/300.,1.));vec3 H=normalize(L+vec3(0.,0.,1.));
+          float dl=max(dot(Fn,L),0.);
+          vec3 stock=vec3(.135,.122,.13)*(.34+1.*dl*dl*dl)+vec3(1.,.95,.88)*.05*pow(max(dot(Fn,H),0.),16.);
+          stock*=1.+gr*.26;
+          vec3 col=mix(stock,min(gold,vec3(1.,.96,.84)),t.b);
+          float rim=smoothstep(1.1,.1,-d);col=mix(col,vec3(.72,.58,.34),rim*.7);
           float c=smoothstep(.7,-.7,d);
           gl_FragColor=vec4(col*c,c)*uAlpha;}`;
 
       const SUIT_PATHS = {
-        spade: new Path2D('M50 4C62 24 94 40 94 63C94 76 84 85 72 85C64 85 57 81 53 74C54 83 58 91 67 96L33 96C42 91 46 83 47 74C43 81 36 85 28 85C16 85 6 76 6 63C6 40 38 24 50 4Z'),
-        heart: new Path2D('M50 95C47 90 4 60 4 31C4 15 16 5 30 5C39 5 46 10 50 18C54 10 61 5 70 5C84 5 96 15 96 31C96 60 53 90 50 95Z'),
-        diamond: new Path2D('M50 2Q62 31 86 50Q62 69 50 98Q38 69 14 50Q38 31 50 2Z'),
-        club: new Path2D('M50 6A21.5 21.5 0 0 1 67 41A21.5 21.5 0 1 1 55 70C56 80 60 90 68 96L32 96C40 90 44 80 45 70A21.5 21.5 0 1 1 33 41A21.5 21.5 0 0 1 50 6Z')
+        spade: new Path2D('M50 2C61 22 95 38 95 60C95 74 84 83 72 83C64 83 58 79 54 73C55 83 60 93 70 98L30 98C40 93 45 83 46 73C42 79 36 83 28 83C16 83 5 74 5 60C5 38 39 22 50 2Z'),
+        heart: new Path2D('M50 96C46 89 4 60 4 31C4 15 16 5 30 5C39 5 46 10 50 19C54 10 61 5 70 5C84 5 96 15 96 31C96 60 54 89 50 96Z'),
+        diamond: new Path2D('M50 2Q64 31 88 50Q64 69 50 98Q36 69 12 50Q36 31 50 2Z'),
+        club: new Path2D('M50 3A22 22 0 0 1 68 38A22 22 0 1 1 55 72C56 84 61 92 69 98L31 98C39 92 44 84 45 72A22 22 0 1 1 32 38A22 22 0 0 1 50 3Z')
       };
       function drawSuit(c, name, cx, cy, size) {
         c.save(); c.translate(cx - size / 2, cy - size / 2); c.scale(size / 100, size / 100); c.fill(SUIT_PATHS[name]); c.restore();
       }
-      function rr(c, x, y, w, h, r) {
-        c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
-        c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
-      }
-      // R = gold foil, G = ruby, B = height (distance from each shape's edge, so
-      // ridges form along its centre, like a cut stone)
-      function makeRelief(gl, w, h, S, paint, chisel) {
-        const W = Math.round(w * S), H = Math.round(h * S), mk = () => { const cv = document.createElement('canvas'); cv.width = W; cv.height = H; const c = cv.getContext('2d', { willReadFrequently: true }); c.scale(S, S); return c; };
-        const c = mk(); c.fillStyle = '#000'; c.fillRect(0, 0, w, h); c.globalCompositeOperation = 'lighter'; paint(c);
-        const m = mk(); m.fillStyle = '#000'; m.fillRect(0, 0, w, h); m.fillStyle = '#fff'; m.strokeStyle = '#fff'; chisel(m);
-        const px = c.getImageData(0, 0, W, H), mk2 = m.getImageData(0, 0, W, H).data, D = new Float32Array(W * H);
+      // R = shape, B = height: a bevelled edge around a flat top
+      function makeRelief(gl, w, h, S, paint) {
+        const W = Math.round(w * S), H = Math.round(h * S);
+        const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+        const c = cv.getContext('2d', { willReadFrequently: true }); c.scale(S, S);
+        c.fillStyle = '#000'; c.fillRect(0, 0, w, h); c.fillStyle = '#f00'; paint(c);
+        const px = c.getImageData(0, 0, W, H), D = new Float32Array(W * H), bevel = 3.2 * S;
         for (let y = 0, i = 0; y < H; y++) for (let x = 0; x < W; x++, i++) {
-          if (mk2[i * 4] < 128) { D[i] = 0; continue; }
-          let v = x && y ? D[i - W - 1] + 1.414 : 0; const nb = [x ? D[i - 1] + 1 : 0, y ? D[i - W] + 1 : 0, y && x < W - 1 ? D[i - W + 1] + 1.414 : 0];
-          D[i] = Math.min(v, nb[0], nb[1], nb[2]);
+          if (px.data[i * 4] < 128) { D[i] = 0; continue; }
+          D[i] = Math.min(x && y ? D[i - W - 1] + 1.414 : 0, x ? D[i - 1] + 1 : 0, y ? D[i - W] + 1 : 0, y && x < W - 1 ? D[i - W + 1] + 1.414 : 0);
         }
-        let cap = 1;
         for (let y = H - 1, i = W * H - 1; y >= 0; y--) for (let x = W - 1; x >= 0; x--, i--) {
           if (!D[i]) continue;
-          const v = Math.min(D[i], x < W - 1 ? D[i + 1] + 1 : 0, y < H - 1 ? D[i + W] + 1 : 0, y < H - 1 && x < W - 1 ? D[i + W + 1] + 1.414 : 0, y < H - 1 && x ? D[i + W - 1] + 1.414 : 0);
-          D[i] = v; if (v > cap) cap = v;
+          D[i] = Math.min(D[i], x < W - 1 ? D[i + 1] + 1 : 0, y < H - 1 ? D[i + W] + 1 : 0, y < H - 1 && x < W - 1 ? D[i + W + 1] + 1.414 : 0, y < H - 1 && x ? D[i + W - 1] + 1.414 : 0);
         }
-        const B = new Float32Array(W * H), R = 2;
         for (let y = 0, i = 0; y < H; y++) for (let x = 0; x < W; x++, i++) {
-          if (!D[i]) continue;
           let sum = 0, n = 0;
-          for (let dy = -R; dy <= R; dy++) for (let dx = -R; dx <= R; dx++) { const yy = y + dy, xx = x + dx; if (yy >= 0 && yy < H && xx >= 0 && xx < W) { sum += D[yy * W + xx]; n++; } }
-          B[i] = sum / n;
+          for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const yy = y + dy, xx = x + dx; if (yy >= 0 && yy < H && xx >= 0 && xx < W) { sum += Math.min(D[yy * W + xx], bevel); n++; } }
+          px.data[i * 4 + 2] = sum / n / bevel * 255; px.data[i * 4 + 3] = 255;
         }
-        for (let i = 0; i < W * H; i++) { px.data[i * 4 + 2] = B[i] / cap * 255; px.data[i * 4 + 3] = 255; }
         const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, W, H, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(px.data.buffer));
         ['TEXTURE_WRAP_S', 'TEXTURE_WRAP_T'].forEach(k => gl.texParameteri(gl.TEXTURE_2D, gl[k], gl.CLAMP_TO_EDGE));
         ['TEXTURE_MIN_FILTER', 'TEXTURE_MAG_FILTER'].forEach(k => gl.texParameteri(gl.TEXTURE_2D, gl[k], gl.LINEAR));
-        return { t, px: [1 / W, 1 / H], cap };
+        return { t, px: [1 / W, 1 / H] };
       }
-      const FOIL = '#ff0000', RUBY = '#00ff00';
-      function cardFront(w, h, suit, name, S) {
-        const main = suit === 'heart' ? RUBY : FOIL, cx = w / 2, cy = h * .375, big = w * .47;
-        const corner = c => {
-          c.fillStyle = main; c.textAlign = 'center'; c.textBaseline = 'alphabetic';
-          c.font = '500 ' + (w * .15) + 'px "Bodoni Moda","DM Serif Display",Georgia,serif';
-          c.fillText('A', w * .135, h * .14); drawSuit(c, suit, w * .135, h * .205, w * .1);
-        };
-        return makeRelief(gf, w, h, S, c => {
-          c.strokeStyle = FOIL; c.lineWidth = 1.1; rr(c, 5, 5, w - 10, h - 10, 8); c.stroke();
-          c.lineWidth = .4; rr(c, 7.5, 7.5, w - 15, h - 15, 6); c.stroke();
-          c.strokeStyle = suit === 'heart' ? 'rgba(0,255,0,.2)' : 'rgba(255,0,0,.17)'; c.lineWidth = .35;
-          for (let r = big * .62; r < big * 1.15; r += 3.4) { c.beginPath(); c.arc(cx, cy, r, 0, 6.2832); c.stroke(); }
-          corner(c); c.save(); c.translate(w, h); c.rotate(Math.PI); corner(c); c.restore();
-          c.fillStyle = main; drawSuit(c, suit, cx, cy, big);
-          c.fillStyle = FOIL; c.font = '500 ' + (w * .105) + 'px "DM Sans",system-ui,sans-serif'; c.textBaseline = 'alphabetic'; c.textAlign = 'left';
-          const sp = w * .028, ws = [...name].map(ch => c.measureText(ch).width), tot = ws.reduce((a, b) => a + b + sp, -sp);
-          let x = cx - tot / 2; [...name].forEach((ch, i) => { c.fillText(ch, x, h * .715); x += ws[i] + sp; });
-        }, c => { drawSuit(c, suit, cx, cy, big); drawSuit(c, suit, w * .135, h * .205, w * .1);
-          c.save(); c.translate(w, h); c.rotate(Math.PI); drawSuit(c, suit, w * .135, h * .205, w * .1); c.restore(); });
-      }
-      function cardBack(w, h, S) {
-        const cx = w / 2, cy = h / 2;
-        return makeRelief(gf, w, h, S, c => {
-          c.strokeStyle = FOIL; c.lineWidth = 1.1; rr(c, 5, 5, w - 10, h - 10, 8); c.stroke();
-          c.save(); rr(c, 9, 9, w - 18, h - 18, 5); c.clip(); c.strokeStyle = 'rgba(255,0,0,.5)'; c.lineWidth = .5;
-          for (let i = -h; i < w + h; i += 9) { c.beginPath(); c.moveTo(i, 0); c.lineTo(i + h, h); c.moveTo(i + h, 0); c.lineTo(i, h); c.stroke(); }
-          c.restore();
-          c.fillStyle = '#000'; c.globalCompositeOperation = 'source-over'; c.beginPath(); c.arc(cx, cy, w * .27, 0, 6.2832); c.fill();
-          c.globalCompositeOperation = 'lighter'; c.strokeStyle = FOIL; c.lineWidth = 1; c.beginPath(); c.arc(cx, cy, w * .27, 0, 6.2832); c.stroke();
-          c.fillStyle = FOIL; drawSuit(c, 'diamond', cx, cy, w * .36);
-        }, c => drawSuit(c, 'diamond', cx, cy, w * .36));
+
+      // The ace artwork is baked ahead of time (images/welcome); start fetching it now
+      const MAPS = { en: 'images/welcome/card-en.jpg', es: 'images/welcome/card-es.jpg', back: 'images/welcome/card-back.jpg' };
+      const mapImg = {}, mapsReady = Promise.all(Object.keys(MAPS).map(k => new Promise((ok, no) => {
+        const im = new Image(); im.onload = () => { mapImg[k] = im; ok(); }; im.onerror = no; im.src = MAPS[k];
+      })));
+      function mapTexture(im) {
+        const t = gf.createTexture(); gf.bindTexture(gf.TEXTURE_2D, t);
+        gf.pixelStorei(gf.UNPACK_COLORSPACE_CONVERSION_WEBGL, gf.NONE);
+        gf.texImage2D(gf.TEXTURE_2D, 0, gf.RGB, gf.RGB, gf.UNSIGNED_BYTE, im);
+        gf.pixelStorei(gf.UNPACK_COLORSPACE_CONVERSION_WEBGL, gf.BROWSER_DEFAULT_WEBGL);
+        ['TEXTURE_WRAP_S', 'TEXTURE_WRAP_T'].forEach(k => gf.texParameteri(gf.TEXTURE_2D, gf[k], gf.CLAMP_TO_EDGE));
+        gf.texParameteri(gf.TEXTURE_2D, gf.TEXTURE_MAG_FILTER, gf.LINEAR);
+        if (isGL2) {
+          gf.generateMipmap(gf.TEXTURE_2D);
+          gf.texParameteri(gf.TEXTURE_2D, gf.TEXTURE_MIN_FILTER, gf.LINEAR_MIPMAP_LINEAR);
+          const ax = gf.getExtension('EXT_texture_filter_anisotropic');
+          if (ax) gf.texParameterf(gf.TEXTURE_2D, ax.TEXTURE_MAX_ANISOTROPY_EXT, 4);
+        } else gf.texParameteri(gf.TEXTURE_2D, gf.TEXTURE_MIN_FILTER, gf.LINEAR);
+        return { t, px: [1 / im.naturalWidth, 1 / im.naturalHeight], cap: 1 };
       }
 
       function program(gl, vs, fs) {
@@ -3410,42 +3462,34 @@
         return { p, u };
       }
 
-      let bg, fx, gb, gf, pBg, pSp, pWd, pCd, spBuf, wdBuf, cdBuf, tex, sprites, suitTex = [], back = null;
-      let W = 0, H = 0, dpr = 1, bgScale = .6, word = null;
+      let bg, fx, gb, gf, isGL2 = false, pBg, pSp, pWd, pCd, pDi, spBuf, wdBuf, cdBuf, tex, sprites, suitTex = [], back = null, faces = null;
+      let W = 0, H = 0, dpr = 1, maxDpr = 3, bgScale = .6, word = null, mapsAt = 0;
       const touch = { x: 0, y: 0, on: false, amt: 0 };
-      const cards = [].slice.call(el.querySelectorAll('.wl-card')).map((c, i) => ({ c, i, rx: 0, ry: 0, suit: c.dataset.lang === 'es' ? 'heart' : 'spade', name: c.dataset.lang === 'es' ? 'ESPAÑOL' : 'ENGLISH', delay: i ? 1.37 : 1.25 }));
-      const suits = [].slice.call(el.querySelectorAll('.wl-suit')).map((e, i) => ({ e, i, name: ['spade', 'heart', 'club', 'diamond'][i], ruby: i % 2 === 1 }));
-      const DUST = 220, dust = [];
+      const cards = [].slice.call(el.querySelectorAll('.wl-card')).map((c, i) => ({ c, i, rx: 0, ry: 0, lang: c.dataset.lang === 'es' ? 'es' : 'en' }));
+      const suits = [].slice.call(el.querySelectorAll('.wl-suit')).map((e, i) => ({ e, i, name: ['spade', 'heart', 'club', 'diamond'][i] }));
+      const DUST = 36, dust = [];
       const GOLDS = [[1, .86, .55], [1, .74, .38], [1, .93, .75], [.95, .66, .3]];
-      for (let i = 0; i < DUST; i++) dust.push({ x: Math.random(), y: Math.random(), vx: 0, vy: 0, s: 5 + Math.random() * Math.random() * 15,
-        tw: Math.random() * 6.28, c: GOLDS[i % 4], a: .25 + Math.random() * .6, init: false });
-      let bulbs = [];
+      for (let i = 0; i < DUST; i++) dust.push({ x: Math.random(), y: Math.random(), vx: 0, vy: 0, s: 2 + Math.random() * Math.random() * 5,
+        tw: Math.random() * 6.28, c: GOLDS[i % 4], a: .3 + Math.random() * .6, init: false });
+
+      // Four dice around the edges; each tumbles slowly and spins when flicked
+      const qmul = (a, b) => [a[3] * b[0] + a[0] * b[3] + a[1] * b[2] - a[2] * b[1], a[3] * b[1] - a[0] * b[2] + a[1] * b[3] + a[2] * b[0], a[3] * b[2] + a[0] * b[1] - a[1] * b[0] + a[2] * b[3], a[3] * b[3] - a[0] * b[0] - a[1] * b[1] - a[2] * b[2]];
+      const qnorm = q => { const l = Math.hypot(q[0], q[1], q[2], q[3]); return [q[0] / l, q[1] / l, q[2] / l, q[3] / l]; };
+      const qmat = q => { const [x, y, z, w] = q; return new Float32Array([1 - 2 * (y * y + z * z), 2 * (x * y + z * w), 2 * (x * z - y * w), 2 * (x * y - z * w), 1 - 2 * (x * x + z * z), 2 * (y * z + x * w), 2 * (x * z + y * w), 2 * (y * z - x * w), 1 - 2 * (x * x + y * y)]); };
+      const dice = [
+        { fx: .1, side: -1, top: true, s: .155, q: qnorm([.42, -.5, -.2, .72]), idle: [.11, .17, .05], d: .1 },
+        { fx: .9, side: 1, top: true, s: .125, q: qnorm([.5, .35, .3, .72]), idle: [-.13, .1, .09], d: .2 },
+        { fx: .17, side: -1, top: false, s: .16, q: qnorm([.35, .55, .1, .75]), idle: [.09, -.14, .06], d: .3 },
+        { fx: .9, side: 1, top: false, s: .195, q: qnorm([-.28, -.42, .34, .79]), idle: [-.08, -.12, -.05], d: .15 }
+      ];
+      dice.forEach(k => { k.w = k.idle.slice(); });
 
       function layout() {
-        W = el.clientWidth; H = el.clientHeight; dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = el.clientWidth; H = el.clientHeight; dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
         bg.width = Math.max(2, W * bgScale | 0); bg.height = Math.max(2, H * bgScale | 0);
         fx.width = W * dpr | 0; fx.height = H * dpr | 0;
         gb.viewport(0, 0, bg.width, bg.height); gf.viewport(0, 0, fx.width, fx.height);
-        // bulbs, evenly spaced around a rounded rectangle
-        bulbs = []; const m = 11, r = 24, step = 16;
-        const w = W - 2 * m, h = H - 2 * m;
-        const per = 2 * (w - 2 * r) + 2 * (h - 2 * r) + 2 * Math.PI * r;
-        const n = Math.round(per / step), gap = per / n;
-        const segs = [w - 2 * r, Math.PI * r / 2, h - 2 * r, Math.PI * r / 2, w - 2 * r, Math.PI * r / 2, h - 2 * r, Math.PI * r / 2];
-        for (let i = 0; i < n; i++) {
-          let d = i * gap, k = 0; while (k < 7 && d > segs[k]) { d -= segs[k]; k++; }
-          let x, y; const a = d / r;
-          if (k === 0) { x = m + r + d; y = m; }
-          else if (k === 1) { x = W - m - r + Math.sin(a) * r; y = m + r - Math.cos(a) * r; }
-          else if (k === 2) { x = W - m; y = m + r + d; }
-          else if (k === 3) { x = W - m - r + Math.cos(a) * r; y = H - m - r + Math.sin(a) * r; }
-          else if (k === 4) { x = W - m - r - d; y = H - m; }
-          else if (k === 5) { x = m + r - Math.sin(a) * r; y = H - m - r + Math.cos(a) * r; }
-          else if (k === 6) { x = m; y = H - m - r - d; }
-          else { x = m + r - Math.cos(a) * r; y = m + r - Math.sin(a) * r; }
-          bulbs.push({ x, y, i });
-        }
-        sprites = new Float32Array((bulbs.length + DUST) * 7);
+        sprites = new Float32Array(DUST * 7);
         buildWord();
         // suits and cards: placed from the page layout, rendered here
         const box = el.getBoundingClientRect(), inner = el.querySelector('.wl-inner').getBoundingClientRect();
@@ -3454,7 +3498,14 @@
           k.w = k.c.offsetWidth; k.h = k.c.offsetHeight;
           k.x = inner.left - box.left + sl.offsetLeft + k.w / 2; k.y = inner.top - box.top + sl.offsetTop + k.h / 2;
           k.rz = parseFloat(sl.style.getPropertyValue('--r')) || 0; });
-        buildCards();
+        // dice sit in the free space above the suits and below the cards
+        const topFree = Math.min.apply(null, suits.map(k => k.y)), botFree = H - Math.max.apply(null, cards.map(k => k.y + k.h * .52));
+        dice.forEach(k => {
+          k.S = k.s * W * Math.min(1, (k.top ? topFree : botFree) / (W * .34) + .34);
+          k.x = k.fx * W;
+          k.y = k.top ? Math.max(topFree * .44, k.S * .1) : H - Math.max(botFree * .46, k.S * .1);
+        });
+        if (!suitTex.length) suits.forEach(k => suitTex.push(makeRelief(gf, 64, 64, 3, c => drawSuit(c, k.name, 32, 32, 46))));
       }
 
       // "Welcome" is drawn once into a texture; the shader lights it as metal
@@ -3479,14 +3530,6 @@
         gf.bufferData(gf.ARRAY_BUFFER, new Float32Array([x0, y0, 0, 0, x1, y0, 1, 0, x0, y1, 0, 1, x1, y1, 1, 1]), gf.STATIC_DRAW);
       }
 
-      function buildCards() {
-        const S = Math.min(dpr * 1.6, 3.2);
-        cards.forEach(k => { if (k.tex) gf.deleteTexture(k.tex.t); k.tex = cardFront(k.w, k.h, k.suit, k.name, S); });
-        if (back) gf.deleteTexture(back.t);
-        back = cardBack(cards[0].w, cards[0].h, S);
-        if (!suitTex.length) suits.forEach(k => { const col = k.ruby ? RUBY : FOIL;
-          suitTex.push(makeRelief(gf, 64, 64, 2.4, c => { c.fillStyle = col; drawSuit(c, k.name, 32, 32, 44); }, c => drawSuit(c, k.name, 32, 32, 44))); });
-      }
       function rot(rx, ry, rz) {
         const a = rx * .01745, b = ry * .01745, g = rz * .01745, ca = Math.cos(a), sa = Math.sin(a), cb = Math.cos(b), sb = Math.sin(b), cg = Math.cos(g), sg = Math.sin(g);
         // Rz * Ry * Rx, column-major
@@ -3497,13 +3540,18 @@
         gf.uniform2f(u.uC, o.x, o.y); gf.uniform2f(u.uSize, o.w, o.h); gf.uniformMatrix3fv(u.uRot, false, o.m);
         gf.uniform1f(u.uScale, o.scale || 1); gf.uniform1f(u.uZ, o.z || 0); gf.uniform1f(u.uQuad, o.quad || 1);
         gf.uniform1f(u.uMode, o.mode); gf.uniform1f(u.uAlpha, o.alpha === undefined ? 1 : o.alpha); gf.uniform1f(u.uRad, o.rad || 0); gf.uniform1f(u.uGlow, o.glow || 0);
-        if (o.tx) { gf.bindTexture(gf.TEXTURE_2D, o.tx.t); gf.uniform2f(u.uPx, o.tx.px[0], o.tx.px[1]); gf.uniform1f(u.uCap, o.tx.cap); }
+        if (o.tx) { gf.bindTexture(gf.TEXTURE_2D, o.tx.t); gf.uniform2f(u.uPx, o.tx.px[0], o.tx.px[1]); }
         gf.drawArrays(gf.TRIANGLE_STRIP, 0, 4);
       }
       const back3 = p => { const c = 1.5, q = p - 1; return 1 + (c + 1) * q * q * q + c * q * q; };
 
       function setTouch(x, y) { const r = el.getBoundingClientRect(); touch.x = x - r.left; touch.y = y - r.top; touch.on = true; }
-      el.addEventListener('touchstart', e => setTouch(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+      // a flick near a die sends it spinning
+      function flick() {
+        dice.forEach(k => { const dx = touch.x - k.x, dy = touch.y - k.y, r = Math.hypot(dx, dy);
+          if (r < k.S * 2.2) { k.w = [-dy / (r + 1) * 7, dx / (r + 1) * 7, (Math.random() - .5) * 3]; } });
+      }
+      el.addEventListener('touchstart', e => { setTouch(e.touches[0].clientX, e.touches[0].clientY); flick(); }, { passive: true });
       el.addEventListener('touchmove', e => setTouch(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
       el.addEventListener('touchend', () => { touch.on = false; }, { passive: true });
       el.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') setTouch(e.clientX, e.clientY); });
@@ -3522,11 +3570,14 @@
         const dt = Math.min((now - (last || now)) / 1000, .05); last = now;
         const t = now / 1000, chosen = el.classList.contains('chosen');
 
-        // keep the phone smooth: lower the back layer's resolution if frames run long
+        // keep the phone smooth: step the resolution down if frames run long
         acc += dt; frames++;
         if (frames === 45) {
           const avg = acc / 45 * 1000;
-          if (avg > 26 && bgScale > .3) { bgScale = Math.max(.3, bgScale * .72); bg.width = W * bgScale | 0; bg.height = H * bgScale | 0; gb.viewport(0, 0, bg.width, bg.height); }
+          if (avg > 26) {
+            if (bgScale > .3) { bgScale = Math.max(.3, bgScale * .72); bg.width = W * bgScale | 0; bg.height = H * bgScale | 0; gb.viewport(0, 0, bg.width, bg.height); }
+            else if (dpr > 2) { maxDpr = 2; layout(); }
+          }
           frames = 0; acc = 0;
         }
 
@@ -3537,12 +3588,13 @@
           touch.x = cx; touch.y = cy; touch.amt = 1;
           dust.forEach(d => { const a = Math.random() * 6.28, sp = 150 + Math.random() * 800;
             d.x = cx + Math.cos(a) * 40; d.y = cy + Math.sin(a) * 60; d.vx = Math.cos(a) * sp; d.vy = Math.sin(a) * sp; d.init = true; });
+          dice.forEach(k => { k.w = [(Math.random() - .5) * 16, (Math.random() - .5) * 16, (Math.random() - .5) * 8]; });
         }
         flash *= Math.pow(.05, dt);
         if (chosenAt) rush = Math.min(1, rush + dt / 1.5);
         touch.amt += ((touch.on ? 1 : 0) - touch.amt) * Math.min(1, dt * 4);
 
-        // satin, searchlights, casino lights
+        // marble table and soft lights
         gb.useProgram(pBg.p);
         gb.uniform2f(pBg.u.uRes, bg.width, bg.height); gb.uniform1f(pBg.u.uT, t % 2000);
         gb.uniform2f(pBg.u.uTouch, (touch.x / W - .5) * (W / H), .5 - touch.y / H);
@@ -3550,10 +3602,35 @@
         gb.drawArrays(gb.TRIANGLE_STRIP, 0, 4);
 
         gf.clearColor(0, 0, 0, 0); gf.clear(gf.COLOR_BUFFER_BIT);
+        gf.blendFunc(gf.ONE, gf.ONE_MINUS_SRC_ALPHA);
+
+        // the key light drifts, and follows the thumb
+        const keyX = (Math.sin(t * .4) * .35 - .4) * (1 - touch.amt) + ((touch.x / W - .5) * 1.6) * touch.amt;
+        const keyY = (Math.cos(t * .31) * .15 - .78) * (1 - touch.amt) + ((touch.y / H - .5) * 2.) * touch.amt;
+
+        // dice
+        gf.useProgram(pDi.p);
+        gf.bindBuffer(gf.ARRAY_BUFFER, cdBuf); gf.enableVertexAttribArray(pDi.aU); gf.vertexAttribPointer(pDi.aU, 2, gf.FLOAT, false, 0, 0);
+        gf.uniform2f(pDi.u.uR, W, H); gf.uniform2f(pDi.u.uKey, keyX, keyY); gf.uniform1f(pDi.u.uD, dpr);
+        dice.forEach((k, i) => {
+          const p = Math.min(Math.max((t - k.d) / 1.1, 0), 1); if (!p) return;
+          const e = back3(p), out = 1 - e;
+          for (let a = 0; a < 3; a++) k.w[a] += (k.idle[a] - k.w[a]) * Math.min(1, dt * 1.3);
+          const hw = Math.hypot(k.w[0], k.w[1], k.w[2]) * dt * .5, sn = hw > 1e-5 ? Math.sin(hw) / (hw / (dt * .5)) : dt * .5;
+          k.q = qnorm(qmul([k.w[0] * sn, k.w[1] * sn, k.w[2] * sn, Math.cos(hw)], k.q));
+          const par = touch.amt * 10 * (k.s / .2);
+          const away = chosenAt ? Math.min((now - chosenAt) / 900, 1) : 0, fly = away * away * W * .9;
+          const cx = k.x + k.side * (out * k.S * 3 + fly) + (touch.x / W - .5) * -par;
+          const cy = k.y + (k.top ? -1 : 1) * (out * k.S * 2.5 + fly) + (touch.y / H - .5) * -par + Math.sin(t * .7 + i * 1.9) * 5;
+          gf.uniform2f(pDi.u.uC, cx, cy); gf.uniform1f(pDi.u.uS, k.S); gf.uniform1f(pDi.u.uQ, k.S * 2.05);
+          gf.uniformMatrix3fv(pDi.u.uM, false, qmat(k.q)); gf.uniform1f(pDi.u.uA, Math.min(p * 4, 1));
+          gf.drawArrays(gf.TRIANGLE_STRIP, 0, 4);
+        });
+        gf.disableVertexAttribArray(pDi.aU);
 
         // metal lettering
         const x = Math.min(Math.max((t - .4) / 1.25, 0), 1);
-        gf.useProgram(pWd.p); gf.blendFunc(gf.ONE, gf.ONE_MINUS_SRC_ALPHA); gf.bindTexture(gf.TEXTURE_2D, tex);
+        gf.useProgram(pWd.p); gf.bindTexture(gf.TEXTURE_2D, tex);
         gf.bindBuffer(gf.ARRAY_BUFFER, wdBuf);
         gf.enableVertexAttribArray(pWd.aP); gf.enableVertexAttribArray(pWd.aU);
         gf.vertexAttribPointer(pWd.aP, 2, gf.FLOAT, false, 16, 0); gf.vertexAttribPointer(pWd.aU, 2, gf.FLOAT, false, 16, 8);
@@ -3567,23 +3644,23 @@
         gf.disableVertexAttribArray(pWd.aP); gf.disableVertexAttribArray(pWd.aU);
 
         // suits and aces
-        gf.useProgram(pCd.p); gf.blendFunc(gf.ONE, gf.ONE_MINUS_SRC_ALPHA);
+        gf.useProgram(pCd.p);
         gf.bindBuffer(gf.ARRAY_BUFFER, cdBuf); gf.enableVertexAttribArray(pCd.aU); gf.vertexAttribPointer(pCd.aU, 2, gf.FLOAT, false, 0, 0);
-        gf.uniform2f(pCd.u.uR, W, H); gf.uniform1f(pCd.u.uT, t % 2000);
-        const ltX = touch.x * touch.amt + (W * (.5 + Math.sin(t * .7) * .55)) * (1 - touch.amt), ltY = touch.y * touch.amt + (H * (.42 + Math.cos(t * .5) * .3)) * (1 - touch.amt);
+        gf.uniform2f(pCd.u.uR, W, H); gf.uniform1f(pCd.u.uT, t % 2000); gf.uniform2f(pCd.u.uKey, keyX, keyY);
+        const ltX = touch.x * touch.amt + (W * (.5 + Math.sin(t * .5) * .45)) * (1 - touch.amt), ltY = touch.y * touch.amt + (H * (.46 + Math.cos(t * .37) * .2)) * (1 - touch.amt);
         gf.uniform2f(pCd.u.uLt, ltX, ltY);
         suits.forEach(k => {
           const p = Math.min(Math.max((t - .15 - k.i * .08) / .8, 0), 1); if (!p) return;
-          const e = back3(p), bob = Math.sin(t * 1.4 + k.i * 1.3) * 2.5;
-          relief({ x: k.x, y: k.y + bob + (1 - e) * 46, w: k.s, h: k.s, m: rot(Math.sin(t * .6 + k.i) * 16, Math.sin(t * .9 + k.i * 1.7) * 30 + (1 - e) * 360, 0), scale: .3 + .7 * e, mode: 0, tx: suitTex[k.i], alpha: Math.min(p * 3, 1) });
+          const e = back3(p), bob = Math.sin(t * 1.4 + k.i * 1.3) * 2;
+          relief({ x: k.x, y: k.y + bob + (1 - e) * 46, w: k.s, h: k.s, m: rot(Math.sin(t * .6 + k.i) * 14, Math.sin(t * .9 + k.i * 1.7) * 26 + (1 - e) * 360, 0), scale: .3 + .7 * e, mode: 0, tx: suitTex[k.i], alpha: Math.min(p * 3, 1) });
         });
-        cards.forEach(k => {
-          const pd = Math.min(Math.max((t - k.delay) / .9, 0), 1); if (!pd) return;
+        if (faces) cards.forEach(k => {
+          const pd = Math.min(Math.max((t - mapsAt - k.i * .12) / .9, 0), 1); if (!pd) return;
           const de = back3(pd);
-          let ty = Math.sin(t * .8 + k.i * 1.7) * 7, tx = Math.cos(t * .65 + k.i) * 5, press = 1;
+          let ty = Math.sin(t * .8 + k.i * 1.7) * 6, tx = Math.cos(t * .65 + k.i) * 4, press = 1;
           if (touch.on && !chosenAt) {
-            ty += Math.max(-1, Math.min(1, (touch.x - k.x) / 170)) * 26;
-            tx -= Math.max(-1, Math.min(1, (touch.y - k.y) / 240)) * 22;
+            ty += Math.max(-1, Math.min(1, (touch.x - k.x) / 170)) * 24;
+            tx -= Math.max(-1, Math.min(1, (touch.y - k.y) / 240)) * 20;
             if (Math.abs(touch.x - k.x) < k.w / 2 && Math.abs(touch.y - k.y) < k.h / 2) press = .96;
           }
           k.ry += (ty - k.ry) * Math.min(1, dt * 7); k.rx += (tx - k.rx) * Math.min(1, dt * 7);
@@ -3594,27 +3671,18 @@
             if (picked) { ry += 180 * e; y -= 18 * e; scale = 1 + .14 * e; rz *= 1 - e; }
             else { y += 90 * e; alpha = 1 - Math.min(f * 2, 1); scale = 1 - .1 * e; }
           }
-          let showBack = Math.cos(ry * .01745) < 0;
+          const showBack = Math.cos(ry * .01745) < 0;
           const m = rot(k.rx, showBack ? ry - 180 : ry, rz);
-          const current = k.c.classList.contains('is-current') && !chosenAt && t > 2.3;
-          const base = { x: k.x, y, w: k.w, h: k.h, m, scale, rad: 11, alpha };
-          relief(Object.assign({}, base, { mode: 3, quad: 1.5, glow: current ? .45 + .35 * Math.sin(t * 2.4) : 0, y: y + 7 }));
-          for (let z = -3; z < 0; z++) relief(Object.assign({}, base, { mode: 2, z }));
-          relief(Object.assign({}, base, { mode: 1, tx: showBack ? back : k.tex }));
+          const current = k.c.classList.contains('is-current') && !chosenAt && t > mapsAt + 1;
+          const base = { x: k.x, y, w: k.w, h: k.h, m, scale, rad: k.w * .085, alpha };
+          relief(Object.assign({}, base, { mode: 3, quad: 1.5, glow: current ? .4 + .3 * Math.sin(t * 2.4) : 0, y: y + 8 }));
+          for (let z = -5; z < 0; z++) relief(Object.assign({}, base, { mode: 2, z: z * .7 }));
+          relief(Object.assign({}, base, { mode: 1, tx: showBack ? back : faces[k.lang] }));
         });
         gf.disableVertexAttribArray(pCd.aU);
 
-        // bulbs: they power on around the frame, then chase; a jackpot strobe on the pick
-        let o = 0; const chase = Math.floor(t * 6), power = Math.min(t / .7, 1) * bulbs.length;
-        const strobe = chosenAt && (now - chosenAt) < 900 ? (Math.floor((now - chosenAt) / 80) % 2) : -1;
-        for (const b of bulbs) {
-          let lit = (b.i + chase) % 3 === 0 ? 1 : .13;
-          if (strobe >= 0) lit = strobe ? 1.25 : .25;
-          if (b.i > power) lit = 0;
-          sprites[o++] = b.x; sprites[o++] = b.y; sprites[o++] = lit > .5 ? 26 : 12;
-          sprites[o++] = 1; sprites[o++] = .8; sprites[o++] = .46; sprites[o++] = lit;
-        }
-        // gold dust: drifts up, and swirls around the thumb
+        // a few sharp gold sparks: they swirl around the thumb and burst on the pick
+        let o = 0;
         for (const d of dust) {
           if (!d.init) { d.x *= W; d.y *= H; d.init = true; }
           d.vx += Math.sin(d.y * .012 + t * .4) * 9 * dt; d.vy += (-7 + Math.cos(d.x * .01 + t * .3) * 4) * dt;
@@ -3638,7 +3706,10 @@
         gf.uniform2f(pSp.u.uR, W, H); gf.uniform1f(pSp.u.uD, dpr);
         gf.drawArrays(gf.POINTS, 0, o / 7);
         gf.disableVertexAttribArray(pSp.aP); gf.disableVertexAttribArray(pSp.aS); gf.disableVertexAttribArray(pSp.aC);
+      }
 
+      function bail() {
+        if (bg) bg.remove(); if (fx) fx.remove(); el.classList.remove('wl-live'); stopped = true;
       }
 
       function start() {
@@ -3646,7 +3717,9 @@
           bg = document.createElement('canvas'); bg.className = 'wl-gl wl-gl-bg'; bg.setAttribute('aria-hidden', 'true');
           fx = document.createElement('canvas'); fx.className = 'wl-gl wl-gl-fx'; fx.setAttribute('aria-hidden', 'true');
           gb = bg.getContext('webgl', { alpha: false, antialias: false });
-          gf = fx.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false });
+          const opts = { alpha: true, premultipliedAlpha: true, antialias: false };
+          gf = fx.getContext('webgl2', opts); isGL2 = !!gf;
+          if (!gf) gf = fx.getContext('webgl', opts);
           if (!gb || !gf) throw new Error('no webgl');
           pBg = program(gb, BG_VS, BG_FS);
           const q = gb.createBuffer(); gb.bindBuffer(gb.ARRAY_BUFFER, q);
@@ -3657,6 +3730,7 @@
           pSp.aP = gf.getAttribLocation(pSp.p, 'aP'); pSp.aS = gf.getAttribLocation(pSp.p, 'aS'); pSp.aC = gf.getAttribLocation(pSp.p, 'aC');
           pWd.aP = gf.getAttribLocation(pWd.p, 'aP'); pWd.aU = gf.getAttribLocation(pWd.p, 'aU');
           pCd = program(gf, CD_VS, CD_FS); pCd.aU = gf.getAttribLocation(pCd.p, 'aU');
+          pDi = program(gf, DI_VS, DI_FS); pDi.aU = gf.getAttribLocation(pDi.p, 'aU');
           cdBuf = gf.createBuffer(); gf.bindBuffer(gf.ARRAY_BUFFER, cdBuf);
           gf.bufferData(gf.ARRAY_BUFFER, new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]), gf.STATIC_DRAW);
           spBuf = gf.createBuffer(); wdBuf = gf.createBuffer(); tex = gf.createTexture();
@@ -3666,12 +3740,16 @@
           el.classList.add('wl-live');
           layout();
           window.addEventListener('resize', layout);
-          bg.addEventListener('webglcontextlost', () => { if (!stopped) { el.classList.remove('wl-live'); bg.remove(); fx.remove(); stopped = true; } });
-          // card lettering uses the page fonts, which arrive a moment later
-          if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', () => { if (!stopped && !chosenAt) buildCards(); });
+          bg.addEventListener('webglcontextlost', () => { if (!stopped) bail(); });
+          // the aces are dealt as soon as their artwork has arrived
+          mapsReady.then(() => {
+            if (stopped) return;
+            faces = { en: mapTexture(mapImg.en), es: mapTexture(mapImg.es) }; back = mapTexture(mapImg.back);
+            mapsAt = Math.max(performance.now() / 1000, 1.1);
+          }, () => { if (!stopped) bail(); });
           requestAnimationFrame(frame);
         } catch (err) {
-          if (bg) bg.remove(); if (fx) fx.remove(); el.classList.remove('wl-live'); stopped = true;
+          bail();
         }
       }
 
